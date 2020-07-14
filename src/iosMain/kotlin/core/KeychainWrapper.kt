@@ -6,7 +6,7 @@ import platform.Foundation.*
 import platform.Security.*
 import platform.darwin.noErr
 
-class KeychainWrapper(val serviceName: String, val accessGroup: String?): Keychain {
+class KeychainWrapper(val serviceName: String, val accessGroup: String?): KeychainWrappable {
     private enum class Operation { Set, Get, Update, Delete }
 
     var printsDebugOutput = false

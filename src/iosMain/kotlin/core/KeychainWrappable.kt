@@ -1,6 +1,6 @@
 package core
 
-interface Keychain {
+interface KeychainWrappable {
     /**
      * Saves a string value in the keychain.
      * @param value The value to store
