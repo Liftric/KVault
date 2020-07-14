@@ -29,13 +29,9 @@ kotlin {
     }
 
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(kotlin("stdlib-common"))
-            }
-        }
         val iosMain by getting {
             dependencies {
+                implementation(kotlin("stdlib-common"))
             }
         }
         val iosTest by getting {
