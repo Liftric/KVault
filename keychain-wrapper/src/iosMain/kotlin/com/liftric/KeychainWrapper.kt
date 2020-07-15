@@ -19,7 +19,7 @@ actual class KeychainWrapper(
 
     private enum class Operation { Set, Get, Update, Delete }
 
-    var printsDebugOutput = false
+    var printsDebugOutput = true
 
     companion object {
         fun shared(): KeychainWrapper {

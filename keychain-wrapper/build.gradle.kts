@@ -1,6 +1,7 @@
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
+    id("maven-publish")
 }
 
 group = "com.liftric"
@@ -49,6 +50,10 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
+                implementation("org.robolectric:robolectric:4.3.1") {
+                    exclude("com.google.auto.service", "auto-service")
+                }
+                implementation("androidx.test:core:1.2.0")
             }
         }
 
@@ -64,8 +69,7 @@ android {
     defaultConfig {
         minSdkVersion(21)
         targetSdkVersion(29)
-        versionCode = 1
-        versionName = "0.0.1"
+        testInstrumentationRunner = "org.robolectric.RobolectricTestRunner"
     }
 
     compileOptions {
