@@ -1,14 +1,16 @@
 package com.liftric
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 
-actual class KeychainWrapper actual constructor(serviceName: String, accessGroup: String?) {
+actual class KeychainWrapper(private val context: Context) {
+    private val encSharedPrefs: SharedPreferences
+
     init {
-        val context: Context? = null
-        val masterKey = MasterKey.Builder(context!!).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
-        val encSharedPrefs = EncryptedSharedPreferences.create(
+        val masterKey = MasterKey.Builder(context).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
+        encSharedPrefs = EncryptedSharedPreferences.create(
             context,
             "secure-shared-preferences",
             masterKey,

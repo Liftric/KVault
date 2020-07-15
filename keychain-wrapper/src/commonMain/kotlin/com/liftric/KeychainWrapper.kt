@@ -1,14 +1,6 @@
 package com.liftric
 
-expect class KeychainWrapper(
-    /**
-     * Identifies keychain entries
-     */
-    serviceName: String,
-    /**
-     * Used to share keychains between apps
-     */
-    accessGroup: String?) {
+expect class KeychainWrapper {
     /**
      * Saves a string value in the keychain.
      * @param value The value to store

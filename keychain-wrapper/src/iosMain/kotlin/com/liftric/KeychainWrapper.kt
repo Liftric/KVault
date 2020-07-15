@@ -6,16 +6,27 @@ import platform.Foundation.*
 import platform.Security.*
 import platform.darwin.noErr
 
-actual class KeychainWrapper actual constructor(val serviceName: String, val accessGroup: String?) {
+actual class KeychainWrapper(
+    /**
+     * Identifies keychain entries
+     */
+    val serviceName: String,
+    /**
+     * Used to share keychains between apps
+     */
+    val accessGroup: String?
+) {
+
     private enum class Operation { Set, Get, Update, Delete }
 
     var printsDebugOutput = false
 
     companion object {
-        fun shared(): KeychainWrapper { return KeychainWrapper(
-            serviceName = defaultServiceName(),
-            accessGroup = null
-        )
+        fun shared(): KeychainWrapper {
+            return KeychainWrapper(
+                serviceName = defaultServiceName(),
+                accessGroup = null
+            )
         }
 
         private fun defaultServiceName(): String {
@@ -222,10 +233,12 @@ actual class KeychainWrapper actual constructor(val serviceName: String, val acc
         }
     }
 
-    private fun perform(operation: Operation, query: CFMutableDictionaryRef?,
-                        result: CFTypeRefVar? = null,
-                        updateQuery: CFDictionaryRef? = null,
-                        verbose: Boolean? = true): Boolean {
+    private fun perform(
+        operation: Operation, query: CFMutableDictionaryRef?,
+        result: CFTypeRefVar? = null,
+        updateQuery: CFDictionaryRef? = null,
+        verbose: Boolean? = true
+    ): Boolean {
         addAccessGroupIfSet(query)
 
         val status = when (operation) {
@@ -235,7 +248,9 @@ actual class KeychainWrapper actual constructor(val serviceName: String, val acc
             Operation.Delete -> SecItemDelete(query)
         }
 
-        return if (status.toUInt() == noErr) { true } else {
+        return if (status.toUInt() == noErr) {
+            true
+        } else {
             val error = SecCopyErrorMessageString(status, null)
             val errorMessage = CFBridgingRelease(error)
             if (printsDebugOutput && verbose!!) {
