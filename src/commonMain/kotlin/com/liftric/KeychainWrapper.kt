@@ -1,47 +1,55 @@
-package core
+package com.liftric
 
-interface KeychainWrappable {
+expect class KeychainWrapper(
+    /**
+     * Identifies keychain entries
+     */
+    serviceName: String,
+    /**
+     * Used to share keychains between apps
+     */
+    accessGroup: String?) {
     /**
      * Saves a string value in the keychain.
      * @param value The value to store
      * @param forKey The key to query
      */
-    fun set(value: String, forKey: String, withAccess: KeychainItemAccessibility? = null): Boolean
+    fun set(value: String, forKey: String): Boolean
 
     /**
      * Saves an int value in the keychain.
      * @param value The value to store
      * @param forKey The key to query
      */
-    fun set(value: Int, forKey: String, withAccess: KeychainItemAccessibility? = null): Boolean
+    fun set(value: Int, forKey: String): Boolean
 
     /**
      * Saves a long value in the keychain.
      * @param value The value to store
      * @param forKey The key to query
      */
-    fun set(value: Long, forKey: String, withAccess: KeychainItemAccessibility? = null): Boolean
+    fun set(value: Long, forKey: String): Boolean
 
     /**
      * Saves a float value in the keychain.
      * @param value The value to store
      * @param forKey The key to query
      */
-    fun set(value: Float, forKey: String, withAccess: KeychainItemAccessibility? = null): Boolean
+    fun set(value: Float, forKey: String): Boolean
 
     /**
      * Saves a double value in the keychain.
      * @param value The value to store
      * @param forKey The key to query
      */
-    fun set(value: Double, forKey: String, withAccess: KeychainItemAccessibility? = null): Boolean
+    fun set(value: Double, forKey: String): Boolean
 
     /**
      * Saves a boolean value in the keychain.
      * @param value The value to store
      * @param forKey The key to query
      */
-    fun set(value: Boolean, forKey: String, withAccess: KeychainItemAccessibility? = null): Boolean
+    fun set(value: Boolean, forKey: String): Boolean
 
     /**
      * Checks if object with key exists in the keychain.

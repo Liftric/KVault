@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("multiplatform") version "1.3.72"
 }
@@ -29,9 +31,17 @@ kotlin {
     }
 
     sourceSets {
-        val iosMain by getting {
+        val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
+            }
+        }
+        val commonTest by getting {
+            dependencies {
+            }
+        }
+        val iosMain by getting {
+            dependencies {
             }
         }
         val iosTest by getting {
