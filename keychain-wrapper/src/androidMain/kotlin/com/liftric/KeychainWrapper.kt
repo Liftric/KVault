@@ -25,7 +25,10 @@ actual class KeychainWrapper(private val context: Context) {
      * @param forKey The key to query
      */
     actual fun set(value: String, forKey: String): Boolean {
-        TODO("Not yet implemented")
+        return encSharedPrefs
+            .edit()
+            .putString(forKey, value)
+            .commit()
     }
 
     /**
@@ -34,7 +37,10 @@ actual class KeychainWrapper(private val context: Context) {
      * @param forKey The key to query
      */
     actual fun set(value: Int, forKey: String): Boolean {
-        TODO("Not yet implemented")
+        return encSharedPrefs
+            .edit()
+            .putInt(forKey, value)
+            .commit()
     }
 
     /**
@@ -43,7 +49,10 @@ actual class KeychainWrapper(private val context: Context) {
      * @param forKey The key to query
      */
     actual fun set(value: Long, forKey: String): Boolean {
-        TODO("Not yet implemented")
+        return encSharedPrefs
+            .edit()
+            .putLong(forKey, value)
+            .commit()
     }
 
     /**
@@ -52,7 +61,10 @@ actual class KeychainWrapper(private val context: Context) {
      * @param forKey The key to query
      */
     actual fun set(value: Float, forKey: String): Boolean {
-        TODO("Not yet implemented")
+        return encSharedPrefs
+            .edit()
+            .putFloat(forKey, value)
+            .commit()
     }
 
     /**
@@ -61,7 +73,10 @@ actual class KeychainWrapper(private val context: Context) {
      * @param forKey The key to query
      */
     actual fun set(value: Double, forKey: String): Boolean {
-        TODO("Not yet implemented")
+        return encSharedPrefs
+            .edit()
+            .putFloat(forKey, value.toFloat())
+            .commit()
     }
 
     /**
@@ -70,7 +85,10 @@ actual class KeychainWrapper(private val context: Context) {
      * @param forKey The key to query
      */
     actual fun set(value: Boolean, forKey: String): Boolean {
-        TODO("Not yet implemented")
+        return encSharedPrefs
+            .edit()
+            .putBoolean(forKey, value)
+            .commit()
     }
 
     /**
@@ -79,7 +97,7 @@ actual class KeychainWrapper(private val context: Context) {
      * @return True or false, depending on wether it is in the keychain or not
      */
     actual fun existsObject(forKey: String): Boolean {
-        TODO("Not yet implemented")
+       return encSharedPrefs.contains(forKey)
     }
 
     /**
@@ -88,7 +106,7 @@ actual class KeychainWrapper(private val context: Context) {
      * @return The stored string value
      */
     actual fun string(forKey: String): String? {
-        TODO("Not yet implemented")
+        return encSharedPrefs.getString(forKey, null)
     }
 
     /**
@@ -97,7 +115,10 @@ actual class KeychainWrapper(private val context: Context) {
      * @return The stored int value
      */
     actual fun int(forKey: String): Int? {
-        TODO("Not yet implemented")
+        if (existsObject(forKey)) {
+            return encSharedPrefs.getInt(forKey, Int.MIN_VALUE)
+        }
+        return null
     }
 
     /**
@@ -106,7 +127,10 @@ actual class KeychainWrapper(private val context: Context) {
      * @return The stored long value
      */
     actual fun long(forKey: String): Long? {
-        TODO("Not yet implemented")
+        if (existsObject(forKey)) {
+            return encSharedPrefs.getLong(forKey, Long.MIN_VALUE)
+        }
+        return null
     }
 
     /**
@@ -115,7 +139,10 @@ actual class KeychainWrapper(private val context: Context) {
      * @return The stored double lue
      */
     actual fun double(forKey: String): Double? {
-        TODO("Not yet implemented")
+        if (existsObject(forKey)) {
+            return encSharedPrefs.getFloat(forKey, Float.MIN_VALUE).toDouble()
+        }
+        return null
     }
 
     /**
@@ -124,7 +151,10 @@ actual class KeychainWrapper(private val context: Context) {
      * @return The stored float value
      */
     actual fun float(forKey: String): Float? {
-        TODO("Not yet implemented")
+        if (existsObject(forKey)) {
+            return encSharedPrefs.getFloat(forKey, Float.MIN_VALUE)
+        }
+        return null
     }
 
     /**
@@ -133,7 +163,10 @@ actual class KeychainWrapper(private val context: Context) {
      * @return The stored boolean value
      */
     actual fun bool(forKey: String): Boolean? {
-        TODO("Not yet implemented")
+        if (existsObject(forKey)) {
+            return encSharedPrefs.getBoolean(forKey, false)
+        }
+        return null
     }
 
     /**
@@ -141,13 +174,13 @@ actual class KeychainWrapper(private val context: Context) {
      * @param forKey The key to query
      */
     actual fun deleteObject(forKey: String): Boolean {
-        TODO("Not yet implemented")
+        return encSharedPrefs.edit().remove(forKey).commit()
     }
 
     /**
      * Deletes all objects with the service name from the keychain.
      */
     actual fun clear() {
+        encSharedPrefs.edit().clear().apply()
     }
-
 }
