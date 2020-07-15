@@ -1,6 +1,22 @@
 package com.liftric
 
+import android.content.Context
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
+
 actual class KeychainWrapper actual constructor(serviceName: String, accessGroup: String?) {
+    init {
+        val context: Context? = null
+        val masterKey = MasterKey.Builder(context!!).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
+        val encSharedPrefs = EncryptedSharedPreferences.create(
+            context,
+            "secure-shared-preferences",
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        )
+    }
+
     /**
      * Saves a string value in the keychain.
      * @param value The value to store

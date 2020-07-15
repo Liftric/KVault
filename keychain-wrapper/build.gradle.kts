@@ -6,28 +6,6 @@ plugins {
 group = "com.liftric"
 version = "0.0.1"
 
-android {
-    compileSdkVersion(26)
-
-    defaultConfig {
-        minSdkVersion(18)
-        targetSdkVersion(26)
-        versionCode = 1
-        versionName = "0.0.1"
-    }
-
-    sourceSets {
-        val main by getting {
-            manifest.srcFile("src/androidMain/AndroidManifest.xml")
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-}
-
 kotlin {
     val buildForDevice = project.findProperty("device") as? Boolean ?: false
     val iosTarget = if(buildForDevice) iosArm64("ios") else iosX64("ios")
@@ -64,6 +42,7 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation(kotlin("stdlib"))
+                implementation("androidx.security:security-crypto:1.1.0-alpha01")
             }
         }
         val androidTest by getting {
@@ -76,5 +55,21 @@ kotlin {
         all {
             languageSettings.useExperimentalAnnotation("kotlin.ExperimentalUnsignedTypes")
         }
+    }
+}
+
+android {
+    compileSdkVersion(29)
+
+    defaultConfig {
+        minSdkVersion(21)
+        targetSdkVersion(29)
+        versionCode = 1
+        versionName = "0.0.1"
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
