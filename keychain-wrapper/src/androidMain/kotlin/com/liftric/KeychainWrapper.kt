@@ -50,7 +50,7 @@ actual class KeychainWrapper(private val context: Context) {
     actual fun set(value: Double, forKey: String): Boolean {
         return encSharedPrefs
             .edit()
-            .putFloat(forKey, value.toFloat())
+            .putLong(forKey, value.toRawBits())
             .commit()
     }
 
@@ -85,7 +85,7 @@ actual class KeychainWrapper(private val context: Context) {
 
     actual fun double(forKey: String): Double? {
         if (existsObject(forKey)) {
-            return encSharedPrefs.getFloat(forKey, Float.MIN_VALUE).toDouble()
+            return Double.fromBits(encSharedPrefs.getLong(forKey, Double.MIN_VALUE.toRawBits()))
         }
         return null
     }
