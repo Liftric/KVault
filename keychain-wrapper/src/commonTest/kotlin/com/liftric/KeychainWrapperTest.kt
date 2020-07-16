@@ -20,7 +20,7 @@ abstract class AbstractKeychainWrapperTest(private val keychain: KeychainWrapper
     }
 
     @Test
-    fun testSetString() {
+    fun testSetGetString() {
         val testdata = mapOf(
             "string1" to "lorem ipsum",
             "string2" to "lorem ipsum \r lorem ipsum",
@@ -37,18 +37,17 @@ abstract class AbstractKeychainWrapperTest(private val keychain: KeychainWrapper
                 "${it.key} should not resolve some other example not contained in testdata"
             )
         }
-
         funnelAssertion<String>(testdata.keys.toList()) {
             keychain.string(it)
         }
     }
 
     @Test
-    fun testSetInt() {
+    fun testSetGetInt() {
         val testdata = mapOf(
-            "int1" to 0,
-            "int2" to 1,
-            "int3" to 2
+            "int1" to Int.MIN_VALUE,
+            "int2" to Int.MAX_VALUE,
+            "int3" to 1337
         )
         testdata.values.toTypedArray().last()
         testdata.forEach {
@@ -57,62 +56,104 @@ abstract class AbstractKeychainWrapperTest(private val keychain: KeychainWrapper
             assertNotNull(keychain.int(it.key), "${it.key} should not be null")
             assertEquals(it.value, keychain.int(it.key), "${it.key} should resolve ${it.value}")
             assertNotEquals(
-                "some other example not contained in testdata",
-                keychain.string(it.key),
+                1,
+                keychain.int(it.key),
                 "${it.key} should not resolve some other example not contained in testdata"
             )
         }
-
         funnelAssertion<Int>(testdata.keys.toList()) {
             keychain.int(it)
         }
     }
 
     @Test
-    fun testSetLong() {
-
+    fun testSetGetLong() {
+        val testdata = mapOf(
+            "long1" to Long.MIN_VALUE,
+            "long2" to Long.MAX_VALUE,
+            "long3" to Int.MAX_VALUE.toLong() + 1
+        )
+        testdata.values.toTypedArray().last()
+        testdata.forEach {
+            keychain.set(it.value, it.key)
+            assertNull(keychain.string(it.key), "${it.key} should be null as it is an Int not a String")
+            assertNotNull(keychain.long(it.key), "${it.key} should not be null")
+            assertEquals(it.value, keychain.long(it.key), "${it.key} should resolve ${it.value}")
+            assertNotEquals(
+                1,
+                keychain.long(it.key),
+                "${it.key} should not resolve some other example not contained in testdata"
+            )
+        }
+        funnelAssertion<Long>(testdata.keys.toList()) {
+            keychain.long(it)
+        }
     }
 
     @Test
-    fun testSetFloat() {
-
+    fun testSetGetFloat() {
+        val testdata = mapOf(
+            "long1" to Float.MIN_VALUE,
+            "long2" to Float.MAX_VALUE,
+            "long3" to 1337.1337f
+        )
+        testdata.values.toTypedArray().last()
+        testdata.forEach {
+            keychain.set(it.value, it.key)
+            assertNull(keychain.string(it.key), "${it.key} should be null as it is an Int not a String")
+            assertNotNull(keychain.float(it.key), "${it.key} should not be null")
+            assertEquals(it.value, keychain.float(it.key), "${it.key} should resolve ${it.value}")
+            assertNotEquals(
+                31337.31337f,
+                keychain.float(it.key),
+                "${it.key} should not resolve some other example not contained in testdata"
+            )
+        }
+        funnelAssertion<Float>(testdata.keys.toList()) {
+            keychain.float(it)
+        }
     }
 
     @Test
-    fun testSetDouble() {
-
+    fun testSetGetDouble() {
+        val testdata = mapOf(
+            "double1" to Double.MIN_VALUE,
+            "double2" to Double.MAX_VALUE,
+            "double3" to 1337.1337
+        )
+        testdata.values.toTypedArray().last()
+        testdata.forEach {
+            keychain.set(it.value, it.key)
+            assertNull(keychain.string(it.key), "${it.key} should be null as it is an Int not a String")
+            assertNotNull(keychain.double(it.key), "${it.key} should not be null")
+            assertEquals(it.value, keychain.double(it.key), "${it.key} should resolve ${it.value}")
+            assertNotEquals(
+                31337.31337,
+                keychain.double(it.key),
+                "${it.key} should not resolve some other example not contained in testdata"
+            )
+        }
+        funnelAssertion<Double>(testdata.keys.toList()) {
+            keychain.double(it)
+        }
     }
 
     @Test
-    fun testSetBoolean() {
-
-    }
-
-    @Test
-    fun testGetString() {
-    }
-
-    @Test
-    fun testGetInt() {
-
-    }
-
-    @Test
-    fun testGetLong() {
-
-    }
-
-    @Test
-    fun testGetDouble() {
-    }
-
-    @Test
-    fun testGetFloat() {
-
-    }
-
-    @Test
-    fun testGetBool() {
+    fun testSetGetBoolean() {
+        val testdata = mapOf(
+            "boolean1" to true,
+            "boolean2" to false
+        )
+        testdata.values.toTypedArray().last()
+        testdata.forEach {
+            keychain.set(it.value, it.key)
+            assertNull(keychain.string(it.key), "${it.key} should be null as it is an Int not a String")
+            assertNotNull(keychain.bool(it.key), "${it.key} should not be null")
+            assertEquals(it.value, keychain.bool(it.key), "${it.key} should resolve ${it.value}")
+        }
+        funnelAssertion<Boolean>(testdata.keys.toList()) {
+            keychain.bool(it)
+        }
     }
 
     @Test
