@@ -158,13 +158,30 @@ abstract class AbstractKeychainWrapperTest(private val keychain: KeychainWrapper
 
     @Test
     fun testExistsObject() {
+        assertFalse(keychain.existsObject("blank"), "blank should not exist")
+        keychain.set("123", "blank")
+        assertTrue(keychain.existsObject("blank"), "blank should exist")
     }
 
     @Test
     fun testDeleteObject() {
+        assertFalse(keychain.existsObject("blank"), "blank should not exist")
+        keychain.set("123", "blank")
+        assertTrue(keychain.existsObject("blank"), "blank should exist")
+        keychain.deleteObject("blank")
+        assertFalse(keychain.existsObject("blank"), "blank should not exist after removal")
     }
 
     @Test
     fun testClear() {
+        val keys = listOf("key1", "key2", "key3", "key4", "key5")
+        keys.forEach {
+            keychain.set("dummy", it)
+            assertTrue(keychain.existsObject(it), "$it should exist")
+        }
+        keychain.clear()
+        keys.forEach {
+            assertFalse(keychain.existsObject(it), "$it should not exist after clear")
+        }
     }
 }

@@ -62,7 +62,7 @@ actual class KeychainWrapper(private val context: Context) {
     }
 
     actual fun existsObject(forKey: String): Boolean {
-       return encSharedPrefs.contains(forKey)
+        return encSharedPrefs.contains(forKey)
     }
 
     actual fun string(forKey: String): String? {
