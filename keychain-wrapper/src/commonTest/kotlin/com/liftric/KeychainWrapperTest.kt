@@ -160,6 +160,7 @@ abstract class AbstractKeychainWrapperTest(private val keychain: KeychainWrapper
     fun testExistsObject() {
         assertFalse(keychain.existsObject("blank"), "blank should not exist")
         keychain.set("123", "blank")
+        keychain.set(1, "bla")
         assertTrue(keychain.existsObject("blank"), "blank should exist")
     }
 
@@ -170,6 +171,15 @@ abstract class AbstractKeychainWrapperTest(private val keychain: KeychainWrapper
         assertTrue(keychain.existsObject("blank"), "blank should exist")
         keychain.deleteObject("blank")
         assertFalse(keychain.existsObject("blank"), "blank should not exist after removal")
+    }
+
+    @Test
+    fun testOverride() {
+        keychain.set("dummyX", "keyX")
+        assertEquals("dummyX", keychain.string("keyX"), "")
+        keychain.set("dummyX2", "keyX")
+        assertEquals("dummyX2", keychain.string("keyX"), "")
+        assertNotEquals("dummyX", keychain.string("keyX"), "")
     }
 
     @Test
