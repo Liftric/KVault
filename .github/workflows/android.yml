@@ -14,3 +14,8 @@ jobs:
         java-version: 1.8
     - name: Build with Gradle
       run: ./gradlew test
+    - name: Upload test result
+      uses: actions/upload-artifact@v2
+      with:
+        name: reports
+        path: keychain-wrapper/build/reports/
