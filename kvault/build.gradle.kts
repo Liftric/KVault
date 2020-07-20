@@ -1,3 +1,5 @@
+import groovy.util.Node
+
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
@@ -5,7 +7,7 @@ plugins {
 }
 
 group = "com.liftric"
-version = "0.0.1"
+version = "1.0"
 
 kotlin {
     val buildForDevice = project.findProperty("device") as? Boolean ?: false
