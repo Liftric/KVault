@@ -2,8 +2,8 @@ package com.liftric
 
 import kotlin.test.*
 
-expect class KVaultTest : AbstractKeychainWrapperTest
-abstract class AbstractKeychainWrapperTest(private val keychain: KVault) {
+expect class KVaultTest : AbstractKVaultTest
+abstract class AbstractKVaultTest(private val keychain: KVault) {
     /**
      * Go to center from both sides and assume that keys are unique and values are always different.
      */
@@ -28,7 +28,7 @@ abstract class AbstractKeychainWrapperTest(private val keychain: KVault) {
         )
         testdata.values.toTypedArray().last()
         testdata.forEach {
-            keychain.set(it.value, it.key)
+            keychain.set(it.key, it.value)
             assertNotNull(keychain.string(it.key), "${it.key} should not be null")
             assertEquals(it.value, keychain.string(it.key), "${it.key} should resolve ${it.value}")
             assertNotEquals(
@@ -51,7 +51,7 @@ abstract class AbstractKeychainWrapperTest(private val keychain: KVault) {
         )
         testdata.values.toTypedArray().last()
         testdata.forEach {
-            keychain.set(it.value, it.key)
+            keychain.set(it.key, it.value)
             assertNull(keychain.string(it.key), "${it.key} should be null as it is an Int not a String")
             assertNotNull(keychain.int(it.key), "${it.key} should not be null")
             assertEquals(it.value, keychain.int(it.key), "${it.key} should resolve ${it.value}")
@@ -75,7 +75,7 @@ abstract class AbstractKeychainWrapperTest(private val keychain: KVault) {
         )
         testdata.values.toTypedArray().last()
         testdata.forEach {
-            keychain.set(it.value, it.key)
+            keychain.set(it.key, it.value)
             assertNull(keychain.string(it.key), "${it.key} should be null as it is an Int not a String")
             assertNotNull(keychain.long(it.key), "${it.key} should not be null")
             assertEquals(it.value, keychain.long(it.key), "${it.key} should resolve ${it.value}")
@@ -99,7 +99,7 @@ abstract class AbstractKeychainWrapperTest(private val keychain: KVault) {
         )
         testdata.values.toTypedArray().last()
         testdata.forEach {
-            keychain.set(it.value, it.key)
+            keychain.set(it.key, it.value)
             assertNull(keychain.string(it.key), "${it.key} should be null as it is an Int not a String")
             assertNotNull(keychain.float(it.key), "${it.key} should not be null")
             assertEquals(it.value, keychain.float(it.key), "${it.key} should resolve ${it.value}")
@@ -123,7 +123,7 @@ abstract class AbstractKeychainWrapperTest(private val keychain: KVault) {
         )
         testdata.values.toTypedArray().last()
         testdata.forEach {
-            keychain.set(it.value, it.key)
+            keychain.set(it.key, it.value)
             assertNull(keychain.string(it.key), "${it.key} should be null as it is an Int not a String")
             assertNotNull(keychain.double(it.key), "${it.key} should not be null")
             assertEquals(it.value, keychain.double(it.key), "${it.key} should resolve ${it.value}")
@@ -146,7 +146,7 @@ abstract class AbstractKeychainWrapperTest(private val keychain: KVault) {
         )
         testdata.values.toTypedArray().last()
         testdata.forEach {
-            keychain.set(it.value, it.key)
+            keychain.set(it.key, it.value)
             assertNull(keychain.string(it.key), "${it.key} should be null as it is an Int not a String")
             assertNotNull(keychain.bool(it.key), "${it.key} should not be null")
             assertEquals(it.value, keychain.bool(it.key), "${it.key} should resolve ${it.value}")
@@ -160,14 +160,14 @@ abstract class AbstractKeychainWrapperTest(private val keychain: KVault) {
     fun testExistsObject() {
         assertFalse(keychain.existsObject("blank"), "blank should not exist")
         keychain.set("123", "blank")
-        keychain.set(1, "bla")
+        keychain.set("bla", 1)
         assertTrue(keychain.existsObject("blank"), "blank should exist")
     }
 
     @Test
     fun testDeleteObject() {
         assertFalse(keychain.existsObject("blank"), "blank should not exist")
-        keychain.set("123", "blank")
+        keychain.set("blank", "123")
         assertTrue(keychain.existsObject("blank"), "blank should exist")
         keychain.deleteObject("blank")
         assertFalse(keychain.existsObject("blank"), "blank should not exist after removal")
@@ -175,9 +175,9 @@ abstract class AbstractKeychainWrapperTest(private val keychain: KVault) {
 
     @Test
     fun testOverride() {
-        keychain.set("dummyX", "keyX")
+        keychain.set("keyX", "dummyX")
         assertEquals("dummyX", keychain.string("keyX"), "")
-        keychain.set("dummyX2", "keyX")
+        keychain.set("keyX", "dummyX2")
         assertEquals("dummyX2", keychain.string("keyX"), "")
         assertNotEquals("dummyX", keychain.string("keyX"), "")
     }
@@ -186,7 +186,7 @@ abstract class AbstractKeychainWrapperTest(private val keychain: KVault) {
     fun testClear() {
         val keys = listOf("key1", "key2", "key3", "key4", "key5")
         keys.forEach {
-            keychain.set("dummy", it)
+            keychain.set(it, "dummy")
             assertTrue(keychain.existsObject(it), "$it should exist")
         }
         keychain.clear()

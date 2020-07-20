@@ -42,36 +42,36 @@ actual class KVault(
     // SET OPERATIONS
     // ===============
 
-    actual fun set(value: String, forKey: String): Boolean {
+    actual fun set(key: String, value: String): Boolean {
         @Suppress("CAST_NEVER_SUCCEEDS")
         (value as NSString).dataUsingEncoding(NSUTF8StringEncoding)?.let {
-            return set(it, forKey)
+            return set(key, it)
         } ?: run { return false }
     }
 
-    actual fun set(value: Int, forKey: String): Boolean {
+    actual fun set(key: String, value: Int): Boolean {
         val number = NSNumber.numberWithInt(value)
-        return set(NSKeyedArchiver.archivedDataWithRootObject(number), forKey)
+        return set(key, NSKeyedArchiver.archivedDataWithRootObject(number))
     }
 
-    actual fun set(value: Long, forKey: String): Boolean {
+    actual fun set(key: String, value: Long): Boolean {
         val number = NSNumber.numberWithLong(value)
-        return set(NSKeyedArchiver.archivedDataWithRootObject(number), forKey)
+        return set(key, NSKeyedArchiver.archivedDataWithRootObject(number))
     }
 
-    actual fun set(value: Float, forKey: String): Boolean {
+    actual fun set(key: String, value: Float): Boolean {
         val number = NSNumber.numberWithFloat(value)
-        return set(NSKeyedArchiver.archivedDataWithRootObject(number), forKey)
+        return set(key, NSKeyedArchiver.archivedDataWithRootObject(number))
     }
 
-    actual fun set(value: Double, forKey: String): Boolean {
+    actual fun set(key: String, value: Double): Boolean {
         val number = NSNumber.numberWithDouble(value)
-        return set(NSKeyedArchiver.archivedDataWithRootObject(number), forKey)
+        return set(key, NSKeyedArchiver.archivedDataWithRootObject(number))
     }
 
-    actual fun set(value: Boolean, forKey: String): Boolean {
+    actual fun set(key: String, value: Boolean): Boolean {
         val number = NSNumber.numberWithBool(value)
-        return set(NSKeyedArchiver.archivedDataWithRootObject(number), forKey)
+        return set(key, NSKeyedArchiver.archivedDataWithRootObject(number))
     }
 
     // ===============
@@ -188,16 +188,16 @@ actual class KVault(
     // HELPER METHODS
     // ===============
 
-    private fun set(value: NSData, forKey: String): Boolean {
+    private fun set(key: String, value: NSData): Boolean {
         val capacity = capacity(4)
         val query = CFDictionaryCreateMutable(null, capacity, null, null)
         CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
-        CFDictionaryAddValue(query, kSecAttrAccount, CFBridgingRetain(forKey))
+        CFDictionaryAddValue(query, kSecAttrAccount, CFBridgingRetain(key))
         CFDictionaryAddValue(query, kSecValueData, CFBridgingRetain(value))
         CFDictionaryAddValue(query, kSecAttrService, CFBridgingRetain(serviceName))
 
-        return if (existsObject(forKey)) {
-            update(value, forKey)
+        return if (existsObject(key)) {
+            update(value, key)
         } else {
             perform(Operation.Set, query)
         }

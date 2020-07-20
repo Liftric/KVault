@@ -3,45 +3,45 @@ package com.liftric
 expect class KVault {
     /**
      * Saves a string value in the keychain.
+     * @param key The key to query
      * @param value The value to store
-     * @param forKey The key to query
      */
-    fun set(value: String, forKey: String): Boolean
+    fun set(key: String, value: String): Boolean
 
     /**
      * Saves an int value in the keychain.
+     * @param key The key to query
      * @param value The value to store
-     * @param forKey The key to query
      */
-    fun set(value: Int, forKey: String): Boolean
+    fun set(key: String, value: Int): Boolean
 
     /**
      * Saves a long value in the keychain.
+     * @param key The key to query
      * @param value The value to store
-     * @param forKey The key to query
      */
-    fun set(value: Long, forKey: String): Boolean
+    fun set(key: String, value: Long): Boolean
 
     /**
      * Saves a float value in the keychain.
+     * @param key The key to query
      * @param value The value to store
-     * @param forKey The key to query
      */
-    fun set(value: Float, forKey: String): Boolean
+    fun set(key: String, value: Float): Boolean
 
     /**
      * Saves a double value in the keychain.
+     * @param key The key to query
      * @param value The value to store
-     * @param forKey The key to query
      */
-    fun set(value: Double, forKey: String): Boolean
+    fun set(key: String, value: Double): Boolean
 
     /**
      * Saves a boolean value in the keychain.
+     * @param key The key to query
      * @param value The value to store
-     * @param forKey The key to query
      */
-    fun set(value: Boolean, forKey: String): Boolean
+    fun set(key: String, value: Boolean): Boolean
 
     /**
      * Checks if object with key exists in the keychain.

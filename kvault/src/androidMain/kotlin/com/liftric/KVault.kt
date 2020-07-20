@@ -19,45 +19,45 @@ actual class KVault(private val context: Context) {
         )
     }
 
-    actual fun set(value: String, forKey: String): Boolean {
+    actual fun set(key: String, value: String): Boolean {
         return encSharedPrefs
             .edit()
-            .putString(forKey, value)
+            .putString(key, value)
             .commit()
     }
 
-    actual fun set(value: Int, forKey: String): Boolean {
+    actual fun set(key: String, value: Int): Boolean {
         return encSharedPrefs
             .edit()
-            .putInt(forKey, value)
+            .putInt(key, value)
             .commit()
     }
 
-    actual fun set(value: Long, forKey: String): Boolean {
+    actual fun set(key: String, value: Long): Boolean {
         return encSharedPrefs
             .edit()
-            .putLong(forKey, value)
+            .putLong(key, value)
             .commit()
     }
 
-    actual fun set(value: Float, forKey: String): Boolean {
+    actual fun set(key: String, value: Float): Boolean {
         return encSharedPrefs
             .edit()
-            .putFloat(forKey, value)
+            .putFloat(key, value)
             .commit()
     }
 
-    actual fun set(value: Double, forKey: String): Boolean {
+    actual fun set(key: String, value: Double): Boolean {
         return encSharedPrefs
             .edit()
-            .putLong(forKey, value.toRawBits())
+            .putLong(key, value.toRawBits())
             .commit()
     }
 
-    actual fun set(value: Boolean, forKey: String): Boolean {
+    actual fun set(key: String, value: Boolean): Boolean {
         return encSharedPrefs
             .edit()
-            .putBoolean(forKey, value)
+            .putBoolean(key, value)
             .commit()
     }
 
