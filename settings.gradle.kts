@@ -1,3 +1,3 @@
-include(":keychain-wrapper")
+include(":kvault")
 enableFeaturePreview("GRADLE_METADATA")
-rootProject.name = "keychain-wrapper"
+rootProject.name = "kvault"

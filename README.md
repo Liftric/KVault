@@ -1,21 +1,25 @@
-# KeychainWrapper
+# KVault
 
-iOS key-value keychain wrapper for Kotlin Multiplatform projects.
+Secure key-value store for Kotlin Multiplatform projects.
 
 ## How-to
 
 ### Instantiating
 
-You can create an instance by using the singleton method. The singleton sets the service name (Used to identify keychain entries) to your main bundle identifier. In case that it can't retrieve the identifier it will be set to `com.liftric.KeychainWrapper`. The access group (Identifier used to share keychains between apps) will be set to null.
+#### Android
 
 ```kotlin
-  val keychainWrapper = KeychainWrapper.shared()
+  val kVault = KVault(context = Context)
 ```
 
-You can also instantiate the class by yourself if you want to set a custom service name and/or access group.
+#### iOS
+
+You can create an instance by using the singleton method. The singleton sets the service name (Used to identify keychain entries) to your main bundle identifier. In case that it can't retrieve the identifier it will be set to `com.liftric.KVault`. The access group (Identifier used to share keychains between apps) will be set to null.
 
 ```kotlin
-  val keychainWrapper = KeychainWrapper(serviceName = "com.company.identifier", val accessGroup = null)
+  val kVault = KVault.shared()
+  // or
+  val kVault = KVault(serviceName = "com.company.identifier", val accessGroup = null)
 ```
 
 ### Setting
@@ -23,9 +27,9 @@ You can also instantiate the class by yourself if you want to set a custom servi
 Objects can be inserted with the correspondending set method. 
 
 ```kotlin
-  val stringStoredSuccessfully: Boolean = set(value = "546hfbfzzeujfdbfdz", forKey = "PASSWORD")
-  val intStoredSuccessfully: Boolean = set(value = 45678765, forKey = "SECRET")
-  val floatStoredSuccessfully: Boolean = set(value = 1.79, forKey = "HEIGHT")
+  val stringStoredSuccessfully: Boolean = set(key = "PASSWORD", value = "546hfbfzzeujfdbfdz")
+  val intStoredSuccessfully: Boolean = set(key = "SECRET", value = 45678765)
+  val floatStoredSuccessfully: Boolean = set(key = "HEIGHT", value = 1.79)
 ```
 
 #### Supported Types
