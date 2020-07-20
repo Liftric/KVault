@@ -1,3 +1,5 @@
+![Android CI](https://github.com/Liftric/kvault/workflows/Android%20CI/badge.svg)
+
 # KVault
 
 Secure key-value store for Kotlin Multiplatform projects.
