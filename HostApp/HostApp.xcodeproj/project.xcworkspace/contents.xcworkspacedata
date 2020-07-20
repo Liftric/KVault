@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:KryptaApp.xcodeproj">
+      location = "self:/Users/jan/Desktop/keychain-wrapper/KryptaApp/HostApp.xcodeproj">
    </FileRef>
 </Workspace>
