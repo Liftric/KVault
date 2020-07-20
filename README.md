@@ -27,9 +27,9 @@ You can create an instance by using the singleton method. The singleton sets the
 Objects can be inserted with the correspondending set method. 
 
 ```kotlin
-  val stringStoredSuccessfully: Boolean = set(value = "546hfbfzzeujfdbfdz", forKey = "PASSWORD")
-  val intStoredSuccessfully: Boolean = set(value = 45678765, forKey = "SECRET")
-  val floatStoredSuccessfully: Boolean = set(value = 1.79, forKey = "HEIGHT")
+  val stringStoredSuccessfully: Boolean = set(key = "PASSWORD", value = "546hfbfzzeujfdbfdz")
+  val intStoredSuccessfully: Boolean = set(key = "SECRET", value = 45678765)
+  val floatStoredSuccessfully: Boolean = set(key = "HEIGHT", value = 1.79)
 ```
 
 #### Supported Types
