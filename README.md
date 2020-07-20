@@ -6,16 +6,20 @@ Secure key-value store for Kotlin Multiplatform projects.
 
 ### Instantiating
 
+#### Android
+
+```kotlin
+  val kVault = KVault(context = Context)
+```
+
+#### iOS
+
 You can create an instance by using the singleton method. The singleton sets the service name (Used to identify keychain entries) to your main bundle identifier. In case that it can't retrieve the identifier it will be set to `com.liftric.KVault`. The access group (Identifier used to share keychains between apps) will be set to null.
 
 ```kotlin
-  val keychainWrapper = KeychainWrapper.shared()
-```
-
-You can also instantiate the class by yourself if you want to set a custom service name and/or access group.
-
-```kotlin
-  val keychainWrapper = KeychainWrapper(serviceName = "com.company.identifier", val accessGroup = null)
+  val kVault = KVault.shared()
+  // or
+  val kVault = KVault(serviceName = "com.company.identifier", val accessGroup = null)
 ```
 
 ### Setting
