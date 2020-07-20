@@ -1,6 +1,6 @@
 package com.liftric
 
-expect class KeychainWrapper {
+expect class KVault {
     /**
      * Saves a string value in the keychain.
      * @param value The value to store

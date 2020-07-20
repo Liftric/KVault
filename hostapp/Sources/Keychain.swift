@@ -7,14 +7,14 @@
 //
 
 import Foundation
-import keychain_wrapper
+import kvault
 
-public struct Keeper {
+public struct Keychain {
     
-    // MARK: - Keeper
+    // MARK: - KVault
 
-    public static var store: KeychainWrapper {
+    public static var store: KVault {
         let identifier = "com.liftric.Keeper"
-        return KeychainWrapper(serviceName: identifier, accessGroup: nil)
+        return KVault(serviceName: identifier, accessGroup: nil)
     }
 }

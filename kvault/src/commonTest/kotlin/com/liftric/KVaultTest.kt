@@ -2,8 +2,8 @@ package com.liftric
 
 import kotlin.test.*
 
-expect class KeychainWrapperTest : AbstractKeychainWrapperTest
-abstract class AbstractKeychainWrapperTest(private val keychain: KeychainWrapper) {
+expect class KVaultTest : AbstractKeychainWrapperTest
+abstract class AbstractKeychainWrapperTest(private val keychain: KVault) {
     /**
      * Go to center from both sides and assume that keys are unique and values are always different.
      */

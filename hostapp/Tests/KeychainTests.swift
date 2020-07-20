@@ -13,7 +13,7 @@ class KeychainTests: XCTestCase {
     
     // MARK: - KeychainTests
     
-    var sut = Keeper.store
+    var sut = Keychain.store
     
     private func funnelAssertion<T: Equatable>(keys: [String], value: (String) -> T?) {
         let odd = keys.count % 2 > 0

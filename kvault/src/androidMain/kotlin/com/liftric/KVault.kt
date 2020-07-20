@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 
-actual class KeychainWrapper(private val context: Context) {
+actual class KVault(private val context: Context) {
     private val encSharedPrefs: SharedPreferences
 
     init {

@@ -6,7 +6,7 @@ import platform.Foundation.*
 import platform.Security.*
 import platform.darwin.noErr
 
-actual class KeychainWrapper(
+actual class KVault(
     /**
      * Identifies keychain entries
      */
@@ -22,8 +22,8 @@ actual class KeychainWrapper(
     var printsDebugOutput = true
 
     companion object {
-        fun shared(): KeychainWrapper {
-            return KeychainWrapper(
+        fun shared(): KVault {
+            return KVault(
                 serviceName = defaultServiceName(),
                 accessGroup = null
             )
