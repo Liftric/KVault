@@ -4,6 +4,6 @@ import platform.Security.*
 import platform.Foundation.*
 
 object Constants {
-    const val CommonIdentifier = "com.liftric.KeychainWrapper"
+    const val DefaultIdentifier = "com.liftric.KVault"
     val BundleIdentifier = NSBundle.mainBundle.bundleIdentifier
 }

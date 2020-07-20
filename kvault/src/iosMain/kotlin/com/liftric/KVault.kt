@@ -33,7 +33,7 @@ actual class KVault(
             Constants.BundleIdentifier?.let {
                 return it
             } ?: run {
-                return Constants.CommonIdentifier
+                return Constants.DefaultIdentifier
             }
         }
     }
