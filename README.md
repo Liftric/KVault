@@ -1,12 +1,12 @@
-# KeychainWrapper
+# KVault
 
-iOS key-value keychain wrapper for Kotlin Multiplatform projects.
+Secure key-value store for Kotlin Multiplatform projects.
 
 ## How-to
 
 ### Instantiating
 
-You can create an instance by using the singleton method. The singleton sets the service name (Used to identify keychain entries) to your main bundle identifier. In case that it can't retrieve the identifier it will be set to `com.liftric.KeychainWrapper`. The access group (Identifier used to share keychains between apps) will be set to null.
+You can create an instance by using the singleton method. The singleton sets the service name (Used to identify keychain entries) to your main bundle identifier. In case that it can't retrieve the identifier it will be set to `com.liftric.KVault`. The access group (Identifier used to share keychains between apps) will be set to null.
 
 ```kotlin
   val keychainWrapper = KeychainWrapper.shared()
