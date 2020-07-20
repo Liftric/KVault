@@ -2,7 +2,7 @@ package com.liftric
 
 import kotlin.test.*
 
-expect class KVaultTest : AbstractKVaultTest
+expect class KVaultTest: AbstractKVaultTest
 abstract class AbstractKVaultTest(private val keychain: KVault) {
     /**
      * Go to center from both sides and assume that keys are unique and values are always different.
@@ -159,7 +159,7 @@ abstract class AbstractKVaultTest(private val keychain: KVault) {
     @Test
     fun testExistsObject() {
         assertFalse(keychain.existsObject("blank"), "blank should not exist")
-        keychain.set("123", "blank")
+        keychain.set("blank", "123")
         keychain.set("bla", 1)
         assertTrue(keychain.existsObject("blank"), "blank should exist")
     }
@@ -194,4 +194,6 @@ abstract class AbstractKVaultTest(private val keychain: KVault) {
             assertFalse(keychain.existsObject(it), "$it should not exist after clear")
         }
     }
+
+
 }

@@ -1,5 +1,3 @@
-import groovy.util.Node
-
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
