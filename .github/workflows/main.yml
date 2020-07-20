@@ -1,0 +1,18 @@
+name: iOS CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: macOS-latest
+    strategy:
+        matrix:
+          destination: ['platform=iOS Simulator,OS=13.6,name=iPhone 11']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Build and test
+        run: |
+          xcodebuild clean test -project HostApp/HostApp.xcodeproj -scheme HostApp -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
+        env: 
+         destination: ${{ matrix.destination }}
