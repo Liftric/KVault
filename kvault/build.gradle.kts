@@ -1,11 +1,12 @@
+import java.util.Date
+import com.jfrog.bintray.gradle.tasks.BintrayUploadTask
+
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
     id("maven-publish")
+    id("com.jfrog.bintray") version "1.8.5"
 }
-
-group = "com.liftric"
-version = "1.0"
 
 kotlin {
     val buildForDevice = project.findProperty("device") as? Boolean ?: false
@@ -18,7 +19,9 @@ kotlin {
         }
     }
 
-    android()
+    android {
+        publishLibraryVariants("release")
+    }
 
     sourceSets {
         val commonMain by getting {
@@ -76,4 +79,48 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+}
+
+val artifactName = "KVault"
+val artifactGroup = "com.liftric"
+val artifactVersion = "1.0"
+
+group = artifactName
+version = artifactVersion
+
+bintray {
+    user = System.getenv("BINTRAY_USER")
+    key = System.getenv("BINTRAY_PASSWORD")
+    publish = true
+    override = true
+
+    pkg.apply {
+        repo = "liftric"
+        name = artifactName
+        userOrg = "liftric"
+        vcsUrl = "https://github.com/Liftric/kvault"
+        description = "Secure key-value store for Kotlin Multiplatform projects"
+        setLabels("kotlin-multiplatform", "liftric", "kotlin-native", "keychain", "sharedpreferences", "key-value-store")
+        setLicenses("MIT")
+        desc = description
+        websiteUrl = "https://github.com/Liftric/kvault"
+        issueTrackerUrl = "https://github.com/Liftric/kvault/issues"
+
+        version.apply {
+            name = artifactVersion
+            vcsTag = artifactVersion
+            released = Date().toString()
+        }
+    }
+}
+
+tasks.withType<BintrayUploadTask> {
+    doFirst {
+        val pubs = project.publishing.publications.map { it.name }.filter { it != "kotlinMultiplatform" }
+        setPublications(*pubs.toTypedArray())
+    }
+}
+
+tasks.withType<BintrayUploadTask> {
+    dependsOn("publishToMavenLocal")
 }
