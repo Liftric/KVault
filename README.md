@@ -1,4 +1,4 @@
-![Android CI](https://github.com/Liftric/kvault/workflows/Android%20CI/badge.svg)
+![CI](https://github.com/Liftric/kvault/workflows/CI/badge.svg)
 
 # KVault
 
