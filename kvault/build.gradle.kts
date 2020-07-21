@@ -89,8 +89,8 @@ group = artifactGroup
 version = artifactVersion
 
 bintray {
-    user = System.getenv("BINTRAY_USER")
-    key = System.getenv("BINTRAY_PASSWORD")
+    user = System.getenv("bintrayUser")
+    key = System.getenv("bintrayApiKey")
     publish = true
     override = true
 
