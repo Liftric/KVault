@@ -1,4 +1,5 @@
 import java.util.Date
+import com.jfrog.bintray.gradle.tasks.BintrayUploadTask
 
 plugins {
     kotlin("multiplatform")
@@ -16,8 +17,8 @@ val pomScmUrl = "https://github.com/Liftric/kvault"
 val pomIssueUrl = "https://github.com/Liftric/kvault/issues"
 val pomDesc = "Secure key-value store for Kotlin Multiplatform projects"
 
-val githubRepo = "Liftric/kvault"
-val githubReadme = "README.md"
+val githubRepo = "https://github.com/Liftric/kvault"
+val githubReadme = "https://github.com/Liftric/kvault/blob/master/README.md"
 
 val pomLicenseName = "MIT"
 val pomLicenseUrl = "https://github.com/Liftric/kvault/blob/LICENSE"
@@ -40,7 +41,9 @@ kotlin {
         }
     }
 
-    android()
+    android {
+        publishLibraryVariants("release")
+    }
 
     sourceSets {
         val commonMain by getting {
@@ -85,24 +88,9 @@ kotlin {
     }
 }
 
-android {
-    compileSdkVersion(29)
-
-    defaultConfig {
-        minSdkVersion(21)
-        targetSdkVersion(29)
-        testInstrumentationRunner = "org.robolectric.RobolectricTestRunner"
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-}
-
 publishing {
     publications {
-        create<MavenPublication>("kvault") {
+        create<MavenPublication>("liftric") {
             groupId = artifactGroup
             artifactId = artifactName.toLowerCase()
             version = artifactVersion
@@ -134,18 +122,31 @@ publishing {
     }
 }
 
-bintray {
-    user = project.findProperty("BINTRAY_USER").toString()
-    key = project.findProperty("BINTRAY_PASSWORD").toString()
-    publish = false
+android {
+    compileSdkVersion(29)
 
-    setPublications("liftric")
+    defaultConfig {
+        minSdkVersion(21)
+        targetSdkVersion(29)
+        testInstrumentationRunner = "org.robolectric.RobolectricTestRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+}
+
+bintray {
+    user = System.getenv("BINTRAY_USER")
+    key = System.getenv("BINTRAY_PASSWORD")
+    publish = false
+    override = true
 
     pkg.apply {
-        repo = "maven"
+        repo = "liftric"
         name = artifactName
         userOrg = pomDeveloperId
-        githubRepo = githubRepo
         vcsUrl = pomScmUrl
         description = pomDesc
         setLabels("kotlin-multiplatform", "liftric", "kotlin-native", "keychain", "sharedpreferences", "key-value-store")
@@ -153,7 +154,6 @@ bintray {
         desc = description
         websiteUrl = pomUrl
         issueTrackerUrl = pomIssueUrl
-        githubReleaseNotesFile = githubReadme
 
         version.apply {
             name = artifactVersion
@@ -162,4 +162,8 @@ bintray {
             vcsTag = artifactVersion
         }
     }
+}
+
+tasks.withType<BintrayUploadTask> {
+    dependsOn("publishToMavenLocal")
 }
