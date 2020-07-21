@@ -2,7 +2,37 @@
 
 # KVault
 
-Secure key-value store for Kotlin Multiplatform projects.
+KVault is a secure key-value store for Kotlin Multiplatform projects. It acts as a iOS Keychain wrapper and implements encrypted SharedPreferences for Android.
+
+## Import
+
+```kotlin
+repositories {
+    maven {  url = uri("https://dl.bintray.com/liftric/maven/") }
+}
+```
+
+Then, simply add the dependencies to your sourceSets.
+
+```kotlin
+sourceSets {
+    commonMain {
+        dependencies {
+            implementation("com.liftric.kvault:1.0"  )   
+        }
+    }
+    androidMain {
+        dependencies {
+            implementation("com.liftric.kvault:android:1.0")
+        }
+    }
+    iosMain {
+        dependencies {
+            implementation("com.liftric.kvault:ios:1.0")
+        }
+    }
+}
+```
 
 ## How-to
 

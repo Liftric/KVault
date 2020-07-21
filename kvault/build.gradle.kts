@@ -85,7 +85,7 @@ val artifactName = "KVault"
 val artifactGroup = "com.liftric"
 val artifactVersion = "1.0"
 
-group = artifactName
+group = artifactGroup
 version = artifactVersion
 
 bintray {
@@ -110,6 +110,19 @@ bintray {
             name = artifactVersion
             vcsTag = artifactVersion
             released = Date().toString()
+        }
+    }
+}
+
+afterEvaluate {
+    project.publishing.publications.withType(MavenPublication::class.java).forEach {
+        it.groupId = artifactGroup
+        if (it.name.contains("metadata")) {
+            it.artifactId = artifactName.toLowerCase()
+        } else if (it.name.contains("android")) {
+            it.artifactId = "${artifactName.toLowerCase()}-android"
+        } else {
+            it.artifactId = "${artifactName.toLowerCase()}-${it.name}"
         }
     }
 }
