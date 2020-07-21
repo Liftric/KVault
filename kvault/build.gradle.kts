@@ -8,26 +8,6 @@ plugins {
     id("com.jfrog.bintray") version "1.8.5"
 }
 
-val artifactName = "KVault"
-val artifactGroup = "com.liftric"
-val artifactVersion = "1.0"
-
-val repoUrl = "https://github.com/Liftric/kvault"
-val issueUrl = "https://github.com/Liftric/kvault/issues"
-val desc = "Secure key-value store for Kotlin Multiplatform projects"
-
-val githubRepo = "https://github.com/Liftric/kvault"
-val githubReadme = "https://github.com/Liftric/kvault/blob/master/README.md"
-
-val licenseName = "MIT"
-val licenseUrl = "https://github.com/Liftric/kvault/blob/LICENSE"
-val licenseDist = "repo"
-
-val developerId = "liftric"
-
-group = artifactName
-version = artifactVersion
-
 kotlin {
     val buildForDevice = project.findProperty("device") as? Boolean ?: false
     val iosTarget = if (buildForDevice) iosArm64("ios") else iosX64("ios")
@@ -101,6 +81,12 @@ android {
     }
 }
 
+val artifactName = "KVault"
+val artifactGroup = "com.liftric"
+val artifactVersion = "1.0"
+
+group = artifactName
+version = artifactVersion
 
 bintray {
     user = System.getenv("BINTRAY_USER")
@@ -111,14 +97,14 @@ bintray {
     pkg.apply {
         repo = "liftric"
         name = artifactName
-        userOrg = developerId
-        vcsUrl = repoUrl
-        description = desc
+        userOrg = "liftric"
+        vcsUrl = "https://github.com/Liftric/kvault"
+        description = "Secure key-value store for Kotlin Multiplatform projects"
         setLabels("kotlin-multiplatform", "liftric", "kotlin-native", "keychain", "sharedpreferences", "key-value-store")
-        setLicenses(licenseName)
+        setLicenses("MIT")
         desc = description
-        websiteUrl = repoUrl
-        issueTrackerUrl = issueUrl
+        websiteUrl = "https://github.com/Liftric/kvault"
+        issueTrackerUrl = "https://github.com/Liftric/kvault/issues"
 
         version.apply {
             name = artifactVersion
