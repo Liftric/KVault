@@ -16,19 +16,19 @@ Then, simply add the dependencies to your sourceSets.
 
 ```kotlin
 sourceSets {
-    commonMain {
+    val commonMain by getting {
         dependencies {
             implementation("com.liftric:kvault:1.0"  )   
         }
     }
-    androidMain {
+    val androidMain by getting {
         dependencies {
-            implementation("com.liftric:kvault-android:1.0")
+             implementation("com.liftric:kvault-android:1.0"  )   
         }
     }
-    iosMain {
+    val iosMain by getting {
         dependencies {
-            implementation("com.liftric:kvault-ios:1.0")
+            implementation("com.liftric:kvault-ios:1.0"  )   
         }
     }
 }
