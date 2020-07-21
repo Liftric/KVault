@@ -13,8 +13,8 @@ jobs:
         with:
           java-version: 1.8
       - name: Build with Gradle
-        run: ./gradlew build
-      - name: Build and test
+        run: ./gradlew build -x iosTest -x testDebugUnitTest -x testReleaseUnitTest
+      - name: Build and test iOS project
         run: |
           cd hostapp
           sudo xcode-select -switch /Applications/Xcode_11.6_beta.app
