@@ -1,4 +1,4 @@
-![CI](https://github.com/Liftric/kvault/workflows/CI/badge.svg)
+![CI](https://github.com/Liftric/kvault/workflows/CI/badge.svg) ![Published](https://github.com/Liftric/kvault/workflows/Publish%20to%20Bintray/badge.svg)
 
 # KVault
 
