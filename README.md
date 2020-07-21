@@ -8,7 +8,7 @@ KVault is a secure key-value store for Kotlin Multiplatform projects. It acts as
 
 ```kotlin
 repositories {
-    maven {  url = uri("https://dl.bintray.com/liftric/maven/") }
+    maven { url = uri("https://dl.bintray.com/liftric/maven/") }
 }
 ```
 
