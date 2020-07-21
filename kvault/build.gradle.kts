@@ -5,30 +5,28 @@ plugins {
     kotlin("multiplatform")
     id("com.android.library")
     id("maven-publish")
-    id("com.jfrog.bintray") version "1.8.4"
+    id("com.jfrog.bintray") version "1.8.5"
 }
 
 val artifactName = "KVault"
-val artifactGroup = project.group.toString()
-val artifactVersion = project.version.toString()
+val artifactGroup = "com.liftric"
+val artifactVersion = "1.0"
 
-val pomUrl = "https://github.com/Liftric/kvault"
-val pomScmUrl = "https://github.com/Liftric/kvault"
-val pomIssueUrl = "https://github.com/Liftric/kvault/issues"
-val pomDesc = "Secure key-value store for Kotlin Multiplatform projects"
+val repoUrl = "https://github.com/Liftric/kvault"
+val issueUrl = "https://github.com/Liftric/kvault/issues"
+val desc = "Secure key-value store for Kotlin Multiplatform projects"
 
 val githubRepo = "https://github.com/Liftric/kvault"
 val githubReadme = "https://github.com/Liftric/kvault/blob/master/README.md"
 
-val pomLicenseName = "MIT"
-val pomLicenseUrl = "https://github.com/Liftric/kvault/blob/LICENSE"
-val pomLicenseDist = "repo"
+val licenseName = "MIT"
+val licenseUrl = "https://github.com/Liftric/kvault/blob/LICENSE"
+val licenseDist = "repo"
 
-val pomDeveloperId = "liftric"
-val pomDeveloperName = "Liftric"
+val developerId = "liftric"
 
-group = "com.liftric"
-version = "1.0"
+group = artifactName
+version = artifactVersion
 
 kotlin {
     val buildForDevice = project.findProperty("device") as? Boolean ?: false
@@ -88,40 +86,6 @@ kotlin {
     }
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("liftric") {
-            groupId = artifactGroup
-            artifactId = artifactName.toLowerCase()
-            version = artifactVersion
-
-            pom {
-                name.set(rootProject.name)
-                description.set(pomDesc)
-                url.set(pomUrl)
-
-                licenses {
-                    license {
-                        name.set(pomLicenseName)
-                        url.set(pomLicenseUrl)
-                    }
-                }
-                developers {
-                    developer {
-                        name.set(pomDeveloperName)
-                        id.set(pomDeveloperId)
-                    }
-                }
-                scm {
-                    connection.set(pomScmUrl)
-                    developerConnection.set(pomScmUrl)
-                    url.set(pomUrl)
-                }
-            }
-        }
-    }
-}
-
 android {
     compileSdkVersion(29)
 
@@ -137,30 +101,37 @@ android {
     }
 }
 
+
 bintray {
     user = System.getenv("BINTRAY_USER")
     key = System.getenv("BINTRAY_PASSWORD")
-    publish = false
+    publish = true
     override = true
 
     pkg.apply {
         repo = "liftric"
         name = artifactName
-        userOrg = pomDeveloperId
-        vcsUrl = pomScmUrl
-        description = pomDesc
+        userOrg = developerId
+        vcsUrl = repoUrl
+        description = desc
         setLabels("kotlin-multiplatform", "liftric", "kotlin-native", "keychain", "sharedpreferences", "key-value-store")
-        setLicenses(pomLicenseName)
+        setLicenses(licenseName)
         desc = description
-        websiteUrl = pomUrl
-        issueTrackerUrl = pomIssueUrl
+        websiteUrl = repoUrl
+        issueTrackerUrl = issueUrl
 
         version.apply {
             name = artifactVersion
-            desc = description
-            released = Date().toString()
             vcsTag = artifactVersion
+            released = Date().toString()
         }
+    }
+}
+
+tasks.withType<BintrayUploadTask> {
+    doFirst {
+        val pubs = project.publishing.publications.map { it.name }.filter { it != "kotlinMultiplatform" }
+        setPublications(*pubs.toTypedArray())
     }
 }
 
