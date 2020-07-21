@@ -18,17 +18,17 @@ Then, simply add the dependencies to your sourceSets.
 sourceSets {
     commonMain {
         dependencies {
-            implementation("com.liftric.kvault:1.0"  )   
+            implementation("com.liftric:kvault:1.0"  )   
         }
     }
     androidMain {
         dependencies {
-            implementation("com.liftric.kvault:android:1.0")
+            implementation("com.liftric:kvault-android:1.0")
         }
     }
     iosMain {
         dependencies {
-            implementation("com.liftric.kvault:ios:1.0")
+            implementation("com.liftric:kvault-ios:1.0")
         }
     }
 }
