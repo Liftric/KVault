@@ -95,7 +95,7 @@ bintray {
     override = true
 
     pkg.apply {
-        repo = "liftric"
+        repo = "maven"
         name = artifactName
         userOrg = "liftric"
         vcsUrl = "https://github.com/Liftric/kvault"
