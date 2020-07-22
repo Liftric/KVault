@@ -6,7 +6,7 @@ plugins {
     id("com.android.library")
     id("maven-publish")
     id("com.jfrog.bintray") version "1.8.5"
-    id("net.nemerosa.versioning") version "2.12.0"
+    id("net.nemerosa.versioning") version "2.14.0"
 }
 
 kotlin {
