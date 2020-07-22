@@ -18,17 +18,17 @@ Then, simply add the dependencies to your sourceSets:
 sourceSets {
     val commonMain by getting {
         dependencies {
-            implementation("com.liftric:kvault-common:1.0")   
+            implementation("com.liftric:kvault-common:1.0.0")   
         }
     }
     val androidMain by getting {
         dependencies {
-             implementation("com.liftric:kvault-android:1.0")   
+             implementation("com.liftric:kvault-android:1.0.0")   
         }
     }
     val iosMain by getting {
         dependencies {
-            implementation("com.liftric:kvault-ios:1.0")   
+            implementation("com.liftric:kvault-ios:1.0.0")   
         }
     }
 }
