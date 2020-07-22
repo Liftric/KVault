@@ -15,6 +15,8 @@ jobs:
           java-version: 1.8
       - name: Grant Permission to Execute
         run: chmod +x gradlew
+      - name: Bump version
+        run: ./gradlew versionDisplay
       - name: Publish Library
         env:
           bintrayUser: ${{ secrets.BINTRAY_USER }}
