@@ -20,7 +20,7 @@ jobs:
           java-version: 1.8
       - name: Build kvault and test kvault (Android)
         run: ./gradlew build test -x iosTest
-      - name: Build hostapp and test kvault (iOS)
+      - name: Build testapp and test kvault (iOS)
         run: |
           cd iostests
           sudo xcode-select -switch /Applications/Xcode_11.5.app
