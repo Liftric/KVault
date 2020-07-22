@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "522F5D6B24C0A04B00F0974A"
-               BuildableName = "HostApp.app"
-               BlueprintName = "HostApp"
-               ReferencedContainer = "container:HostApp.xcodeproj">
+               BuildableName = "TestApp.app"
+               BlueprintName = "TestApp"
+               ReferencedContainer = "container:TestApp.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,7 +35,7 @@
                BlueprintIdentifier = "522F5D8124C0A04D00F0974A"
                BuildableName = "Tests.xctest"
                BlueprintName = "Tests"
-               ReferencedContainer = "container:HostApp.xcodeproj">
+               ReferencedContainer = "container:TestApp.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "522F5D6B24C0A04B00F0974A"
-            BuildableName = "HostApp.app"
-            BlueprintName = "HostApp"
-            ReferencedContainer = "container:HostApp.xcodeproj">
+            BuildableName = "TestApp.app"
+            BlueprintName = "TestApp"
+            ReferencedContainer = "container:TestApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "522F5D6B24C0A04B00F0974A"
-            BuildableName = "HostApp.app"
-            BlueprintName = "HostApp"
-            ReferencedContainer = "container:HostApp.xcodeproj">
+            BuildableName = "TestApp.app"
+            BlueprintName = "TestApp"
+            ReferencedContainer = "container:TestApp.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -1,13 +1,13 @@
 //
-//  KryptaAppTests.swift
-//  KryptaAppTests
+//  Tests.swift
+//  TestApp
 //
 //  Created by Ben John on 16.07.20.
 //  Copyright © 2020 Liftric GmbH. All rights reserved.
 //
 
 import XCTest
-@testable import HostApp
+@testable import TestApp
 
 class KeychainTests: XCTestCase {
     

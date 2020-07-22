@@ -45,7 +45,7 @@
 
 /* Begin PBXFileReference section */
 		3D37545324C5BAD800C708E3 /* kvault.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = kvault.framework; path = ../kvault/build/bin/ios/debugFramework/kvault.framework; sourceTree = "<group>"; };
-		522F5D6C24C0A04B00F0974A /* HostApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HostApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		522F5D6C24C0A04B00F0974A /* TestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		522F5D6F24C0A04B00F0974A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		522F5D7124C0A04B00F0974A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		522F5D7324C0A04B00F0974A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -92,7 +92,7 @@
 		522F5D6D24C0A04B00F0974A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				522F5D6C24C0A04B00F0974A /* HostApp.app */,
+				522F5D6C24C0A04B00F0974A /* TestApp.app */,
 				522F5D8224C0A04D00F0974A /* Tests.xctest */,
 			);
 			name = Products;
@@ -142,9 +142,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		522F5D6B24C0A04B00F0974A /* HostApp */ = {
+		522F5D6B24C0A04B00F0974A /* TestApp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 522F5D8B24C0A04E00F0974A /* Build configuration list for PBXNativeTarget "HostApp" */;
+			buildConfigurationList = 522F5D8B24C0A04E00F0974A /* Build configuration list for PBXNativeTarget "TestApp" */;
 			buildPhases = (
 				522F5D6824C0A04B00F0974A /* Sources */,
 				522F5D6924C0A04B00F0974A /* Frameworks */,
@@ -155,9 +155,9 @@
 			);
 			dependencies = (
 			);
-			name = HostApp;
+			name = TestApp;
 			productName = KryptaApp;
-			productReference = 522F5D6C24C0A04B00F0974A /* HostApp.app */;
+			productReference = 522F5D6C24C0A04B00F0974A /* TestApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 		522F5D8124C0A04D00F0974A /* Tests */ = {
@@ -197,7 +197,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 522F5D6724C0A04B00F0974A /* Build configuration list for PBXProject "HostApp" */;
+			buildConfigurationList = 522F5D6724C0A04B00F0974A /* Build configuration list for PBXProject "TestApp" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -210,7 +210,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				522F5D6B24C0A04B00F0974A /* HostApp */,
+				522F5D6B24C0A04B00F0974A /* TestApp */,
 				522F5D8124C0A04D00F0974A /* Tests */,
 			);
 		};
@@ -261,7 +261,7 @@
 /* Begin PBXTargetDependency section */
 		522F5D8424C0A04D00F0974A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 522F5D6B24C0A04B00F0974A /* HostApp */;
+			target = 522F5D6B24C0A04B00F0974A /* TestApp */;
 			targetProxy = 522F5D8324C0A04D00F0974A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -403,6 +403,7 @@
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../**";
 				INFOPLIST_FILE = Sources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -425,6 +426,7 @@
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../**";
 				INFOPLIST_FILE = Sources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -443,17 +445,17 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = Tests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.liftric.HostAppTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.liftric.TestAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HostApp.app/HostApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TestApp.app/TestApp";
 			};
 			name = Debug;
 		};
@@ -464,24 +466,24 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = Tests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.liftric.HostAppTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.liftric.TestAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HostApp.app/HostApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TestApp.app/TestApp";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		522F5D6724C0A04B00F0974A /* Build configuration list for PBXProject "HostApp" */ = {
+		522F5D6724C0A04B00F0974A /* Build configuration list for PBXProject "TestApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				522F5D8924C0A04D00F0974A /* Debug */,
@@ -490,7 +492,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		522F5D8B24C0A04E00F0974A /* Build configuration list for PBXNativeTarget "HostApp" */ = {
+		522F5D8B24C0A04E00F0974A /* Build configuration list for PBXNativeTarget "TestApp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				522F5D8C24C0A04E00F0974A /* Debug */,

@@ -22,9 +22,9 @@ jobs:
         run: ./gradlew build test -x iosTest
       - name: Build hostapp and test kvault (iOS)
         run: |
-          cd hostapp
-          sudo xcode-select -switch /Applications/Xcode_11.6_beta.app
-          xcodebuild clean test -project HostApp.xcodeproj -scheme HostApp -destination "platform=iOS Simulator,OS=13.6,name=iPhone 11 Pro" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
+          cd iostests
+          sudo xcode-select -switch /Applications/Xcode_11.5.app
+          xcodebuild clean test -project TestApp.xcodeproj -scheme TestApp -destination "platform=iOS Simulator,OS=13.5,name=iPhone 11 Pro" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
       - name: Upload test result
         uses: actions/upload-artifact@v2
         with:
