@@ -2,7 +2,7 @@
 
 # KVault
 
-KVault is a secure key-value store for Kotlin Multiplatform projects. It acts as a iOS Keychain wrapper and implements encrypted SharedPreferences for Android.
+KVault is a secure key-value storage for Kotlin Multiplatform projects. It acts as an iOS Keychain wrapper and implements encrypted SharedPreferences for Android.
 
 ## Import
 
@@ -12,13 +12,13 @@ repositories {
 }
 ```
 
-Then, simply add the dependencies to your sourceSets.
+Then, simply add the dependencies to your sourceSets:
 
 ```kotlin
 sourceSets {
     val commonMain by getting {
         dependencies {
-            implementation("com.liftric:kvault:1.0")   
+            implementation("com.liftric:kvault-common:1.0")   
         }
     }
     val androidMain by getting {
@@ -99,3 +99,7 @@ Either a single object or all at once can be deleted.
 ```kotlin
   clear() // Removes all objects that are linked to the service name
 ```
+
+## License
+
+KVault is available under the MIT license. See the LICENSE file for more info.
