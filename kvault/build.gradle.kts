@@ -83,7 +83,7 @@ android {
 
 val artifactName = "KVault"
 val artifactGroup = "com.liftric"
-val artifactVersion = "1.0"
+val artifactVersion = "1.0.0"
 
 group = artifactGroup
 version = artifactVersion
