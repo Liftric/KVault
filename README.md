@@ -1,4 +1,4 @@
-![CI](https://github.com/Liftric/kvault/workflows/CI/badge.svg) ![Published](https://github.com/Liftric/kvault/workflows/Publish%20to%20Bintray/badge.svg)
+![CI](https://github.com/Liftric/kvault/workflows/CI/badge.svg) ![Published](https://github.com/Liftric/kvault/workflows/Publish%20to%20Bintray/badge.svg) ![Version](https://img.shields.io/github/v/release/liftric/kvault?label=version)
 
 # KVault
 
@@ -18,17 +18,17 @@ Then, simply add the dependencies to your sourceSets:
 sourceSets {
     val commonMain by getting {
         dependencies {
-            implementation("com.liftric:kvault-common:1.0.0")   
+            implementation("com.liftric:kvault-common:<version>")   
         }
     }
     val androidMain by getting {
         dependencies {
-             implementation("com.liftric:kvault-android:1.0.0")   
+             implementation("com.liftric:kvault-android:<version>")   
         }
     }
     val iosMain by getting {
         dependencies {
-            implementation("com.liftric:kvault-ios:1.0.0")   
+            implementation("com.liftric:kvault-ios:<version>")   
         }
     }
 }
