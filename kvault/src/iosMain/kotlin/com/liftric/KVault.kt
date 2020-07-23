@@ -6,36 +6,17 @@ import platform.Foundation.*
 import platform.Security.*
 import platform.darwin.noErr
 
-actual class KVault(
-    /**
-     * Identifies keychain entries
-     */
-    val serviceName: String,
-    /**
-     * Used to share keychains between apps
-     */
-    val accessGroup: String?
-) {
-
+actual class KVault() {
     private enum class Operation { Set, Get, Update, Delete }
 
     var printsDebugOutput = true
 
-    companion object {
-        fun shared(): KVault {
-            return KVault(
-                serviceName = defaultServiceName(),
-                accessGroup = null
-            )
-        }
+    private var serviceName = defaultServiceName()
+    private var accessGroup: String? = null
 
-        private fun defaultServiceName(): String {
-            Constants.BundleIdentifier?.let {
-                return it
-            } ?: run {
-                return Constants.DefaultIdentifier
-            }
-        }
+    constructor(serviceName: String, accessGroup: String? = null): this() {
+        this.serviceName = serviceName
+        this.accessGroup = accessGroup
     }
 
     // ===============
@@ -258,6 +239,14 @@ actual class KVault(
                 println("$errorMessage")
             }
             false
+        }
+    }
+
+    private fun defaultServiceName(): String {
+        Constants.BundleIdentifier?.let {
+            return it
+        } ?: run {
+            return Constants.DefaultIdentifier
         }
     }
 }

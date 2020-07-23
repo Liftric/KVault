@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  KryptaApp
+//  TestApp
 //
 //  Created by Ben John on 16.07.20.
 //  Copyright © 2020 Liftric GmbH. All rights reserved.

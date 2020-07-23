@@ -6,6 +6,7 @@ plugins {
     id("com.android.library")
     id("maven-publish")
     id("com.jfrog.bintray") version "1.8.5"
+    id("net.nemerosa.versioning") version "2.14.0"
 }
 
 kotlin {
@@ -83,7 +84,13 @@ android {
 
 val artifactName = "KVault"
 val artifactGroup = "com.liftric"
-val artifactVersion = "1.0.0"
+val artifactVersion: String = with(versioning.info) {
+    if (branch == "HEAD" && dirty.not()) {
+        tag
+    } else {
+        full
+    }
+}
 
 group = artifactGroup
 version = artifactVersion
@@ -99,7 +106,7 @@ bintray {
         name = artifactName
         userOrg = "liftric"
         vcsUrl = "https://github.com/Liftric/kvault"
-        description = "Secure key-value store for Kotlin Multiplatform projects"
+        description = "Secure key-value storage for Kotlin Multiplatform projects"
         setLabels("kotlin-multiplatform", "liftric", "kotlin-native", "keychain", "sharedpreferences", "key-value-store")
         setLicenses("MIT")
         desc = description

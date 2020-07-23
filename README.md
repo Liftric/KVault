@@ -1,4 +1,4 @@
-![CI](https://github.com/Liftric/kvault/workflows/CI/badge.svg) ![Published](https://github.com/Liftric/kvault/workflows/Publish%20to%20Bintray/badge.svg)
+![CI](https://github.com/Liftric/kvault/workflows/CI/badge.svg) ![Published](https://github.com/Liftric/kvault/workflows/Publish%20to%20Bintray/badge.svg) ![Version](https://img.shields.io/github/v/release/liftric/kvault?label=version)
 
 # KVault
 
@@ -18,17 +18,17 @@ Then, simply add the dependencies to your sourceSets:
 sourceSets {
     val commonMain by getting {
         dependencies {
-            implementation("com.liftric:kvault-common:1.0.0")   
+            implementation("com.liftric:kvault-common:<version>")   
         }
     }
     val androidMain by getting {
         dependencies {
-             implementation("com.liftric:kvault-android:1.0.0")   
+             implementation("com.liftric:kvault-android:<version>")   
         }
     }
     val iosMain by getting {
         dependencies {
-            implementation("com.liftric:kvault-ios:1.0.0")   
+            implementation("com.liftric:kvault-ios:<version>")   
         }
     }
 }
@@ -46,12 +46,12 @@ sourceSets {
 
 #### iOS
 
-You can create an instance by using the singleton method. The singleton sets the service name (Used to identify keychain entries) to your main bundle identifier. In case that it can't retrieve the identifier it will be set to `com.liftric.KVault`. The access group (Identifier used to share keychains between apps) will be set to null.
+You can create an instance by using the primary or secondary constructor. The primary constructor sets the service name (Used to identify keychain entries) to your main bundle identifier. In case that it can't retrieve the identifier it will be set to `com.liftric.KVault`. The access group (Identifier used to share keychains between apps) will be set to null.
 
 ```kotlin
-  val kVault = KVault.shared()
+  val kVault = KVault()
   // or
-  val kVault = KVault(serviceName = "com.company.identifier", val accessGroup = null)
+  val kVault = KVault(serviceName = "com.company.identifier", accessGroup = null)
 ```
 
 ### Setting
