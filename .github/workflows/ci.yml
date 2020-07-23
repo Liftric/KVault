@@ -13,7 +13,7 @@ jobs:
         with:
           java-version: 1.8
       - name: Build kvault and test kvault (Android)
-        run: ./gradlew clean build test -x iosTest
+        run: ./gradlew build test -x iosTest
       - name: Build testapp and test kvault (iOS)
         run: |
           cd iostests
