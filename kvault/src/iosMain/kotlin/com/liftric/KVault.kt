@@ -14,7 +14,7 @@ actual class KVault() {
     private var serviceName = defaultServiceName()
     private var accessGroup: String? = null
 
-    constructor(serviceName: String, accessGroup: String? = null) {
+    constructor(serviceName: String, accessGroup: String? = null): this() {
         this.serviceName = serviceName
         this.accessGroup = accessGroup
     }
