@@ -10,15 +10,7 @@ plugins {
 }
 
 kotlin {
-    val buildForDevice = project.findProperty("device") as? Boolean ?: false
-    val iosTarget = if (buildForDevice) iosArm64("ios") else iosX64("ios")
-    iosTarget.binaries {
-        framework {
-            if (!buildForDevice) {
-                embedBitcode("disable")
-            }
-        }
-    }
+    ios()
 
     android {
         publishLibraryVariants("release")
