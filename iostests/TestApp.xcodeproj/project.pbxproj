@@ -44,7 +44,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		3D37545324C5BAD800C708E3 /* kvault.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = kvault.framework; path = ../kvault/build/bin/ios/debugFramework/kvault.framework; sourceTree = "<group>"; };
+		3D37545324C5BAD800C708E3 /* kvault.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = kvault.framework; path = ../kvault/build/bin/iosX64/debugFramework/kvault.framework; sourceTree = "<group>"; };
 		522F5D6C24C0A04B00F0974A /* TestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		522F5D6F24C0A04B00F0974A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		522F5D7124C0A04B00F0974A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
