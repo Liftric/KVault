@@ -1,3 +1,3 @@
 package com.liftric
 
-actual class KVaultTest: AbstractKVaultTest(KVault.shared())
+actual class KVaultTest: AbstractKVaultTest(KVault())
