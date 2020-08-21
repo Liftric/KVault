@@ -6,8 +6,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:3.6.4")
-        classpath(kotlin("gradle-plugin", version = "1.3.72"))
+        classpath(Libs.AndroidGradleTools)
+        classpath(kotlin(Libs.GradlePlugin, version = Versions.Kotlin))
     }
 }
 
