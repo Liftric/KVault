@@ -2,11 +2,11 @@ import java.util.Date
 import com.jfrog.bintray.gradle.tasks.BintrayUploadTask
 
 plugins {
-    id("com.android.library")
-    kotlin("multiplatform")
-    id("maven-publish")
-    id("com.jfrog.bintray") version "1.8.5"
-    id("net.nemerosa.versioning") version "2.14.0"
+    id(Libs.AndroidLibrary)
+    kotlin(Libs.Multiplatform)
+    id(Libs.MavenPublish)
+    id(Libs.Bintray) version Versions.Bintray
+    id(Libs.Versioning) version Versions.Versioning
 }
 
 kotlin {
@@ -25,8 +25,8 @@ kotlin {
         }
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
+                implementation(kotlin(TestLibs.TestCommon))
+                implementation(kotlin(TestLibs.TestAnnotations))
             }
         }
         val iosMain by getting {
@@ -39,18 +39,17 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                implementation(kotlin("stdlib"))
-                implementation("androidx.security:security-crypto:1.1.0-alpha02")
+                implementation(Libs.Crypto)
             }
         }
         val androidTest by getting {
             dependencies {
-                implementation(kotlin("test"))
-                implementation(kotlin("test-junit"))
-                implementation("org.robolectric:robolectric:4.3.1") {
-                    exclude("com.google.auto.service", "auto-service")
+                implementation(kotlin(TestLibs.Test))
+                implementation(kotlin(TestLibs.TestJunit))
+                implementation(TestLibs.RoboElectrics) {
+                    exclude(Exclude.GoogleAutoService, Exclude.AutoService)
                 }
-                implementation("androidx.test:core:1.2.0")
+                implementation(TestLibs.TestCore)
             }
         }
 
@@ -61,12 +60,12 @@ kotlin {
 }
 
 android {
-    compileSdkVersion(30)
+    compileSdkVersion(Android.CompileSdk)
 
     defaultConfig {
-        minSdkVersion(21)
-        targetSdkVersion(30)
-        testInstrumentationRunner = "org.robolectric.RobolectricTestRunner"
+        minSdkVersion(Android.MinSdk)
+        targetSdkVersion(Android.TargetSdk)
+        testInstrumentationRunner = Android.TestRunner
     }
 
     compileOptions {
