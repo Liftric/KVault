@@ -1,6 +1,6 @@
 name: CI
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   test:
@@ -21,6 +21,7 @@ jobs:
           xcodebuild clean test -project TestApp.xcodeproj -scheme TestApp -destination "platform=iOS Simulator,OS=13.5,name=iPhone 11 Pro" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
       - name: Upload test result
         uses: actions/upload-artifact@v2
+        if: ${{ always() }}
         with:
           name: reports
           path: kvault/build/reports/
