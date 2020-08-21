@@ -10,7 +10,9 @@ plugins {
 }
 
 kotlin {
-    ios()
+    ios {
+        binaries.framework()
+    }
 
     android {
         publishLibraryVariants("debug", "release")
