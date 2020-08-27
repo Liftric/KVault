@@ -1,4 +1,4 @@
-package com.liftric
+package com.liftric.kvault
 
 expect class KVault {
     /**

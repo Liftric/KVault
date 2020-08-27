@@ -1,6 +1,5 @@
-package com.liftric
+package com.liftric.kvault
 
-import platform.Security.*
 import platform.Foundation.*
 
 object Constants {

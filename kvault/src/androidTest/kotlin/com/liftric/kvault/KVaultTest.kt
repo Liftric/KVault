@@ -1,4 +1,4 @@
-package com.liftric
+package com.liftric.kvault
 
 import androidx.test.core.app.ApplicationProvider
 import org.junit.runner.RunWith
