@@ -46,7 +46,7 @@ You can create an instance by using the primary or secondary constructor. The pr
 
 ### Setting
 
-Objects can be inserted with the correspondending set method. 
+Objects can be inserted with the corresponding set method. 
 
 ```kotlin
   val stringStoredSuccessfully: Boolean = set(key = "PASSWORD", value = "546hfbfzzeujfdbfdz")
