@@ -23,6 +23,11 @@ actual class KVault() {
     // SET OPERATIONS
     // ===============
 
+    /**
+     * Saves a string value in the keychain.
+     * @param key The key to store
+     * @param value The value to store
+     */
     actual fun set(key: String, value: String): Boolean {
         @Suppress("CAST_NEVER_SUCCEEDS")
         (value as NSString).dataUsingEncoding(NSUTF8StringEncoding)?.let {
@@ -30,26 +35,51 @@ actual class KVault() {
         } ?: run { return false }
     }
 
+    /**
+     * Saves an int value in the keychain.
+     * @param key The key to store
+     * @param value The value to store
+     */
     actual fun set(key: String, value: Int): Boolean {
         val number = NSNumber.numberWithInt(value)
         return set(key, NSKeyedArchiver.archivedDataWithRootObject(number))
     }
 
+    /**
+     * Saves a long value in the keychain.
+     * @param key The key to store
+     * @param value The value to store
+     */
     actual fun set(key: String, value: Long): Boolean {
         val number = NSNumber.numberWithLong(value)
         return set(key, NSKeyedArchiver.archivedDataWithRootObject(number))
     }
 
+    /**
+     * Saves a float value in the keychain.
+     * @param key The key to store
+     * @param value The value to store
+     */
     actual fun set(key: String, value: Float): Boolean {
         val number = NSNumber.numberWithFloat(value)
         return set(key, NSKeyedArchiver.archivedDataWithRootObject(number))
     }
 
+    /**
+     * Saves a double value in the keychain.
+     * @param key The key to store
+     * @param value The value to store
+     */
     actual fun set(key: String, value: Double): Boolean {
         val number = NSNumber.numberWithDouble(value)
         return set(key, NSKeyedArchiver.archivedDataWithRootObject(number))
     }
 
+    /**
+     * Saves a boolean value in the keychain.
+     * @param key The key to store
+     * @param value The value to store
+     */
     actual fun set(key: String, value: Boolean): Boolean {
         val number = NSNumber.numberWithBool(value)
         return set(key, NSKeyedArchiver.archivedDataWithRootObject(number))
@@ -59,6 +89,11 @@ actual class KVault() {
     // GET OPERATIONS
     // ===============
 
+    /**
+     * Returns the string value of an object in the keychain.
+     * @param forKey The key to query
+     * @return The stored string value, or null if it is missing
+     */
     actual fun string(forKey: String): String? {
         data(forKey)?.let { data ->
             return NSString.create(data, NSUTF8StringEncoding) as String?
@@ -67,6 +102,11 @@ actual class KVault() {
         }
     }
 
+    /**
+     * Returns the int value of an object in the keychain.
+     * @param forKey The key to query
+     * @return The stored string value, or null if it is missing
+     */
     actual fun int(forKey: String): Int? {
         data(forKey)?.let {
             val number = NSKeyedUnarchiver.unarchiveObjectWithData(it) as NSNumber
@@ -76,6 +116,11 @@ actual class KVault() {
         }
     }
 
+    /**
+     * Returns the long value of an object in the keychain.
+     * @param forKey The key to query
+     * @return The stored string value, or null if it is missing
+     */
     actual fun long(forKey: String): Long? {
         data(forKey)?.let {
             val number = NSKeyedUnarchiver.unarchiveObjectWithData(it) as NSNumber
@@ -85,6 +130,11 @@ actual class KVault() {
         }
     }
 
+    /**
+     * Returns the float value of an object in the keychain.
+     * @param forKey The key to query
+     * @return The stored string value, or null if it is missing
+     */
     actual fun float(forKey: String): Float? {
         data(forKey)?.let {
             val number = NSKeyedUnarchiver.unarchiveObjectWithData(it) as NSNumber
@@ -94,6 +144,11 @@ actual class KVault() {
         }
     }
 
+    /**
+     * Returns the double value of an object in the keychain.
+     * @param forKey The key to query
+     * @return The stored string value, or null if it is missing
+     */
     actual fun double(forKey: String): Double? {
         data(forKey)?.let {
             val number = NSKeyedUnarchiver.unarchiveObjectWithData(it) as NSNumber
@@ -103,6 +158,11 @@ actual class KVault() {
         }
     }
 
+    /**
+     * Returns the boolean value of an object in the keychain.
+     * @param forKey The key to query
+     * @return The stored string value, or null if it is missing
+     */
     actual fun bool(forKey: String): Boolean? {
         data(forKey)?.let {
             val number = NSKeyedUnarchiver.unarchiveObjectWithData(it) as NSNumber
@@ -112,6 +172,11 @@ actual class KVault() {
         }
     }
 
+    /**
+     * Checks if object with key exists in the keychain.
+     * @param forKey The key to query
+     * @return True or false, depending on wether it is in the shared preferences or not
+     */
     actual fun existsObject(forKey: String): Boolean {
         val query = CFDictionaryCreateMutable(null, capacity(4), null, null)
         CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
@@ -133,6 +198,10 @@ actual class KVault() {
     // DELETE OPERATIONS
     // ==================
 
+    /**
+     * Deletes object with the given key from the keychain.
+     * @param forKey The key to query
+     */
     actual fun deleteObject(forKey: String): Boolean {
         val query = CFDictionaryCreateMutable(null, capacity(3), null, null)
         CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
@@ -141,6 +210,9 @@ actual class KVault() {
         return perform(Operation.Delete, query)
     }
 
+    /**
+     * Deletes all objects with the service name from the keychain.
+     */
     actual fun clear() {
         val query = CFDictionaryCreateMutable(null, capacity(2), null, null)
         CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
