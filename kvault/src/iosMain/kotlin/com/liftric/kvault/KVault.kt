@@ -24,7 +24,7 @@ actual class KVault() {
     // ===============
 
     /**
-     * Saves a string value in the keychain.
+     * Saves a string value in the Keychain.
      * @param key The key to store
      * @param value The value to store
      */
@@ -36,7 +36,7 @@ actual class KVault() {
     }
 
     /**
-     * Saves an int value in the keychain.
+     * Saves an int value in the Keychain.
      * @param key The key to store
      * @param value The value to store
      */
@@ -46,7 +46,7 @@ actual class KVault() {
     }
 
     /**
-     * Saves a long value in the keychain.
+     * Saves a long value in the Keychain.
      * @param key The key to store
      * @param value The value to store
      */
@@ -56,7 +56,7 @@ actual class KVault() {
     }
 
     /**
-     * Saves a float value in the keychain.
+     * Saves a float value in the Keychain.
      * @param key The key to store
      * @param value The value to store
      */
@@ -66,7 +66,7 @@ actual class KVault() {
     }
 
     /**
-     * Saves a double value in the keychain.
+     * Saves a double value in the Keychain.
      * @param key The key to store
      * @param value The value to store
      */
@@ -76,7 +76,7 @@ actual class KVault() {
     }
 
     /**
-     * Saves a boolean value in the keychain.
+     * Saves a boolean value in the Keychain.
      * @param key The key to store
      * @param value The value to store
      */
@@ -90,7 +90,7 @@ actual class KVault() {
     // ===============
 
     /**
-     * Returns the string value of an object in the keychain.
+     * Returns the string value of an object in the Keychain.
      * @param forKey The key to query
      * @return The stored string value, or null if it is missing
      */
@@ -103,7 +103,7 @@ actual class KVault() {
     }
 
     /**
-     * Returns the int value of an object in the keychain.
+     * Returns the int value of an object in the Keychain.
      * @param forKey The key to query
      * @return The stored string value, or null if it is missing
      */
@@ -117,7 +117,7 @@ actual class KVault() {
     }
 
     /**
-     * Returns the long value of an object in the keychain.
+     * Returns the long value of an object in the Keychain.
      * @param forKey The key to query
      * @return The stored string value, or null if it is missing
      */
@@ -131,7 +131,7 @@ actual class KVault() {
     }
 
     /**
-     * Returns the float value of an object in the keychain.
+     * Returns the float value of an object in the Keychain.
      * @param forKey The key to query
      * @return The stored string value, or null if it is missing
      */
@@ -145,7 +145,7 @@ actual class KVault() {
     }
 
     /**
-     * Returns the double value of an object in the keychain.
+     * Returns the double value of an object in the Keychain.
      * @param forKey The key to query
      * @return The stored string value, or null if it is missing
      */
@@ -159,7 +159,7 @@ actual class KVault() {
     }
 
     /**
-     * Returns the boolean value of an object in the keychain.
+     * Returns the boolean value of an object in the Keychain.
      * @param forKey The key to query
      * @return The stored string value, or null if it is missing
      */
@@ -173,7 +173,7 @@ actual class KVault() {
     }
 
     /**
-     * Checks if object with key exists in the keychain.
+     * Checks if object with the given key exists in the Keychain.
      * @param forKey The key to query
      * @return True or false, depending on wether it is in the shared preferences or not
      */
@@ -199,7 +199,7 @@ actual class KVault() {
     // ==================
 
     /**
-     * Deletes object with the given key from the keychain.
+     * Deletes object with the given key from the Keychain.
      * @param forKey The key to query
      */
     actual fun deleteObject(forKey: String): Boolean {
@@ -211,7 +211,7 @@ actual class KVault() {
     }
 
     /**
-     * Deletes all objects with the service name from the keychain.
+     * Deletes all objects with the service name from the Keychain.
      */
     actual fun clear() {
         val query = CFDictionaryCreateMutable(null, capacity(2), null, null)

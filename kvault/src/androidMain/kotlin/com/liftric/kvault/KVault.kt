@@ -178,7 +178,7 @@ actual class KVault(private val context: Context) {
     }
 
     /**
-     * Deletes all objects with the service name from the shared preferences.
+     * Deletes all objects from the SharedPreferences.
      */
     actual fun clear() {
         encSharedPrefs.edit().clear().apply()
