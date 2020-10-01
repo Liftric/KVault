@@ -20,7 +20,7 @@ actual class KVault(private val context: Context) {
     }
 
     /**
-     * Saves a string value in the shared preferences.
+     * Saves a string value in the SharedPreferences.
      * @param key The key to store
      * @param value The value to store
      */
@@ -32,7 +32,7 @@ actual class KVault(private val context: Context) {
     }
 
     /**
-     * Saves an int value in the shared preferences.
+     * Saves an int value in the SharedPreferences.
      * @param key The key to store
      * @param value The value to store
      */
@@ -44,7 +44,7 @@ actual class KVault(private val context: Context) {
     }
 
     /**
-     * Saves a long value in the shared preferences.
+     * Saves a long value in the SharedPreferences.
      * @param key The key to store
      * @param value The value to store
      */
@@ -56,7 +56,7 @@ actual class KVault(private val context: Context) {
     }
 
     /**
-     * Saves a float value in the shared preferences.
+     * Saves a float value in the SharedPreferences.
      * @param key The key to store
      * @param value The value to store
      */
@@ -68,7 +68,7 @@ actual class KVault(private val context: Context) {
     }
 
     /**
-     * Saves a double value in the shared preferences.
+     * Saves a double value in the SharedPreferences.
      * @param key The key to store
      * @param value The value to store
      */
@@ -80,7 +80,7 @@ actual class KVault(private val context: Context) {
     }
 
     /**
-     * Saves a boolean value in the shared preferences.
+     * Saves a boolean value in the SharedPreferences.
      * @param key The key to store
      * @param value The value to store
      */
@@ -92,7 +92,7 @@ actual class KVault(private val context: Context) {
     }
 
     /**
-     * Checks if object with key exists in the shared preferences.
+     * Checks if object with key exists in the SharedPreferences.
      * @param forKey The key to query
      * @return True or false, depending on wether it is in the shared preferences or not
      */
@@ -101,7 +101,7 @@ actual class KVault(private val context: Context) {
     }
 
     /**
-     * Returns the string value of an object in the shared preferences.
+     * Returns the string value of an object in the SharedPreferences.
      * @param forKey The key to query
      * @return The stored string value, or null if it is missing
      */
@@ -110,7 +110,7 @@ actual class KVault(private val context: Context) {
     }
 
     /**
-     * Returns the int value of an object in the shared preferences.
+     * Returns the int value of an object in the SharedPreferences.
      * @param forKey The key to query
      * @return The stored string value, or null if it is missing
      */
@@ -122,7 +122,7 @@ actual class KVault(private val context: Context) {
     }
 
     /**
-     * Returns the long value of an object in the shared preferences.
+     * Returns the long value of an object in the SharedPreferences.
      * @param forKey The key to query
      * @return The stored string value, or null if it is missing
      */
@@ -134,7 +134,7 @@ actual class KVault(private val context: Context) {
     }
 
     /**
-     * Returns the float value of an object in the shared preferences.
+     * Returns the float value of an object in the SharedPreferences.
      * @param forKey The key to query
      * @return The stored string value, or null if it is missing
      */
@@ -146,7 +146,7 @@ actual class KVault(private val context: Context) {
     }
 
     /**
-     * Returns the double value of an object in the shared preferences.
+     * Returns the double value of an object in the SharedPreferences.
      * @param forKey The key to query
      * @return The stored string value, or null if it is missing
      */
@@ -158,7 +158,7 @@ actual class KVault(private val context: Context) {
     }
 
     /**
-     * Returns the boolean value of an object in the shared preferences.
+     * Returns the boolean value of an object in the SharedPreferences.
      * @param forKey The key to query
      * @return The stored string value, or null if it is missing
      */
@@ -170,7 +170,7 @@ actual class KVault(private val context: Context) {
     }
 
     /**
-     * Deletes object with the given key from the shared preferences.
+     * Deletes object with the given key from the SharedPreferences.
      * @param forKey The key to query
      */
     actual fun deleteObject(forKey: String): Boolean {
