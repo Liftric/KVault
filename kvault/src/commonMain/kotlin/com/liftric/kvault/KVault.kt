@@ -86,7 +86,7 @@ expect class KVault {
     fun float(forKey: String): Float?
 
     /**
-     * Returns the boolean value of an object in the keychain.
+     * Returns the boolean value of an object in the store.
      * @param forKey The key to query
      * @return The stored boolean value
      */
@@ -99,7 +99,7 @@ expect class KVault {
     fun deleteObject(forKey: String): Boolean
 
     /**
-     * Deletes all objects with the service name from the store.
+     * Deletes all objects from the store.
      */
     fun clear()
 }
