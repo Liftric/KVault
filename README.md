@@ -1,4 +1,4 @@
-![CI](https://github.com/Liftric/kvault/workflows/CI/badge.svg) ![Published](https://github.com/Liftric/kvault/workflows/Publish%20to%20Bintray/badge.svg) ![Version](https://img.shields.io/github/v/release/liftric/kvault?label=version)
+![CI](https://github.com/Liftric/kvault/workflows/CI/badge.svg) ![Version](https://img.shields.io/github/v/release/liftric/kvault?label=version)
 
 # KVault
 
@@ -6,13 +6,7 @@ KVault is a secure key-value storage for Kotlin Multiplatform projects. It acts 
 
 ## Import
 
-```kotlin
-repositories {
-    maven { url = uri("https://dl.bintray.com/liftric/maven/") }
-}
-```
-
-Then, simply add the dependencies to your sourceSets:
+Simply add the dependencies to your sourceSets:
 
 ```kotlin
 sourceSets {
