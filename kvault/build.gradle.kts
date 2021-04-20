@@ -1,12 +1,11 @@
 import java.util.Date
-import com.jfrog.bintray.gradle.tasks.BintrayUploadTask
 
 plugins {
     id(Libs.AndroidLibrary)
     kotlin(Libs.Multiplatform)
     id(Libs.MavenPublish)
-    id(Libs.Bintray) version Versions.Bintray
     id(Libs.Versioning) version Versions.Versioning
+    id("signing")
 }
 
 kotlin {
@@ -87,54 +86,60 @@ val artifactVersion: String = with(versioning.info) {
 group = artifactGroup
 version = artifactVersion
 
-bintray {
-    user = System.getenv("bintrayUser")
-    key = System.getenv("bintrayApiKey")
-    publish = true
-    override = true
-
-    pkg.apply {
-        repo = "maven"
-        name = artifactName
-        userOrg = "liftric"
-        vcsUrl = "https://github.com/Liftric/kvault"
-        description = "Secure key-value storage for Kotlin Multiplatform projects"
-        setLabels("kotlin-multiplatform", "liftric", "kotlin-native", "keychain", "sharedpreferences", "key-value-store")
-        setLicenses("MIT")
-        desc = description
-        websiteUrl = "https://github.com/Liftric/kvault"
-        issueTrackerUrl = "https://github.com/Liftric/kvault/issues"
-
-        version.apply {
-            name = artifactVersion
-            vcsTag = artifactVersion
-            released = Date().toString()
-        }
-    }
-}
-
 afterEvaluate {
     project.publishing.publications.withType(MavenPublication::class.java).forEach {
         it.groupId = artifactGroup
     }
 }
 
-tasks.withType<BintrayUploadTask> {
-    doFirst {
-        // https://github.com/bintray/gradle-bintray-plugin/issues/229
-        project.publishing.publications.withType(MavenPublication::class.java).forEach {
-            val moduleFile = buildDir.resolve("publications/${it.name}/module.json")
-            if (moduleFile.exists()) {
-                it.artifact(object : org.gradle.api.publish.maven.internal.artifact.FileBasedMavenArtifact(moduleFile) {
-                    override fun getDefaultExtension() = "module"
-                })
+val ossrhUsername: String? by project
+val ossrhPassword: String? by project
+
+val javadocJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("javadoc")
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "sonatype"
+            setUrl("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+            credentials {
+                username = ossrhUsername
+                password = ossrhPassword
             }
         }
-        val pubs = project.publishing.publications.map { it.name }
-        setPublications(*pubs.toTypedArray())
+    }
+
+    publications.withType<MavenPublication> {
+
+        artifact(javadocJar.get())
+
+        pom {
+            name.set(artifactName)
+            description.set("Secure key-value storage for Kotlin Multiplatform projects")
+            url.set("https://github.com/Liftric/kvault")
+
+            licenses {
+                license {
+                    name.set("MIT")
+                    url.set("https://github.com/Liftric/kvault/blob/master/LICENSE")
+                }
+            }
+            developers {
+                developer {
+                    id.set("gaebel")
+                    name.set("Jan Gaebel")
+                    email.set("gaebel@liftric.com")
+                }
+            }
+            scm {
+                url.set("https://github.com/Liftric/kvault")
+            }
+        }
     }
 }
 
-tasks.withType<BintrayUploadTask> {
-    dependsOn("publishToMavenLocal")
+signing {
+    sign(publishing.publications)
 }
