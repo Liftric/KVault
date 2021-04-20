@@ -1,4 +1,4 @@
-name: Publish to Bintray
+name: Publish to Sonatype
 on:
   release:
     types: [published]
@@ -19,6 +19,8 @@ jobs:
         run: ./gradlew versionDisplay
       - name: Publish Library
         env:
-          bintrayUser: ${{ secrets.BINTRAY_USER }}
-          bintrayApiKey: ${{ secrets.BINTRAY_PASSWORD }}
-        run: ./gradlew bintrayUpload
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
+          ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.OSSRH_USERNAME }}
+          ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.OSSRH_PASSWORD }}
+        run: ./gradlew publishAllPublicationsToSonatypeRepository
