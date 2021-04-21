@@ -1,4 +1,4 @@
-![CI](https://github.com/Liftric/kvault/workflows/CI/badge.svg) ![Version](https://img.shields.io/github/v/release/liftric/kvault?label=version)
+![CI](https://github.com/Liftric/kvault/workflows/CI/badge.svg) ![maven-central](https://img.shields.io/maven-central/v/com.liftric/kvault)
 
 # KVault
 
