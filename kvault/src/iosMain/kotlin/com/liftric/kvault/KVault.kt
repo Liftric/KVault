@@ -6,18 +6,27 @@ import platform.Foundation.*
 import platform.Security.*
 import platform.darwin.noErr
 
-actual class KVault() {
+/**
+ * Keychain wrapper.
+ *
+ * @param serviceName Name of the service.
+ * @param accessGroup Name of the access group. Used to share entries between apps.
+ * @constructor Initiates a Keychain with the given properties.
+ */
+actual class KVault(
+    val serviceName: String? = null,
+    val accessGroup: String? = null
+) {
     private enum class Operation { Set, Get, Update, Delete }
 
-    var printsDebugOutput = true
+    // Internal debugging
+    private var printsDebugOutput = false
 
-    private var serviceName = defaultServiceName()
-    private var accessGroup: String? = null
-
-    constructor(serviceName: String, accessGroup: String? = null): this() {
-        this.serviceName = serviceName
-        this.accessGroup = accessGroup
-    }
+    /**
+     * Initiates a Keychain with the bundle identifier as the service name and without an access group.
+     * If the bundle identifier is nil, it will fallback to `com.liftric.KVault`.
+     */
+    constructor(): this(Constants.BundleIdentifier, null)
 
     // ===============
     // SET OPERATIONS
@@ -178,11 +187,10 @@ actual class KVault() {
      * @return True or false, depending on wether it is in the shared preferences or not
      */
     actual fun existsObject(forKey: String): Boolean {
-        val query = CFDictionaryCreateMutable(null, capacity(4), null, null)
+        val query = CFDictionaryCreateMutable(null, capacity(3), null, null)
         CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
         CFDictionaryAddValue(query, kSecAttrAccount, CFBridgingRetain(forKey))
         CFDictionaryAddValue(query, kSecReturnData, kCFBooleanFalse)
-        CFDictionaryAddValue(query, kSecAttrService, CFBridgingRetain(serviceName))
 
         memScoped {
             val result = alloc<CFTypeRefVar>()
@@ -203,20 +211,18 @@ actual class KVault() {
      * @param forKey The key to query
      */
     actual fun deleteObject(forKey: String): Boolean {
-        val query = CFDictionaryCreateMutable(null, capacity(3), null, null)
+        val query = CFDictionaryCreateMutable(null, capacity(2), null, null)
         CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
         CFDictionaryAddValue(query, kSecAttrAccount, CFBridgingRetain(forKey))
-        CFDictionaryAddValue(query, kSecAttrService, CFBridgingRetain(serviceName))
         return perform(Operation.Delete, query)
     }
 
     /**
-     * Deletes all objects with the service name from the Keychain.
+     * Deletes all objects.
      */
     actual fun clear() {
-        val query = CFDictionaryCreateMutable(null, capacity(2), null, null)
+        val query = CFDictionaryCreateMutable(null, capacity(1), null, null)
         CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
-        CFDictionaryAddValue(query, kSecAttrService, CFBridgingRetain(serviceName))
         perform(Operation.Delete, query)
     }
 
@@ -225,11 +231,10 @@ actual class KVault() {
     // =================
 
     private fun update(value: NSData, forKey: String): Boolean {
-        val query = CFDictionaryCreateMutable(null, 4, null, null)
+        val query = CFDictionaryCreateMutable(null, capacity(3), null, null)
         CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
         CFDictionaryAddValue(query, kSecAttrAccount, CFBridgingRetain(forKey))
         CFDictionaryAddValue(query, kSecReturnData, kCFBooleanFalse)
-        CFDictionaryAddValue(query, kSecAttrService, CFBridgingRetain(serviceName))
 
         val updateQuery = CFDictionaryCreateMutable(null, 1, null, null)
         CFDictionaryAddValue(updateQuery, kSecValueData, CFBridgingRetain(value))
@@ -242,12 +247,10 @@ actual class KVault() {
     // ===============
 
     private fun set(key: String, value: NSData): Boolean {
-        val capacity = capacity(4)
-        val query = CFDictionaryCreateMutable(null, capacity, null, null)
+        val query = CFDictionaryCreateMutable(null, capacity(3), null, null)
         CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
         CFDictionaryAddValue(query, kSecAttrAccount, CFBridgingRetain(key))
         CFDictionaryAddValue(query, kSecValueData, CFBridgingRetain(value))
-        CFDictionaryAddValue(query, kSecAttrService, CFBridgingRetain(serviceName))
 
         return if (existsObject(key)) {
             update(value, key)
@@ -257,12 +260,11 @@ actual class KVault() {
     }
 
     private fun data(forKey: String): NSData? {
-        val query = CFDictionaryCreateMutable(null, capacity(5), null, null)
+        val query = CFDictionaryCreateMutable(null, capacity(4), null, null)
         CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
         CFDictionaryAddValue(query, kSecAttrAccount, CFBridgingRetain(forKey))
         CFDictionaryAddValue(query, kSecReturnData, kCFBooleanTrue)
         CFDictionaryAddValue(query, kSecMatchLimit, kSecMatchLimitOne)
-        CFDictionaryAddValue(query, kSecAttrService, CFBridgingRetain(serviceName))
 
         memScoped {
             val result = alloc<CFTypeRefVar>()
@@ -277,6 +279,7 @@ actual class KVault() {
     private fun capacity(base: CFIndex): CFIndex {
         var capacity = base
         accessGroup?.let { capacity += 1 }
+        serviceName?.let { capacity += 1 }
         return capacity
     }
 
@@ -286,13 +289,21 @@ actual class KVault() {
         }
     }
 
+    private fun addServiceNameIfSet(query: CFMutableDictionaryRef?) {
+        serviceName?.let {
+            CFDictionaryAddValue(query, kSecAttrService, CFBridgingRetain(it))
+        }
+    }
+
     private fun perform(
-        operation: Operation, query: CFMutableDictionaryRef?,
+        operation: Operation,
+        query: CFMutableDictionaryRef?,
         result: CFTypeRefVar? = null,
         updateQuery: CFDictionaryRef? = null,
         verbose: Boolean? = true
     ): Boolean {
         addAccessGroupIfSet(query)
+        addServiceNameIfSet(query)
 
         val status = when (operation) {
             Operation.Set -> SecItemAdd(query, result?.ptr)
@@ -311,14 +322,6 @@ actual class KVault() {
                 println("$errorMessage")
             }
             false
-        }
-    }
-
-    private fun defaultServiceName(): String {
-        Constants.BundleIdentifier?.let {
-            return it
-        } ?: run {
-            return Constants.DefaultIdentifier
         }
     }
 }
