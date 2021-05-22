@@ -1,11 +1,11 @@
-import java.util.Date
+import org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeTest
 
 plugins {
     id(Libs.AndroidLibrary)
     kotlin(Libs.Multiplatform)
     id(Libs.MavenPublish)
     id(Libs.Versioning) version Versions.Versioning
-    id("signing")
+    id(Libs.Signing)
 }
 
 kotlin {
@@ -56,6 +56,10 @@ kotlin {
             languageSettings.useExperimentalAnnotation("kotlin.ExperimentalUnsignedTypes")
         }
     }
+}
+
+tasks.withType(KotlinNativeTest::class) {
+    filter.setExcludePatterns("com.liftric.kvault.KVaultTest")
 }
 
 android {
