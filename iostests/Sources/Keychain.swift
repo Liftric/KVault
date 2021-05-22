@@ -2,19 +2,21 @@
 //  Keychain.swift
 //  TestApp
 //
-//  Created by Ben John on 16.07.20.
-//  Copyright © 2020 Liftric GmbH. All rights reserved.
+//  Created by Jan Gaebel on 22.05.21.
 //
 
 import Foundation
 import kvault
 
 public struct Keychain {
-    
+
     // MARK: - KVault
 
+    public static var defaultStore: KVault {
+        KVault()
+    }
+
     public static var store: KVault {
-        let identifier = "com.liftric.Keeper"
-        return KVault(serviceName: identifier, accessGroup: nil)
+        KVault(serviceName: "com.liftric.Test", accessGroup: nil)
     }
 }
