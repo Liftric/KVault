@@ -2,7 +2,8 @@
 //  Keychain.swift
 //  TestApp
 //
-//  Created by Jan Gaebel on 22.05.21.
+//  Created by Ben John on 16.07.20.
+//  Copyright © 2020 Liftric GmbH. All rights reserved.
 //
 
 import Foundation

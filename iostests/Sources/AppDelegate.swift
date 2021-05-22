@@ -3,6 +3,7 @@
 //  TestApp
 //
 //  Created by Jan Gaebel on 22.05.21.
+//  Copyright © 2020 Liftric GmbH. All rights reserved.
 //
 
 import UIKit
