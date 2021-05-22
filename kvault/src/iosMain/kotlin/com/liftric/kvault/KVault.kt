@@ -1,6 +1,9 @@
 package com.liftric.kvault
 
-import kotlinx.cinterop.*
+import kotlinx.cinterop.alloc
+import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.ptr
+import kotlinx.cinterop.value
 import platform.CoreFoundation.*
 import platform.Foundation.*
 import platform.Security.*
@@ -13,7 +16,7 @@ import platform.darwin.noErr
  * @param accessGroup Name of the access group. Used to share entries between apps.
  * @constructor Initiates a Keychain with the given properties.
  */
-actual class KVault(
+actual open class KVault(
     val serviceName: String? = null,
     val accessGroup: String? = null
 ) {
@@ -26,7 +29,10 @@ actual class KVault(
      * Initiates a Keychain with the bundle identifier as the service name and without an access group.
      * If the bundle identifier is nil, it will fallback to `com.liftric.KVault`.
      */
+    @Deprecated("Use companion object named `Default` to create KVault with a default service name.")
     constructor(): this(Constants.BundleIdentifier, null)
+
+    companion object Default: KVault(Constants.BundleIdentifier, null)
 
     // ===============
     // SET OPERATIONS

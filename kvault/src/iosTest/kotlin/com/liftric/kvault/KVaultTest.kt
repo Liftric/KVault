@@ -1,3 +1,3 @@
 package com.liftric.kvault
 
-actual class KVaultTest: AbstractKVaultTest(KVault())
+actual class KVaultTest: AbstractKVaultTest(KVault.Default)

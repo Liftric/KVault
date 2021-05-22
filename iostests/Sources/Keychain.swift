@@ -14,7 +14,7 @@ public struct Keychain {
     // MARK: - KVault
 
     public static var defaultStore: KVault {
-        KVault()
+        KVault.Default()
     }
 
     public static var store: KVault {
