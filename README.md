@@ -30,12 +30,14 @@ sourceSets {
 
 #### iOS
 
-You can create an instance by using the primary or secondary constructor. The primary constructor sets the service name (Used to identify keychain entries) to your main bundle identifier. In case that it can't retrieve the identifier it will be set to `com.liftric.KVault`. The access group (Identifier used to share keychains between apps) will be set to null.
+```kotlin
+  val kVault = KVault(serviceName = "com.company.identifier", accessGroup = null)
+```
+
+**Convencience**: Service name will be set to your main bundle identifier and the access group to null. In case that it can't retrieve the identifier it will be set to `com.liftric.KVault`.
 
 ```kotlin
   val kVault = KVault()
-  // or
-  val kVault = KVault(serviceName = "com.company.identifier", accessGroup = null)
 ```
 
 ### Setting
@@ -69,19 +71,21 @@ Casted values can be retrieved with type methods.
 It's also possible to check if an object with a given key is in the keychain.
 
 ```kotlin
-  val objectExists = existsObject(forKey = "PASSWORD")
+  val existsObject: Boolean = existsObject(forKey = "PASSWORD")
 ```
 
 ### Deleting
 
-Either a single object or all at once can be deleted.
+Delete a single object.
 
 ```kotlin
-  val removed: Boolean = removeObject(forKey = "PASSWORD")
+  val isRemoved: Boolean = removeObject(forKey = "PASSWORD")
 ```
 
+Delete all objects.
+
 ```kotlin
-  clear() // Removes all objects that are linked to the service name
+  clear()
 ```
 
 ## License
