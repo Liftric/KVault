@@ -39,7 +39,7 @@ sourceSets {
 Service name will be set to your main bundle identifier and the access group to null. In case that it can't retrieve the identifier it will be set to `com.liftric.KVault`.
 
 ```kotlin
-  val kVault = KVault()
+  val kVault = KVault.Default
 ```
 
 ### Setting

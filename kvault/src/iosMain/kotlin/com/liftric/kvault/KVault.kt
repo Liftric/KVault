@@ -25,13 +25,13 @@ actual open class KVault(
     // Internal debugging
     private var printsDebugOutput = false
 
+    @Deprecated("Use companion object `Default` to create KVault with a default service name.")
+    constructor(): this(Constants.BundleIdentifier, null)
+
     /**
      * Initiates a Keychain with the bundle identifier as the service name and without an access group.
      * If the bundle identifier is nil, it will fallback to `com.liftric.KVault`.
      */
-    @Deprecated("Use companion object named `Default` to create KVault with a default service name.")
-    constructor(): this(Constants.BundleIdentifier, null)
-
     companion object Default: KVault(Constants.BundleIdentifier, null)
 
     // ===============
