@@ -58,7 +58,7 @@ kotlin {
     }
 }
 
-tasks.withType(KotlinNativeTest::class) {
+tasks.withType(KotlinNativeTest::class).named("iosX64Test") {
     filter.setExcludePatterns("com.liftric.kvault.KVaultTest")
 }
 
