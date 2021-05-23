@@ -32,14 +32,6 @@ sourceSets {
   val store = KVault(serviceName = "com.company.identifier", accessGroup = null)
 ```
 
-##### Convencience
-
-Service name will be set to your main bundle identifier and the access group to null. In case that it can't retrieve the identifier it will be set to `com.liftric.KVault`.
-
-```kotlin
-  val store = KVault.Default
-```
-
 ### Setting
 
 Objects can be inserted with the corresponding set method. 
