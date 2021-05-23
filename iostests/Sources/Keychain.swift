@@ -11,13 +11,17 @@ import kvault
 
 public struct Keychain {
 
-    // MARK: - KVault
+    // MARK: - Keychain
 
-    public static var defaultStore: KVault {
+    public static var `default`: KVault {
         KVault.Default()
     }
 
-    public static var store: KVault {
-        KVault(serviceName: "com.liftric.Test", accessGroup: nil)
+    public static var scoped: KVault {
+        KVault(serviceName: "com.liftric.test", accessGroup: nil)
+    }
+
+    public static var global: KVault {
+        KVault(serviceName: nil, accessGroup: nil)
     }
 }
