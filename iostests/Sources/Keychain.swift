@@ -14,7 +14,7 @@ public struct Keychain {
     // MARK: - Keychain
 
     public static var `default`: KVault {
-        KVault.Default()
+        KVault(serviceName: "com.liftric.default", accessGroup: nil)
     }
 
     public static var scoped: KVault {
