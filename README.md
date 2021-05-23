@@ -78,13 +78,17 @@ It's also possible to check if an object with a given key is in the keychain.
 
 ### Deleting
 
-Delete a single object.
+#### Single object
 
 ```kotlin
   val isRemoved: Boolean = removeObject(forKey = "PASSWORD")
 ```
 
-Delete all objects.
+#### All objects
+
+##### iOS
+
+If the service name and/or the access group is not nil it will only delete the items that match the query.
 
 ```kotlin
   clear()
