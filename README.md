@@ -18,7 +18,7 @@ sourceSets {
 
 ## How-to
 
-### Instantiating
+### Init
 
 #### Android
 
@@ -33,8 +33,6 @@ sourceSets {
 ```
 
 ### Setting
-
-Objects can be inserted with the corresponding set method. 
 
 ```kotlin
   val stringStoredSuccessfully: Boolean = store.set(key = "PASSWORD", value = "546hfbfzzeujfdbfdz")
@@ -53,14 +51,12 @@ Objects can be inserted with the corresponding set method.
 
 ### Getting
 
-Casted values can be retrieved with type methods.
-
 ```kotlin
   val stringValue: String? = store.string(forKey = "PASSWORD")
   val intValue: Int? = store.int(forKey = "SECRET")
 ```
 
-It's also possible to check if an object with a given key is in the keychain.
+To check if an object is in the Keychain you can also use:
 
 ```kotlin
   val existsObject: Boolean = store.existsObject(forKey = "PASSWORD")
@@ -78,7 +74,7 @@ It's also possible to check if an object with a given key is in the keychain.
 
 ##### iOS
 
-If the service name and/or the access group is not null it will only delete the items that match the query.
+If the service name and the access group are null it will delete all objects that are in the apps Keychain.
 
 ```kotlin
   store.clear()
