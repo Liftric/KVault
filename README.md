@@ -74,7 +74,7 @@ To check if an object is in the Keychain you can also use:
 
 ##### iOS
 
-If the service name and the access group are null it will delete all objects that are in the apps Keychain.
+⚠️ If the service name and the access group are null it will delete all objects that are in the apps Keychain.
 
 ```kotlin
   store.clear()
