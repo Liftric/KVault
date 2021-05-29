@@ -1,9 +1,7 @@
 buildscript {
     repositories {
-        maven { url = uri("https://dl.bintray.com/jetbrains/kotlin-native-dependencies") }
         mavenCentral()
         google()
-        jcenter()
     }
     dependencies {
         classpath(Libs.AndroidGradleTools)
@@ -15,6 +13,5 @@ allprojects {
     repositories {
         mavenCentral()
         google()
-        jcenter()
     }
 }

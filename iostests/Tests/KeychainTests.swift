@@ -1,6 +1,6 @@
 //
-//  Tests.swift
-//  TestApp
+//  KeychainTests.swift
+//  Tests
 //
 //  Created by Ben John on 16.07.20.
 //  Copyright © 2020 Liftric GmbH. All rights reserved.
@@ -10,11 +10,11 @@ import XCTest
 @testable import TestApp
 
 class KeychainTests: XCTestCase {
-    
+
     // MARK: - KeychainTests
-    
-    var sut = Keychain.store
-    
+
+    let sut = Keychain.default
+
     private func funnelAssertion<T: Equatable>(keys: [String], value: (String) -> T?) {
         let odd = keys.count % 2 > 0
         let middle = (keys.count - 1) / 2
@@ -32,7 +32,7 @@ class KeychainTests: XCTestCase {
             "string2": "lorem ipsum, dolor sit atmet",
             "string3": "lorem ipsum, ipsum lorem",
         ]
-        
+
         testData.forEach {
             sut.set(key: $0.key, value_____: $0.value)
             XCTAssertNotNil(sut.string(forKey: $0.key), "\($0.key) should not be null")
@@ -41,19 +41,19 @@ class KeychainTests: XCTestCase {
                               "Some string not contained in testData",
                               "\($0.key) should not resolve some other example not contained in testData")
         }
-    
+
         funnelAssertion(keys: testData.keys.map { $0 }) {
             sut.string(forKey: $0)
         }
     }
-    
+
     func testSetGetInt() throws {
         let testData = [
             "int1": Int32.min,
             "int2": Int32.max,
             "int3": 42,
         ]
-        
+
         testData.forEach {
             sut.set(key: $0.key, value___: $0.value)
             XCTAssertNotNil(sut.int(forKey: $0.key)?.int32Value, "\($0.key) should not be null")
@@ -61,19 +61,19 @@ class KeychainTests: XCTestCase {
             XCTAssertNotEqual(sut.int(forKey: $0.key)?.int32Value, 1337,
                               "\($0.key) should not resolve some other example not contained in testData")
         }
-        
+
         funnelAssertion(keys: testData.keys.map { $0 }) {
             sut.int(forKey: $0)?.int32Value
         }
     }
-    
+
     func testSetGetLong() throws {
         let testData = [
             "long1": Int64.min,
             "long2": Int64.max,
             "long3": Int64(Int32.max) + 1,
         ]
-        
+
         testData.forEach {
             sut.set(key: $0.key, value____: $0.value)
             XCTAssertNotNil(sut.long(forKey: $0.key)?.int64Value, "\($0.key) should not be null")
@@ -81,19 +81,19 @@ class KeychainTests: XCTestCase {
             XCTAssertNotEqual(sut.long(forKey: $0.key)?.int64Value, 1337,
                               "\($0.key) should not resolve some other example not contained in testData")
         }
-        
+
         funnelAssertion(keys: testData.keys.map { $0 }) {
             sut.long(forKey: $0)?.int64Value
         }
     }
-    
+
     func testSetGetFloat() throws {
         let testData = [
             "float1": Float.leastNormalMagnitude,
             "float2": Float.greatestFiniteMagnitude,
             "float3": 1337.1337,
         ]
-        
+
         testData.forEach {
             sut.set(key: $0.key, value__: $0.value)
             XCTAssertNotNil(sut.float(forKey: $0.key)?.floatValue, "\($0.key) should not be null")
@@ -101,19 +101,19 @@ class KeychainTests: XCTestCase {
             XCTAssertNotEqual(sut.float(forKey: $0.key)?.floatValue, 31337.31337,
                               "\($0.key) should not resolve some other example not contained in testData")
         }
-        
+
         funnelAssertion(keys: testData.keys.map { $0 }) {
             sut.float(forKey: $0)?.floatValue
         }
     }
-    
+
     func testSetGetDouble() throws {
         let testData = [
             "double1": Double.leastNormalMagnitude,
             "double2": Double.greatestFiniteMagnitude,
             "double3": 1337.1337,
         ]
-        
+
         testData.forEach {
             sut.set(key: $0.key, value_: $0.value)
             XCTAssertNotNil(sut.double(forKey: $0.key)?.doubleValue, "\($0.key) should not be null")
@@ -121,29 +121,29 @@ class KeychainTests: XCTestCase {
             XCTAssertNotEqual(sut.double(forKey: $0.key)?.doubleValue, 31337.31337,
                               "\($0.key) should not resolve some other example not contained in testData")
         }
-        
+
         funnelAssertion(keys: testData.keys.map { $0 }) {
             sut.double(forKey: $0)?.doubleValue
         }
     }
-    
+
     func testSetGetBool() throws {
         let testData = [
             "bool1": true,
             "bool2": false,
         ]
-        
+
         testData.forEach {
             sut.set(key: $0.key, value: $0.value)
             XCTAssertNotNil(sut.bool(forKey: $0.key)?.boolValue, "\($0.key) should not be null")
             XCTAssertEqual($0.value, sut.bool(forKey: $0.key)?.boolValue, "\($0.key) should resolve \($0.value)")
         }
-        
+
         funnelAssertion(keys: testData.keys.map { $0 }) {
             sut.bool(forKey: $0)?.boolValue
         }
     }
-    
+
     func testExistsObject() {
         XCTAssertFalse(sut.existsObject(forKey: "blank"), "Blank should not exist")
         sut.set(key: "blank", value_____: "124")
@@ -158,7 +158,7 @@ class KeychainTests: XCTestCase {
         sut.deleteObject(forKey: "blank")
         XCTAssertFalse(sut.existsObject(forKey: "blank"), "Blank should not exist anymore")
     }
-    
+
     func testOverwrite() {
         sut.set(key: "keyX", value_____: "dummyX")
         XCTAssertEqual("dummyX", sut.string(forKey: "keyX"))
@@ -166,24 +166,85 @@ class KeychainTests: XCTestCase {
         XCTAssertEqual("dummyXY", sut.string(forKey: "keyX"))
         XCTAssertNotEqual("dummyX", sut.string(forKey: "keyX"))
     }
-    
+
     func testClear() {
         let keys = ["key1", "key2", "key3", "key4", "key5"]
-        
+
         keys.forEach {
             sut.set(key: $0, value_____: "dummy")
             XCTAssertTrue(sut.existsObject(forKey: $0), "\($0) should exist")
         }
-        
+
         sut.clear()
-        
+
         keys.forEach {
             XCTAssertFalse(sut.existsObject(forKey: $0), "\($0) should not exist anymore")
         }
     }
-    
-    override func tearDown() {
+
+    func testClearOnlyInOwnScope() {
+        let keys = ["key1", "key2", "key3"]
+
+        let sut2 = Keychain.scoped
+
+        [sut, sut2].forEach { sut in
+            keys.forEach {
+                sut.set(key: $0, value_____: "dummy")
+                XCTAssertTrue(sut.existsObject(forKey: $0), "\($0) should exist")
+            }
+        }
+
+        sut2.clear()
+
+        keys.forEach {
+            XCTAssertTrue(sut.existsObject(forKey: $0), "\($0) should exist")
+        }
+
+        keys.forEach {
+            XCTAssertFalse(sut2.existsObject(forKey: $0), "\($0) should not exist anymore")
+        }
+
+        keys.forEach {
+            sut2.set(key: $0, value_____: "dummy")
+            XCTAssertTrue(sut2.existsObject(forKey: $0), "\($0) should exist")
+        }
+
         sut.clear()
+
+        keys.forEach {
+            XCTAssertTrue(sut2.existsObject(forKey: $0), "\($0) should exist")
+        }
+
+        keys.forEach {
+            XCTAssertFalse(sut.existsObject(forKey: $0), "\($0) should not exist anymore")
+        }
+    }
+
+    func testClearGlobally() {
+        let keys = ["key1", "key2", "key3"]
+
+        let sut2 = Keychain.global
+
+        [sut, sut2].forEach { sut in
+            keys.forEach {
+                sut.set(key: $0, value_____: "dummy")
+                XCTAssertTrue(sut.existsObject(forKey: $0), "\($0) should exist")
+            }
+        }
+
+        sut2.clear()
+
+        keys.forEach {
+            XCTAssertFalse(sut.existsObject(forKey: $0), "\($0) should not exist anymore")
+        }
+
+        keys.forEach {
+            XCTAssertFalse(sut2.existsObject(forKey: $0), "\($0) should not exist anymore")
+        }
+    }
+
+    override func tearDown() {
+        Keychain.global.clear()
         super.tearDown()
     }
 }

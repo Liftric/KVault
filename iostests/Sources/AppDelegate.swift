@@ -2,13 +2,13 @@
 //  AppDelegate.swift
 //  TestApp
 //
-//  Created by Ben John on 16.07.20.
+//  Created by Jan Gaebel on 22.05.21.
 //  Copyright © 2020 Liftric GmbH. All rights reserved.
 //
 
 import UIKit
 
-@UIApplicationMain
+@main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 

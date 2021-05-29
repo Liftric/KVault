@@ -10,11 +10,18 @@ import Foundation
 import kvault
 
 public struct Keychain {
-    
-    // MARK: - KVault
 
-    public static var store: KVault {
-        let identifier = "com.liftric.Keeper"
-        return KVault(serviceName: identifier, accessGroup: nil)
+    // MARK: - Keychain
+
+    public static var `default`: KVault {
+        KVault(serviceName: "com.liftric.default", accessGroup: nil)
+    }
+
+    public static var scoped: KVault {
+        KVault(serviceName: "com.liftric.test", accessGroup: nil)
+    }
+
+    public static var global: KVault {
+        KVault(serviceName: nil, accessGroup: nil)
     }
 }

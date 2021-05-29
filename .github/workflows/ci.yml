@@ -13,12 +13,12 @@ jobs:
         with:
           java-version: 1.8
       - name: Build kvault and test kvault (Android)
-        run: ./gradlew build test -x iosX64Test
+        run: ./gradlew build test
       - name: Build testapp and test kvault (iOS)
         run: |
           cd iostests
-          sudo xcode-select -switch /Applications/Xcode_11.6.app
-          xcodebuild clean test -project TestApp.xcodeproj -scheme TestApp -destination "platform=iOS Simulator,OS=13.6,name=iPhone 11 Pro" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
+          sudo xcode-select -switch /Applications/Xcode_12.4.app
+          xcodebuild clean test -project TestApp.xcodeproj -scheme TestApp -destination "platform=iOS Simulator,OS=14.4,name=iPhone 12" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
       - name: Upload test result
         uses: actions/upload-artifact@v2
         if: ${{ always() }}

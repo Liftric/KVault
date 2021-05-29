@@ -6,8 +6,6 @@ KVault is a secure key-value storage for Kotlin Multiplatform projects. It acts 
 
 ## Import
 
-Simply add the dependencies to your sourceSets:
-
 ```kotlin
 sourceSets {
     val commonMain by getting {
@@ -20,32 +18,26 @@ sourceSets {
 
 ## How-to
 
-### Instantiating
+### Init
 
 #### Android
 
 ```kotlin
-  val kVault = KVault(context = Context)
+  val store = KVault(context = Context)
 ```
 
 #### iOS
 
-You can create an instance by using the primary or secondary constructor. The primary constructor sets the service name (Used to identify keychain entries) to your main bundle identifier. In case that it can't retrieve the identifier it will be set to `com.liftric.KVault`. The access group (Identifier used to share keychains between apps) will be set to null.
-
 ```kotlin
-  val kVault = KVault()
-  // or
-  val kVault = KVault(serviceName = "com.company.identifier", accessGroup = null)
+  val store = KVault(serviceName = "com.company.identifier", accessGroup = null)
 ```
 
 ### Setting
 
-Objects can be inserted with the corresponding set method. 
-
 ```kotlin
-  val stringStoredSuccessfully: Boolean = set(key = "PASSWORD", value = "546hfbfzzeujfdbfdz")
-  val intStoredSuccessfully: Boolean = set(key = "SECRET", value = 45678765)
-  val floatStoredSuccessfully: Boolean = set(key = "HEIGHT", value = 1.79)
+  val stringStoredSuccessfully: Boolean = store.set(key = "PASSWORD", value = "546hfbfzzeujfdbfdz")
+  val intStoredSuccessfully: Boolean = store.set(key = "SECRET", value = 45678765)
+  val floatStoredSuccessfully: Boolean = store.set(key = "HEIGHT", value = 1.79)
 ```
 
 #### Supported Types
@@ -59,29 +51,33 @@ Objects can be inserted with the corresponding set method.
 
 ### Getting
 
-Casted values can be retrieved with type methods.
-
 ```kotlin
-  val stringValue: String = string(forKey = "PASSWORD")
-  val intValue: Int = int(forKey = "SECRET")
+  val stringValue: String? = store.string(forKey = "PASSWORD")
+  val intValue: Int? = store.int(forKey = "SECRET")
 ```
 
-It's also possible to check if an object with a given key is in the keychain.
+To check if an object is in the Keychain you can also use:
 
 ```kotlin
-  val objectExists = existsObject(forKey = "PASSWORD")
+  val existsObject: Boolean = store.existsObject(forKey = "PASSWORD")
 ```
 
 ### Deleting
 
-Either a single object or all at once can be deleted.
+#### Single object
 
 ```kotlin
-  val removed: Boolean = removeObject(forKey = "PASSWORD")
+  val isRemoved: Boolean = store.removeObject(forKey = "PASSWORD")
 ```
 
+#### All objects
+
+##### iOS
+
+⚠️ If the service name and the access group are null it will delete all objects that are in the apps Keychain.
+
 ```kotlin
-  clear() // Removes all objects that are linked to the service name
+  store.clear()
 ```
 
 ## License
