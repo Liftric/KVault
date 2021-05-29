@@ -28,14 +28,6 @@ kotlin {
                 implementation(kotlin(TestLibs.TestAnnotations))
             }
         }
-        val iosMain by getting {
-            dependencies {
-            }
-        }
-        val iosTest by getting {
-            dependencies {
-            }
-        }
         val androidMain by getting {
             dependencies {
                 implementation(Libs.Crypto)

@@ -29,7 +29,7 @@ sourceSets {
 #### iOS
 
 ```kotlin
-  val store = KVault(serviceName = "com.company.identifier", accessGroup = null)
+  val store = KVault(serviceName = "credentials", accessGroup = null)
 ```
 
 ### Setting

@@ -6,8 +6,8 @@ object Android {
 }
 
 object Versions {
-    const val Gradle = "4.1.0"
-    const val Kotlin = "1.4.30"
+    const val Gradle = "4.2.1"
+    const val Kotlin = "1.5.10"
     const val Versioning = "2.14.0"
     const val Crypto = "1.1.0-alpha03"
     const val RoboElectric = "4.5.1"
