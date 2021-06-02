@@ -16,7 +16,6 @@ object Versions {
 
 object Libs {
     const val Signing = "signing"
-    const val GradlePlugin = "gradle-plugin"
     const val AndroidGradleTools = "com.android.tools.build:gradle:${Versions.Gradle}"
     const val AndroidLibrary = "com.android.library"
     const val Multiplatform = "multiplatform"
