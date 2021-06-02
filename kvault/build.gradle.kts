@@ -1,11 +1,16 @@
-import org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeTest
+import org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeSimulatorTest
 
 plugins {
     id(Libs.AndroidLibrary)
-    kotlin(Libs.Multiplatform)
+    kotlin(Libs.Multiplatform) version Versions.Kotlin
     id(Libs.MavenPublish)
     id(Libs.Versioning) version Versions.Versioning
     id(Libs.Signing)
+}
+
+repositories {
+    google()
+    mavenCentral()
 }
 
 kotlin {
@@ -49,9 +54,10 @@ kotlin {
         }
     }
 }
-
-tasks.withType(KotlinNativeTest::class).named("iosX64Test") {
-    filter.setExcludePatterns("com.liftric.kvault.KVaultTest")
+tasks {
+    val iosX64Test by existing(KotlinNativeSimulatorTest::class) {
+        filter.excludeTestsMatching("com.liftric.kvault.KVaultTest")
+    }
 }
 
 android {
