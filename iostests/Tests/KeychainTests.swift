@@ -235,7 +235,7 @@ class KeychainTests: XCTestCase {
         sut2.clear()
 
         keys.forEach {
-            XCTAssertTrue(sut.existsObject(forKey: $0), "\($0) should still exist")
+            XCTAssertFalse(sut.existsObject(forKey: $0), "\($0) should not exist anymore")
         }
 
         keys.forEach {

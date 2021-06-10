@@ -22,6 +22,6 @@ public struct Keychain {
     }
 
     public static var global: KVault {
-        KVault()
+        KVault(serviceName: nil, accessGroup: nil)
     }
 }
