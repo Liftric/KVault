@@ -30,7 +30,7 @@ actual open class KVault(
      * If the bundle identifier is nil, it will fallback to `com.liftric.KVault`.
      */
     @Deprecated("Will be removed in a future version, please use the primary constructor. Check your service name before migrating.")
-    constructor(): this(Constants.BundleIdentifier, null)
+    constructor() : this(Constants.BundleIdentifier, null)
 
     // ===============
     // SET OPERATIONS
@@ -255,7 +255,6 @@ actual open class KVault(
         CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
         CFDictionaryAddValue(query, kSecAttrAccount, CFBridgingRetain(key))
         CFDictionaryAddValue(query, kSecValueData, CFBridgingRetain(value))
-
         return if (existsObject(key)) {
             update(value, key)
         } else {
@@ -269,14 +268,12 @@ actual open class KVault(
         CFDictionaryAddValue(query, kSecAttrAccount, CFBridgingRetain(forKey))
         CFDictionaryAddValue(query, kSecReturnData, kCFBooleanTrue)
         CFDictionaryAddValue(query, kSecMatchLimit, kSecMatchLimitOne)
-
         memScoped {
             val result = alloc<CFTypeRefVar>()
             if (perform(Operation.Get, query, result)) {
                 return CFBridgingRelease(result.value) as NSData
             }
         }
-
         return null
     }
 
@@ -315,6 +312,8 @@ actual open class KVault(
             Operation.Update -> SecItemUpdate(query, updateQuery)
             Operation.Delete -> SecItemDelete(query)
         }
+        CFRelease(query)
+        updateQuery?.let { CFRelease(it) }
 
         return if (status.toUInt() == noErr) {
             true
