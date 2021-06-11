@@ -39,7 +39,7 @@ actual open class KVault(
      * @param value The value to store
      */
     actual fun set(key: String, value: String): Boolean = memScoped {
-        return value.toNSData()?.let { set(key, it) } ?: run { false }
+        return value.toNSData()?.let { add(key, it) } ?: run { false }
     }
 
     /**
@@ -48,8 +48,7 @@ actual open class KVault(
      * @param value The value to store
      */
     actual fun set(key: String, value: Int): Boolean = memScoped{
-        val number = NSNumber.numberWithInt(value)
-        return set(key, NSKeyedArchiver.archivedDataWithRootObject(number))
+        return add(key, NSKeyedArchiver.encode(NSNumber.numberWithInt(value)))
     }
 
     /**
@@ -58,8 +57,7 @@ actual open class KVault(
      * @param value The value to store
      */
     actual fun set(key: String, value: Long): Boolean = memScoped{
-        val number = NSNumber.numberWithLong(value)
-        return set(key, NSKeyedArchiver.archivedDataWithRootObject(number))
+        return add(key, NSKeyedArchiver.encode(NSNumber.numberWithLong(value)))
     }
 
     /**
@@ -68,8 +66,7 @@ actual open class KVault(
      * @param value The value to store
      */
     actual fun set(key: String, value: Float): Boolean = memScoped{
-        val number = NSNumber.numberWithFloat(value)
-        return set(key, NSKeyedArchiver.archivedDataWithRootObject(number))
+        return add(key, NSKeyedArchiver.encode(NSNumber.numberWithFloat(value)))
     }
 
     /**
@@ -78,8 +75,7 @@ actual open class KVault(
      * @param value The value to store
      */
     actual fun set(key: String, value: Double): Boolean = memScoped {
-        val number = NSNumber.numberWithDouble(value)
-        return set(key, NSKeyedArchiver.archivedDataWithRootObject(number))
+        return add(key, NSKeyedArchiver.encode(NSNumber.numberWithDouble(value)))
     }
 
     /**
@@ -88,8 +84,7 @@ actual open class KVault(
      * @param value The value to store
      */
     actual fun set(key: String, value: Boolean): Boolean = memScoped {
-        val number = NSNumber.numberWithBool(value)
-        return set(key, NSKeyedArchiver.archivedDataWithRootObject(number))
+        return add(key, NSKeyedArchiver.encode(NSNumber.numberWithBool(value)))
     }
 
     /**
@@ -98,7 +93,7 @@ actual open class KVault(
      * @return The stored string value, or null if it is missing
      */
     actual fun string(forKey: String): String? {
-        return data(forKey)?.let { data ->
+        return value(forKey)?.let { data ->
             NSString.create(data, NSUTF8StringEncoding) as String?
         }
     }
@@ -109,8 +104,8 @@ actual open class KVault(
      * @return The stored string value, or null if it is missing
      */
     actual fun int(forKey: String): Int? {
-        return data(forKey)?.let {
-            (NSKeyedUnarchiver.unarchiveObjectWithData(it) as? NSNumber)?.intValue
+        return value(forKey)?.let {
+            (NSKeyedUnarchiver.decode(it))?.intValue
         }
     }
 
@@ -120,8 +115,8 @@ actual open class KVault(
      * @return The stored string value, or null if it is missing
      */
     actual fun long(forKey: String): Long? {
-        return data(forKey)?.let {
-            (NSKeyedUnarchiver.unarchiveObjectWithData(it) as? NSNumber)?.longValue
+        return value(forKey)?.let {
+            (NSKeyedUnarchiver.decode(it))?.longValue
         }
     }
 
@@ -131,8 +126,8 @@ actual open class KVault(
      * @return The stored string value, or null if it is missing
      */
     actual fun float(forKey: String): Float? {
-        return data(forKey)?.let {
-            (NSKeyedUnarchiver.unarchiveObjectWithData(it) as? NSNumber)?.floatValue
+        return value(forKey)?.let {
+            (NSKeyedUnarchiver.decode(it))?.floatValue
         }
     }
 
@@ -142,8 +137,8 @@ actual open class KVault(
      * @return The stored string value, or null if it is missing
      */
     actual fun double(forKey: String): Double? {
-        return data(forKey)?.let {
-            (NSKeyedUnarchiver.unarchiveObjectWithData(it) as? NSNumber)?.doubleValue
+        return value(forKey)?.let {
+            (NSKeyedUnarchiver.decode(it))?.doubleValue
         }
     }
 
@@ -153,8 +148,8 @@ actual open class KVault(
      * @return The stored string value, or null if it is missing
      */
     actual fun bool(forKey: String): Boolean? {
-        return data(forKey)?.let {
-            (NSKeyedUnarchiver.unarchiveObjectWithData(it) as? NSNumber)?.boolValue
+        return value(forKey)?.let {
+            (NSKeyedUnarchiver.decode(it))?.boolValue
         }
     }
 
@@ -229,7 +224,7 @@ actual open class KVault(
         }
     }
 
-    private fun set(key: String, value: NSData): Boolean = memScoped {
+    private fun add(key: String, value: NSData): Boolean = memScoped {
         if(existsObject(key)) {
             update(value, key)
         } else {
@@ -247,7 +242,7 @@ actual open class KVault(
         }
     }
 
-    private fun data(forKey: String): NSData? = memScoped {
+    private fun value(forKey: String): NSData? = memScoped {
         retain(forKey) { (key) ->
             makeQuery(
                 kSecClass to kSecClassGenericPassword,
@@ -301,7 +296,9 @@ actual open class KVault(
     @Suppress("CAST_NEVER_SUCCEEDS")
     private fun String.toNSData(): NSData? = (this as NSString).dataUsingEncoding(NSUTF8StringEncoding)
 
-    private fun OSStatus.release(vararg queries: CFDictionaryRef?) = apply { queries.forEach { CFRelease(it) } }
+    private fun NSKeyedArchiver.Companion.encode(value: Any): NSData = archivedDataWithRootObject(value)
+    private fun NSKeyedUnarchiver.Companion.decode(data: NSData): NSNumber? = unarchiveObjectWithData(data) as? NSNumber
 
+    private fun OSStatus.release(vararg queries: CFTypeRef?) = apply { queries.forEach { CFRelease(it) } }
     private fun OSStatus.isValid(): Boolean = toUInt() == noErr
 }
