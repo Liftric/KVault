@@ -39,10 +39,7 @@ actual open class KVault(
      * @param value The value to store
      */
     actual fun set(key: String, value: String): Boolean = memScoped {
-        @Suppress("CAST_NEVER_SUCCEEDS")
-        return (value as NSString).dataUsingEncoding(NSUTF8StringEncoding)?.let {
-             set(key, it)
-        } ?: run { false }
+        return value.toNSData()?.let { set(key, it) } ?: run { false }
     }
 
     /**
@@ -173,7 +170,9 @@ actual open class KVault(
                 kSecAttrAccount to key,
                 kSecReturnData to kCFBooleanFalse
             ) { query ->
-                SecItemCopyMatching(query, null).isValid()
+                SecItemCopyMatching(query, null)
+                    .release(query)
+                    .isValid()
             }
         }
     }
@@ -188,7 +187,9 @@ actual open class KVault(
                 kSecClass to kSecClassGenericPassword,
                 kSecAttrAccount to key
             ) { query ->
-                SecItemDelete(query).isValid()
+                SecItemDelete(query)
+                    .release(query)
+                    .isValid()
             }
         }
     }
@@ -200,7 +201,9 @@ actual open class KVault(
         makeQuery(
             kSecClass to kSecClassGenericPassword
         ) { query ->
-            SecItemDelete(query).isValid()
+            SecItemDelete(query)
+                .release(query)
+                .isValid()
         }
     }
 
@@ -218,7 +221,9 @@ actual open class KVault(
                 makeQuery(
                     kSecValueData to value
                 ) { updateQuery ->
-                    SecItemUpdate(query, updateQuery).isValid()
+                    SecItemUpdate(query, updateQuery)
+                        .release(query, updateQuery)
+                        .isValid()
                 }
             }
         }
@@ -234,7 +239,9 @@ actual open class KVault(
                     kSecAttrAccount to key,
                     kSecValueData to value
                 ) { query ->
-                    SecItemAdd(query, null).isValid()
+                    SecItemAdd(query, null)
+                        .release(query)
+                        .isValid()
                 }
             }
         }
@@ -249,11 +256,10 @@ actual open class KVault(
                 kSecMatchLimit to kSecMatchLimitOne
             ) { query ->
                 val result = alloc<CFTypeRefVar>()
-                if(SecItemCopyMatching(query, result.ptr).isValid()) {
-                    CFBridgingRelease(result.value) as? NSData
-                } else {
-                    null
-                }
+                SecItemCopyMatching(query, result.ptr)
+                    .release(query)
+                    .isValid()
+                CFBridgingRelease(result.value) as? NSData
             }
         }
     }
@@ -280,19 +286,22 @@ actual open class KVault(
             val values = allocArrayOf(*map.values.toTypedArray())
 
             CFDictionaryCreate(
-                kCFAllocatorDefault,
+                null,
                 keys.reinterpret(),
                 values.reinterpret(),
                 map.size.convert(),
                 null,
                 null
-            ).apply {
-                CFAutorelease(this)
-            }.run {
+            ).run {
                 block(this)
             }
         }
     }
+
+    @Suppress("CAST_NEVER_SUCCEEDS")
+    private fun String.toNSData(): NSData? = (this as NSString).dataUsingEncoding(NSUTF8StringEncoding)
+
+    private fun OSStatus.release(vararg queries: CFDictionaryRef?) = apply { queries.forEach { CFRelease(it) } }
 
     private fun OSStatus.isValid(): Boolean = toUInt() == noErr
 }
