@@ -1,13 +1,13 @@
 package com.liftric.kvault
 
-import kotlinx.cinterop.alloc
-import kotlinx.cinterop.memScoped
-import kotlinx.cinterop.ptr
-import kotlinx.cinterop.value
+import kotlinx.cinterop.*
 import platform.CoreFoundation.*
 import platform.Foundation.*
 import platform.Security.*
+import platform.darwin.OSErr
 import platform.darwin.noErr
+import platform.posix.free
+import kotlin.native.concurrent.freeze
 
 /**
  * Keychain wrapper.
@@ -22,26 +22,27 @@ actual open class KVault(
 ) {
     private enum class Operation { Set, Get, Update, Delete }
 
-    // Internal debugging
-    private var printsDebugOutput = false
-
     /**
      * Initiates a Keychain with the bundle identifier as the service name and without an access group.
      * If the bundle identifier is nil, it will fallback to `com.liftric.KVault`.
      */
-    @Deprecated("Will be removed in a future version, please use the primary constructor. Check your service name before migrating.")
+    @Deprecated(
+        """
+            Will be removed in a future version, 
+            please use the primary constructor. 
+            Check your service name before migrating.
+            """
+        ,
+        level = DeprecationLevel.ERROR
+    )
     constructor() : this(Constants.BundleIdentifier, null)
-
-    // ===============
-    // SET OPERATIONS
-    // ===============
 
     /**
      * Saves a string value in the Keychain.
      * @param key The key to store
      * @param value The value to store
      */
-    actual fun set(key: String, value: String): Boolean {
+    actual fun set(key: String, value: String): Boolean = memScoped {
         @Suppress("CAST_NEVER_SUCCEEDS")
         (value as NSString).dataUsingEncoding(NSUTF8StringEncoding)?.let {
             return set(key, it)
@@ -53,7 +54,7 @@ actual open class KVault(
      * @param key The key to store
      * @param value The value to store
      */
-    actual fun set(key: String, value: Int): Boolean {
+    actual fun set(key: String, value: Int): Boolean = memScoped{
         val number = NSNumber.numberWithInt(value)
         return set(key, NSKeyedArchiver.archivedDataWithRootObject(number))
     }
@@ -63,7 +64,7 @@ actual open class KVault(
      * @param key The key to store
      * @param value The value to store
      */
-    actual fun set(key: String, value: Long): Boolean {
+    actual fun set(key: String, value: Long): Boolean = memScoped{
         val number = NSNumber.numberWithLong(value)
         return set(key, NSKeyedArchiver.archivedDataWithRootObject(number))
     }
@@ -73,7 +74,7 @@ actual open class KVault(
      * @param key The key to store
      * @param value The value to store
      */
-    actual fun set(key: String, value: Float): Boolean {
+    actual fun set(key: String, value: Float): Boolean = memScoped{
         val number = NSNumber.numberWithFloat(value)
         return set(key, NSKeyedArchiver.archivedDataWithRootObject(number))
     }
@@ -83,7 +84,7 @@ actual open class KVault(
      * @param key The key to store
      * @param value The value to store
      */
-    actual fun set(key: String, value: Double): Boolean {
+    actual fun set(key: String, value: Double): Boolean = memScoped {
         val number = NSNumber.numberWithDouble(value)
         return set(key, NSKeyedArchiver.archivedDataWithRootObject(number))
     }
@@ -93,14 +94,10 @@ actual open class KVault(
      * @param key The key to store
      * @param value The value to store
      */
-    actual fun set(key: String, value: Boolean): Boolean {
+    actual fun set(key: String, value: Boolean): Boolean = memScoped {
         val number = NSNumber.numberWithBool(value)
         return set(key, NSKeyedArchiver.archivedDataWithRootObject(number))
     }
-
-    // ===============
-    // GET OPERATIONS
-    // ===============
 
     /**
      * Returns the string value of an object in the Keychain.
@@ -190,141 +187,147 @@ actual open class KVault(
      * @param forKey The key to query
      * @return True or false, depending on wether it is in the shared preferences or not
      */
-    actual fun existsObject(forKey: String): Boolean {
-        val query = CFDictionaryCreateMutable(null, capacity(3), null, null)
-        CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
-        CFDictionaryAddValue(query, kSecAttrAccount, CFBridgingRetain(forKey))
-        CFDictionaryAddValue(query, kSecReturnData, kCFBooleanFalse)
-
-        memScoped {
-            val result = alloc<CFTypeRefVar>()
-            if (perform(Operation.Get, query, result, verbose = false)) {
-                return true
+    actual fun existsObject(forKey: String): Boolean = memScoped {
+        retain(forKey) { (key) ->
+            makeQuery(
+                kSecClass to kSecClassGenericPassword,
+                kSecAttrAccount to key,
+                kSecReturnData to kCFBooleanFalse
+            ) { query ->
+                perform(Operation.Get, query)
             }
         }
-
-        return false
     }
-
-    // ==================
-    // DELETE OPERATIONS
-    // ==================
 
     /**
      * Deletes object with the given key from the Keychain.
      * @param forKey The key to query
      */
-    actual fun deleteObject(forKey: String): Boolean {
-        val query = CFDictionaryCreateMutable(null, capacity(2), null, null)
-        CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
-        CFDictionaryAddValue(query, kSecAttrAccount, CFBridgingRetain(forKey))
-        return perform(Operation.Delete, query)
+    actual fun deleteObject(forKey: String): Boolean = memScoped {
+        retain(forKey) { (key) ->
+            makeQuery(
+                kSecClass to kSecClassGenericPassword,
+                kSecAttrAccount to key
+            ) { query ->
+                perform(Operation.Delete, query)
+            }
+        }
     }
 
     /**
      * Deletes all objects.
      */
-    actual fun clear() {
-        val query = CFDictionaryCreateMutable(null, capacity(1), null, null)
-        CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
-        perform(Operation.Delete, query)
-    }
-
-    // =================
-    // UPDATE OPERATIONS
-    // =================
-
-    private fun update(value: NSData, forKey: String): Boolean {
-        val query = CFDictionaryCreateMutable(null, capacity(3), null, null)
-        CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
-        CFDictionaryAddValue(query, kSecAttrAccount, CFBridgingRetain(forKey))
-        CFDictionaryAddValue(query, kSecReturnData, kCFBooleanFalse)
-
-        val updateQuery = CFDictionaryCreateMutable(null, 1, null, null)
-        CFDictionaryAddValue(updateQuery, kSecValueData, CFBridgingRetain(value))
-
-        return perform(Operation.Update, query, updateQuery = updateQuery)
-    }
-
-    // ===============
-    // HELPER METHODS
-    // ===============
-
-    private fun set(key: String, value: NSData): Boolean {
-        val query = CFDictionaryCreateMutable(null, capacity(3), null, null)
-        CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
-        CFDictionaryAddValue(query, kSecAttrAccount, CFBridgingRetain(key))
-        CFDictionaryAddValue(query, kSecValueData, CFBridgingRetain(value))
-        return if (existsObject(key)) {
-            update(value, key)
-        } else {
-            perform(Operation.Set, query)
+    actual fun clear(): Unit = memScoped {
+        makeQuery(
+            kSecClass to kSecClassGenericPassword
+        ) { query ->
+            perform(Operation.Delete, query)
         }
     }
 
-    private fun data(forKey: String): NSData? {
-        val query = CFDictionaryCreateMutable(null, capacity(4), null, null)
-        CFDictionaryAddValue(query, kSecClass, kSecClassGenericPassword)
-        CFDictionaryAddValue(query, kSecAttrAccount, CFBridgingRetain(forKey))
-        CFDictionaryAddValue(query, kSecReturnData, kCFBooleanTrue)
-        CFDictionaryAddValue(query, kSecMatchLimit, kSecMatchLimitOne)
-        memScoped {
-            val result = alloc<CFTypeRefVar>()
-            if (perform(Operation.Get, query, result)) {
-                return CFBridgingRelease(result.value) as NSData
+    // ===============
+    // PRIVATE METHODS
+    // ===============
+
+    private fun update(value: NSData, forKey: String): Boolean = memScoped {
+        retain(forKey, value) { (key, value) ->
+            makeQuery(
+                kSecClass to  kSecClassGenericPassword,
+                kSecAttrAccount to key,
+                kSecReturnData to kCFBooleanFalse
+            ) { query ->
+                makeQuery(
+                    kSecValueData to value
+                ) { updateQuery ->
+                    perform(Operation.Update, query, updateQuery = updateQuery)
+                }
             }
         }
-        return null
     }
 
-    private fun capacity(base: CFIndex): CFIndex {
-        var capacity = base
-        accessGroup?.let { capacity += 1 }
-        serviceName?.let { capacity += 1 }
-        return capacity
-    }
-
-    private fun addAccessGroupIfSet(query: CFMutableDictionaryRef?) {
-        accessGroup?.let {
-            CFDictionaryAddValue(query, kSecAttrAccessGroup, CFBridgingRetain(it))
+    private fun set(key: String, value: NSData): Boolean = memScoped {
+        if(existsObject(key)) {
+            update(value, key)
+        } else {
+            retain(key, value) { (key, value) ->
+                makeQuery(
+                    kSecClass to kSecClassGenericPassword,
+                    kSecAttrAccount to key,
+                    kSecValueData to value
+                ) { query ->
+                    perform(Operation.Set, query)
+                }
+            }
         }
     }
 
-    private fun addServiceNameIfSet(query: CFMutableDictionaryRef?) {
-        serviceName?.let {
-            CFDictionaryAddValue(query, kSecAttrService, CFBridgingRetain(it))
+    private fun data(forKey: String): NSData? = memScoped {
+        retain(forKey) { (key) ->
+            makeQuery(
+                kSecClass to kSecClassGenericPassword,
+                kSecAttrAccount to key,
+                kSecReturnData to kCFBooleanTrue,
+                kSecMatchLimit to kSecMatchLimitOne
+            ) { query ->
+                val result = alloc<CFTypeRefVar>()
+                if(perform(Operation.Get, query, result)) {
+                    CFBridgingRelease(result.value) as? NSData
+                } else {
+                    null
+                }
+            }
+        }
+    }
+
+    private fun <T> MemScope.retain(vararg values: Any?, block: MemScope.(List<CFTypeRef?>) -> T): T {
+        val retained = arrayOf(*values).map { CFBridgingRetain(it) }
+        try {
+            return block(retained)
+        } finally {
+            retained.forEach { CFBridgingRelease(it) }
+        }
+    }
+
+    private fun <T> MemScope.makeQuery(vararg pairs: Pair<CFStringRef?, CFTypeRef?>, operation: (CFDictionaryRef?) -> T): T {
+        return retain(accessGroup, serviceName) { (accessGroup, serviceName) ->
+            val map = mutableMapOf(*pairs)
+
+            if (this@KVault.accessGroup != null) {
+                map[kSecAttrAccessGroup] = accessGroup
+            }
+            if (this@KVault.serviceName != null) {
+                map[kSecAttrService] = serviceName
+            }
+
+            val keys = allocArrayOf(*map.keys.toTypedArray())
+            val values = allocArrayOf(*map.values.toTypedArray())
+
+            val query = CFDictionaryCreate(
+                kCFAllocatorMalloc,
+                keys.reinterpret(),
+                values.reinterpret(),
+                map.size.convert(),
+                null,
+                null
+            )
+
+            operation(query)
         }
     }
 
     private fun perform(
         operation: Operation,
-        query: CFMutableDictionaryRef?,
+        query: CFDictionaryRef?,
         result: CFTypeRefVar? = null,
-        updateQuery: CFDictionaryRef? = null,
-        verbose: Boolean? = true
+        updateQuery: CFDictionaryRef? = null
     ): Boolean {
-        addAccessGroupIfSet(query)
-        addServiceNameIfSet(query)
-
-        val status = when (operation) {
+        return when (operation) {
             Operation.Set -> SecItemAdd(query, result?.ptr)
             Operation.Get -> SecItemCopyMatching(query, result?.ptr)
-            Operation.Update -> SecItemUpdate(query, updateQuery)
+            Operation.Update -> SecItemUpdate(query, updateQuery).apply { CFRelease(updateQuery) }
             Operation.Delete -> SecItemDelete(query)
-        }
-        CFRelease(query)
-        updateQuery?.let { CFRelease(it) }
-
-        return if (status.toUInt() == noErr) {
-            true
-        } else {
-            val error = SecCopyErrorMessageString(status, null)
-            val errorMessage = CFBridgingRelease(error)
-            if (printsDebugOutput && verbose!!) {
-                println("Operation -> ${operation.name}")
-                println("$errorMessage")
-            }
-            false
-        }
+        }.apply {
+            CFRelease(query)
+        }.toUInt() == noErr
     }
 }
