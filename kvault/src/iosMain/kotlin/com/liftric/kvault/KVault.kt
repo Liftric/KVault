@@ -303,7 +303,7 @@ actual open class KVault(
             val values = allocArrayOf(*map.values.toTypedArray())
 
             val query = CFDictionaryCreate(
-                kCFAllocatorDefault,
+                null,
                 keys.reinterpret(),
                 values.reinterpret(),
                 map.size.convert(),
