@@ -33,7 +33,7 @@ actual open class KVault(
             Check your service name before migrating.
             """
         ,
-        level = DeprecationLevel.ERROR
+        level = DeprecationLevel.WARNING
     )
     constructor() : this(Constants.BundleIdentifier, null)
 
@@ -232,7 +232,7 @@ actual open class KVault(
     private fun update(value: NSData, forKey: String): Boolean = memScoped {
         retain(forKey, value) { (key, value) ->
             makeQuery(
-                kSecClass to  kSecClassGenericPassword,
+                kSecClass to kSecClassGenericPassword,
                 kSecAttrAccount to key,
                 kSecReturnData to kCFBooleanFalse
             ) { query ->
@@ -279,7 +279,7 @@ actual open class KVault(
         }
     }
 
-    private fun <T> MemScope.retain(vararg values: Any?, block: MemScope.(List<CFTypeRef?>) -> T): T {
+    private fun <T> retain(vararg values: Any?, block: (List<CFTypeRef?>) -> T): T {
         val retained = arrayOf(*values).map { CFBridgingRetain(it) }
         try {
             return block(retained)
@@ -303,7 +303,7 @@ actual open class KVault(
             val values = allocArrayOf(*map.values.toTypedArray())
 
             val query = CFDictionaryCreate(
-                kCFAllocatorMalloc,
+                kCFAllocatorDefault,
                 keys.reinterpret(),
                 values.reinterpret(),
                 map.size.convert(),
