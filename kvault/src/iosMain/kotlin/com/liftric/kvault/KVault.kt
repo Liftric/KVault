@@ -5,6 +5,7 @@ import platform.CoreFoundation.*
 import platform.Foundation.*
 import platform.Security.*
 import platform.darwin.OSErr
+import platform.darwin.OSStatus
 import platform.darwin.noErr
 import platform.posix.free
 import kotlin.native.concurrent.freeze
@@ -20,8 +21,6 @@ actual open class KVault(
     val serviceName: String? = null,
     val accessGroup: String? = null
 ) {
-    private enum class Operation { Set, Get, Update, Delete }
-
     /**
      * Initiates a Keychain with the bundle identifier as the service name and without an access group.
      * If the bundle identifier is nil, it will fallback to `com.liftric.KVault`.
@@ -44,9 +43,9 @@ actual open class KVault(
      */
     actual fun set(key: String, value: String): Boolean = memScoped {
         @Suppress("CAST_NEVER_SUCCEEDS")
-        (value as NSString).dataUsingEncoding(NSUTF8StringEncoding)?.let {
-            return set(key, it)
-        } ?: run { return false }
+        return (value as NSString).dataUsingEncoding(NSUTF8StringEncoding)?.let {
+             set(key, it)
+        } ?: run { false }
     }
 
     /**
@@ -105,10 +104,8 @@ actual open class KVault(
      * @return The stored string value, or null if it is missing
      */
     actual fun string(forKey: String): String? {
-        data(forKey)?.let { data ->
-            return NSString.create(data, NSUTF8StringEncoding) as String?
-        } ?: run {
-            return null
+        return data(forKey)?.let { data ->
+            NSString.create(data, NSUTF8StringEncoding) as String?
         }
     }
 
@@ -118,11 +115,8 @@ actual open class KVault(
      * @return The stored string value, or null if it is missing
      */
     actual fun int(forKey: String): Int? {
-        data(forKey)?.let {
-            val number = NSKeyedUnarchiver.unarchiveObjectWithData(it) as NSNumber
-            return number.intValue
-        } ?: run {
-            return null
+        return data(forKey)?.let {
+            (NSKeyedUnarchiver.unarchiveObjectWithData(it) as? NSNumber)?.intValue
         }
     }
 
@@ -132,11 +126,8 @@ actual open class KVault(
      * @return The stored string value, or null if it is missing
      */
     actual fun long(forKey: String): Long? {
-        data(forKey)?.let {
-            val number = NSKeyedUnarchiver.unarchiveObjectWithData(it) as NSNumber
-            return number.longValue
-        } ?: run {
-            return null
+        return data(forKey)?.let {
+            (NSKeyedUnarchiver.unarchiveObjectWithData(it) as? NSNumber)?.longValue
         }
     }
 
@@ -146,11 +137,8 @@ actual open class KVault(
      * @return The stored string value, or null if it is missing
      */
     actual fun float(forKey: String): Float? {
-        data(forKey)?.let {
-            val number = NSKeyedUnarchiver.unarchiveObjectWithData(it) as NSNumber
-            return number.floatValue
-        } ?: run {
-            return null
+        return data(forKey)?.let {
+            (NSKeyedUnarchiver.unarchiveObjectWithData(it) as? NSNumber)?.floatValue
         }
     }
 
@@ -160,11 +148,8 @@ actual open class KVault(
      * @return The stored string value, or null if it is missing
      */
     actual fun double(forKey: String): Double? {
-        data(forKey)?.let {
-            val number = NSKeyedUnarchiver.unarchiveObjectWithData(it) as NSNumber
-            return number.doubleValue
-        } ?: run {
-            return null
+        return data(forKey)?.let {
+            (NSKeyedUnarchiver.unarchiveObjectWithData(it) as? NSNumber)?.doubleValue
         }
     }
 
@@ -174,11 +159,8 @@ actual open class KVault(
      * @return The stored string value, or null if it is missing
      */
     actual fun bool(forKey: String): Boolean? {
-        data(forKey)?.let {
-            val number = NSKeyedUnarchiver.unarchiveObjectWithData(it) as NSNumber
-            return number.boolValue
-        } ?: run {
-            return null
+        return data(forKey)?.let {
+            (NSKeyedUnarchiver.unarchiveObjectWithData(it) as? NSNumber)?.boolValue
         }
     }
 
@@ -194,7 +176,7 @@ actual open class KVault(
                 kSecAttrAccount to key,
                 kSecReturnData to kCFBooleanFalse
             ) { query ->
-                perform(Operation.Get, query)
+                SecItemCopyMatching(query, null).isValid()
             }
         }
     }
@@ -209,7 +191,7 @@ actual open class KVault(
                 kSecClass to kSecClassGenericPassword,
                 kSecAttrAccount to key
             ) { query ->
-                perform(Operation.Delete, query)
+                SecItemDelete(query).isValid()
             }
         }
     }
@@ -221,7 +203,7 @@ actual open class KVault(
         makeQuery(
             kSecClass to kSecClassGenericPassword
         ) { query ->
-            perform(Operation.Delete, query)
+            SecItemDelete(query).isValid()
         }
     }
 
@@ -239,7 +221,7 @@ actual open class KVault(
                 makeQuery(
                     kSecValueData to value
                 ) { updateQuery ->
-                    perform(Operation.Update, query, updateQuery = updateQuery)
+                    SecItemUpdate(query, updateQuery).isValid()
                 }
             }
         }
@@ -255,7 +237,7 @@ actual open class KVault(
                     kSecAttrAccount to key,
                     kSecValueData to value
                 ) { query ->
-                    perform(Operation.Set, query)
+                    SecItemAdd(query, null).isValid()
                 }
             }
         }
@@ -270,7 +252,7 @@ actual open class KVault(
                 kSecMatchLimit to kSecMatchLimitOne
             ) { query ->
                 val result = alloc<CFTypeRefVar>()
-                if(perform(Operation.Get, query, result)) {
+                if(SecItemCopyMatching(query, result.ptr).isValid()) {
                     CFBridgingRelease(result.value) as? NSData
                 } else {
                     null
@@ -281,53 +263,39 @@ actual open class KVault(
 
     private fun <T> retain(vararg values: Any?, block: (List<CFTypeRef?>) -> T): T {
         val retained = arrayOf(*values).map { CFBridgingRetain(it) }
-        try {
-            return block(retained)
-        } finally {
+        return block(retained).apply {
             retained.forEach { CFBridgingRelease(it) }
         }
     }
 
-    private fun <T> MemScope.makeQuery(vararg pairs: Pair<CFStringRef?, CFTypeRef?>, operation: (CFDictionaryRef?) -> T): T {
+    private fun <T> MemScope.makeQuery(vararg pairs: Pair<CFStringRef?, CFTypeRef?>, block: (CFDictionaryRef?) -> T): T {
         return retain(accessGroup, serviceName) { (accessGroup, serviceName) ->
             val map = mutableMapOf(*pairs)
 
-            if (this@KVault.accessGroup != null) {
+            if (accessGroup != null) {
                 map[kSecAttrAccessGroup] = accessGroup
             }
-            if (this@KVault.serviceName != null) {
+            if (serviceName != null) {
                 map[kSecAttrService] = serviceName
             }
 
             val keys = allocArrayOf(*map.keys.toTypedArray())
             val values = allocArrayOf(*map.values.toTypedArray())
 
-            val query = CFDictionaryCreate(
+            CFDictionaryCreate(
                 kCFAllocatorDefault,
                 keys.reinterpret(),
                 values.reinterpret(),
                 map.size.convert(),
                 null,
                 null
-            )
-
-            operation(query)
+            ).apply {
+                CFAutorelease(this)
+            }.run {
+                block(this)
+            }
         }
     }
 
-    private fun perform(
-        operation: Operation,
-        query: CFDictionaryRef?,
-        result: CFTypeRefVar? = null,
-        updateQuery: CFDictionaryRef? = null
-    ): Boolean {
-        return when (operation) {
-            Operation.Set -> SecItemAdd(query, result?.ptr)
-            Operation.Get -> SecItemCopyMatching(query, result?.ptr)
-            Operation.Update -> SecItemUpdate(query, updateQuery).apply { CFRelease(updateQuery) }
-            Operation.Delete -> SecItemDelete(query)
-        }.apply {
-            CFRelease(query)
-        }.toUInt() == noErr
-    }
+    private fun OSStatus.isValid(): Boolean = toUInt() == noErr
 }
