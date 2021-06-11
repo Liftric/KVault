@@ -4,11 +4,8 @@ import kotlinx.cinterop.*
 import platform.CoreFoundation.*
 import platform.Foundation.*
 import platform.Security.*
-import platform.darwin.OSErr
 import platform.darwin.OSStatus
 import platform.darwin.noErr
-import platform.posix.free
-import kotlin.native.concurrent.freeze
 
 /**
  * Keychain wrapper.
