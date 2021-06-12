@@ -93,7 +93,7 @@ actual open class KVault(
      * @return The stored string value, or null if it is missing
      */
     actual fun string(forKey: String): String? {
-        return value(forKey)?.toKString()
+        return value(forKey)?.stringValue
     }
 
     /**
@@ -190,7 +190,7 @@ actual open class KVault(
     // PRIVATE METHODS
     // ===============
 
-    private fun update(value: Any?, forKey: String): Boolean = retain(value, forKey) { (key, value) ->
+    private fun update(value: Any?, forKey: String): Boolean = retain(forKey, value) { (key, value) ->
         makeQuery(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to key,
@@ -206,18 +206,20 @@ actual open class KVault(
         }
     }
 
-    private fun add(key: String, value: NSData?): Boolean = if(existsObject(key)) {
-        update(value, key)
-    } else {
-        retain(key, value) { (key, value) ->
-            makeQuery(
-                kSecClass to kSecClassGenericPassword,
-                kSecAttrAccount to key,
-                kSecValueData to value
-            ) { query ->
-                SecItemAdd(query, null)
-                    .release(query)
-                    .isValid()
+    private fun add(key: String, value: NSData?): Boolean {
+        return if(existsObject(key)) {
+            update(value, key)
+        } else {
+            retain(key, value) { (key, value) ->
+                makeQuery(
+                    kSecClass to kSecClassGenericPassword,
+                    kSecAttrAccount to key,
+                    kSecValueData to value
+                ) { query ->
+                    SecItemAdd(query, null)
+                        .release(query)
+                        .isValid()
+                }
             }
         }
     }
@@ -238,7 +240,7 @@ actual open class KVault(
     }
 
     private fun <T> retain(vararg values: Any?, block: MemScope.(List<CFTypeRef?>) -> T): T = memScoped {
-        val retained = arrayOf(*values).map { CFBridgingRetain(it) }
+        val retained = arrayOf(*values.copyOf()).map { CFBridgingRetain(it) }
         block(retained).apply {
             retained.forEach { CFBridgingRelease(it) }
         }
@@ -269,7 +271,8 @@ actual open class KVault(
     private fun String.toNSData(): NSData? = NSString.create(string = this).dataUsingEncoding(NSUTF8StringEncoding)
     private fun NSNumber.toNSData() = NSKeyedArchiver.archivedDataWithRootObject(this)
     private fun NSData.toNSNumber() = NSKeyedUnarchiver.unarchiveObjectWithData(this) as? NSNumber
-    private fun NSData.toKString(): String? = NSString.create(this, NSUTF8StringEncoding) as String?
+    private val NSData.stringValue: String?
+        get() = NSString.create(this, NSUTF8StringEncoding) as String?
 
     private fun OSStatus.release(vararg queries: CFTypeRef?) = apply { queries.forEach { CFRelease(it) } }
     private fun OSStatus.isValid(): Boolean = toUInt() == noErr
