@@ -36,55 +36,55 @@ actual open class KVault(
     /**
      * Saves a string value in the Keychain.
      * @param key The key to store
-     * @param value The value to store
+     * @param stringValue The value to store
      */
-    actual fun set(key: String, value: String): Boolean = memScoped {
-        return value.toNSData()?.let { add(key, it) } ?: run { false }
+    actual fun set(key: String, stringValue: String): Boolean {
+        return add(key, stringValue.toNSData())
     }
 
     /**
      * Saves an int value in the Keychain.
      * @param key The key to store
-     * @param value The value to store
+     * @param intValue The value to store
      */
-    actual fun set(key: String, value: Int): Boolean = memScoped{
-        return add(key, NSKeyedArchiver.encode(NSNumber.numberWithInt(value)))
+    actual fun set(key: String, intValue: Int): Boolean {
+        return add(key, NSNumber(int = intValue).toNSData())
     }
 
     /**
      * Saves a long value in the Keychain.
      * @param key The key to store
-     * @param value The value to store
+     * @param longValue The value to store
      */
-    actual fun set(key: String, value: Long): Boolean = memScoped{
-        return add(key, NSKeyedArchiver.encode(NSNumber.numberWithLong(value)))
+    actual fun set(key: String, longValue: Long): Boolean {
+        return add(key, NSNumber(long = longValue).toNSData())
     }
 
     /**
      * Saves a float value in the Keychain.
      * @param key The key to store
-     * @param value The value to store
+     * @param floatValue The value to store
      */
-    actual fun set(key: String, value: Float): Boolean = memScoped{
-        return add(key, NSKeyedArchiver.encode(NSNumber.numberWithFloat(value)))
+    actual fun set(key: String, floatValue: Float): Boolean {
+        return add(key, NSNumber(float = floatValue).toNSData())
     }
 
     /**
      * Saves a double value in the Keychain.
      * @param key The key to store
-     * @param value The value to store
+     * @param doubleValue The value to store
      */
-    actual fun set(key: String, value: Double): Boolean = memScoped {
-        return add(key, NSKeyedArchiver.encode(NSNumber.numberWithDouble(value)))
+    actual fun set(key: String, doubleValue: Double): Boolean {
+        return add(key, NSNumber(double = doubleValue).toNSData())
     }
 
     /**
      * Saves a boolean value in the Keychain.
      * @param key The key to store
-     * @param value The value to store
+     * @param boolValue The value to store
      */
-    actual fun set(key: String, value: Boolean): Boolean = memScoped {
-        return add(key, NSKeyedArchiver.encode(NSNumber.numberWithBool(value)))
+    actual fun set(key: String, boolValue: Boolean): Boolean {
+        return add(key, NSNumber(bool = boolValue).toNSData())
     }
 
     /**
@@ -93,9 +93,7 @@ actual open class KVault(
      * @return The stored string value, or null if it is missing
      */
     actual fun string(forKey: String): String? {
-        return value(forKey)?.let { data ->
-            NSString.create(data, NSUTF8StringEncoding) as String?
-        }
+        return value(forKey)?.toKString()
     }
 
     /**
@@ -104,9 +102,7 @@ actual open class KVault(
      * @return The stored string value, or null if it is missing
      */
     actual fun int(forKey: String): Int? {
-        return value(forKey)?.let {
-            (NSKeyedUnarchiver.decode(it))?.intValue
-        }
+        return value(forKey)?.toNSNumber()?.intValue
     }
 
     /**
@@ -115,9 +111,7 @@ actual open class KVault(
      * @return The stored string value, or null if it is missing
      */
     actual fun long(forKey: String): Long? {
-        return value(forKey)?.let {
-            (NSKeyedUnarchiver.decode(it))?.longValue
-        }
+        return value(forKey)?.toNSNumber()?.longValue
     }
 
     /**
@@ -126,9 +120,7 @@ actual open class KVault(
      * @return The stored string value, or null if it is missing
      */
     actual fun float(forKey: String): Float? {
-        return value(forKey)?.let {
-            (NSKeyedUnarchiver.decode(it))?.floatValue
-        }
+        return value(forKey)?.toNSNumber()?.floatValue
     }
 
     /**
@@ -137,9 +129,7 @@ actual open class KVault(
      * @return The stored string value, or null if it is missing
      */
     actual fun double(forKey: String): Double? {
-        return value(forKey)?.let {
-            (NSKeyedUnarchiver.decode(it))?.doubleValue
-        }
+        return value(forKey)?.toNSNumber()?.doubleValue
     }
 
     /**
@@ -148,27 +138,23 @@ actual open class KVault(
      * @return The stored string value, or null if it is missing
      */
     actual fun bool(forKey: String): Boolean? {
-        return value(forKey)?.let {
-            (NSKeyedUnarchiver.decode(it))?.boolValue
-        }
+        return value(forKey)?.toNSNumber()?.boolValue
     }
 
     /**
      * Checks if object with the given key exists in the Keychain.
      * @param forKey The key to query
-     * @return True or false, depending on wether it is in the shared preferences or not
+     * @return True or false, depending on whether it is in the Keychain or not
      */
-    actual fun existsObject(forKey: String): Boolean = memScoped {
-        retain(forKey) { (key) ->
-            makeQuery(
-                kSecClass to kSecClassGenericPassword,
-                kSecAttrAccount to key,
-                kSecReturnData to kCFBooleanFalse
-            ) { query ->
-                SecItemCopyMatching(query, null)
-                    .release(query)
-                    .isValid()
-            }
+    actual fun existsObject(forKey: String): Boolean = retain(forKey) { (key) ->
+        makeQuery(
+            kSecClass to kSecClassGenericPassword,
+            kSecAttrAccount to key,
+            kSecReturnData to kCFBooleanFalse
+        ) { query ->
+            SecItemCopyMatching(query, null)
+                .release(query)
+                .isValid()
         }
     }
 
@@ -176,24 +162,22 @@ actual open class KVault(
      * Deletes object with the given key from the Keychain.
      * @param forKey The key to query
      */
-    actual fun deleteObject(forKey: String): Boolean = memScoped {
-        retain(forKey) { (key) ->
-            makeQuery(
-                kSecClass to kSecClassGenericPassword,
-                kSecAttrAccount to key
-            ) { query ->
-                SecItemDelete(query)
-                    .release(query)
-                    .isValid()
-            }
+    actual fun deleteObject(forKey: String): Boolean = retain(forKey) { (key) ->
+        makeQuery(
+            kSecClass to kSecClassGenericPassword,
+            kSecAttrAccount to key
+        ) { query ->
+            SecItemDelete(query)
+                .release(query)
+                .isValid()
         }
     }
 
     /**
      * Deletes all objects.
      */
-    actual fun clear(): Unit = memScoped {
-        makeQuery(
+    actual fun clear() {
+        return makeQuery(
             kSecClass to kSecClassGenericPassword
         ) { query ->
             SecItemDelete(query)
@@ -206,98 +190,86 @@ actual open class KVault(
     // PRIVATE METHODS
     // ===============
 
-    private fun update(value: NSData, forKey: String): Boolean = memScoped {
-        retain(forKey, value) { (key, value) ->
+    private fun update(value: Any?, forKey: String): Boolean = retain(value, forKey) { (key, value) ->
+        makeQuery(
+            kSecClass to kSecClassGenericPassword,
+            kSecAttrAccount to key,
+            kSecReturnData to kCFBooleanFalse
+        ) { query ->
             makeQuery(
-                kSecClass to kSecClassGenericPassword,
-                kSecAttrAccount to key,
-                kSecReturnData to kCFBooleanFalse
-            ) { query ->
-                makeQuery(
-                    kSecValueData to value
-                ) { updateQuery ->
-                    SecItemUpdate(query, updateQuery)
-                        .release(query, updateQuery)
-                        .isValid()
-                }
+                kSecValueData to value
+            ) { updateQuery ->
+                SecItemUpdate(query, updateQuery)
+                    .release(query, updateQuery)
+                    .isValid()
             }
         }
     }
 
-    private fun add(key: String, value: NSData): Boolean = memScoped {
-        if(existsObject(key)) {
-            update(value, key)
-        } else {
-            retain(key, value) { (key, value) ->
-                makeQuery(
-                    kSecClass to kSecClassGenericPassword,
-                    kSecAttrAccount to key,
-                    kSecValueData to value
-                ) { query ->
-                    SecItemAdd(query, null)
-                        .release(query)
-                        .isValid()
-                }
-            }
-        }
-    }
-
-    private fun value(forKey: String): NSData? = memScoped {
-        retain(forKey) { (key) ->
+    private fun add(key: String, value: NSData?): Boolean = if(existsObject(key)) {
+        update(value, key)
+    } else {
+        retain(key, value) { (key, value) ->
             makeQuery(
                 kSecClass to kSecClassGenericPassword,
                 kSecAttrAccount to key,
-                kSecReturnData to kCFBooleanTrue,
-                kSecMatchLimit to kSecMatchLimitOne
+                kSecValueData to value
             ) { query ->
-                val result = alloc<CFTypeRefVar>()
-                SecItemCopyMatching(query, result.ptr)
+                SecItemAdd(query, null)
                     .release(query)
                     .isValid()
-                CFBridgingRelease(result.value) as? NSData
             }
         }
     }
 
-    private fun <T> retain(vararg values: Any?, block: (List<CFTypeRef?>) -> T): T {
+    private fun value(forKey: String): NSData? = retain(forKey) { (key) ->
+        makeQuery(
+            kSecClass to kSecClassGenericPassword,
+            kSecAttrAccount to key,
+            kSecReturnData to kCFBooleanTrue,
+            kSecMatchLimit to kSecMatchLimitOne
+        ) { query ->
+            val result = alloc<CFTypeRefVar>()
+            SecItemCopyMatching(query, result.ptr)
+                .release(query)
+                .isValid()
+            CFBridgingRelease(result.value) as? NSData
+        }
+    }
+
+    private fun <T> retain(vararg values: Any?, block: MemScope.(List<CFTypeRef?>) -> T): T = memScoped {
         val retained = arrayOf(*values).map { CFBridgingRetain(it) }
-        return block(retained).apply {
+        block(retained).apply {
             retained.forEach { CFBridgingRelease(it) }
         }
     }
 
-    private fun <T> MemScope.makeQuery(vararg pairs: Pair<CFStringRef?, CFTypeRef?>, block: (CFDictionaryRef?) -> T): T {
-        return retain(accessGroup, serviceName) { (accessGroup, serviceName) ->
-            val map = mutableMapOf(*pairs)
+    private fun <T> makeQuery(
+        vararg pairs: Pair<CFStringRef?, CFTypeRef?>,
+        action: (CFDictionaryRef?) -> T
+    ): T = retain(accessGroup, serviceName) { (accessGroup, serviceName) ->
+        val map = mutableMapOf(*pairs)
 
-            if (accessGroup != null) {
-                map[kSecAttrAccessGroup] = accessGroup
-            }
-            if (serviceName != null) {
-                map[kSecAttrService] = serviceName
-            }
+        if (accessGroup != null) {
+            map[kSecAttrAccessGroup] = accessGroup
+        }
+        if (serviceName != null) {
+            map[kSecAttrService] = serviceName
+        }
 
-            val keys = allocArrayOf(*map.keys.toTypedArray())
-            val values = allocArrayOf(*map.values.toTypedArray())
-
-            CFDictionaryCreate(
-                null,
-                keys.reinterpret(),
-                values.reinterpret(),
-                map.size.convert(),
-                null,
-                null
-            ).run {
-                block(this)
-            }
+        CFDictionaryCreateMutable(
+            null, map.size.convert(), null, null
+        ).apply {
+            map.entries.forEach { CFDictionaryAddValue(this, it.key, it.value) }
+        }.run {
+            action(this)
         }
     }
 
-    @Suppress("CAST_NEVER_SUCCEEDS")
-    private fun String.toNSData(): NSData? = (this as NSString).dataUsingEncoding(NSUTF8StringEncoding)
-
-    private fun NSKeyedArchiver.Companion.encode(value: Any): NSData = archivedDataWithRootObject(value)
-    private fun NSKeyedUnarchiver.Companion.decode(data: NSData): NSNumber? = unarchiveObjectWithData(data) as? NSNumber
+    private fun String.toNSData(): NSData? = NSString.create(string = this).dataUsingEncoding(NSUTF8StringEncoding)
+    private fun NSNumber.toNSData() = NSKeyedArchiver.archivedDataWithRootObject(this)
+    private fun NSData.toNSNumber() = NSKeyedUnarchiver.unarchiveObjectWithData(this) as? NSNumber
+    private fun NSData.toKString(): String? = NSString.create(this, NSUTF8StringEncoding) as String?
 
     private fun OSStatus.release(vararg queries: CFTypeRef?) = apply { queries.forEach { CFRelease(it) } }
     private fun OSStatus.isValid(): Boolean = toUInt() == noErr
