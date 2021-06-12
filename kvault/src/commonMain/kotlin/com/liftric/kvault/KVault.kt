@@ -101,5 +101,5 @@ expect open class KVault {
     /**
      * Deletes all objects from the store.
      */
-    fun clear()
+    fun clear(): Boolean
 }

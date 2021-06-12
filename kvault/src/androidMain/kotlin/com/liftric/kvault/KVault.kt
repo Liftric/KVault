@@ -180,7 +180,7 @@ actual open class KVault(private val context: Context) {
     /**
      * Deletes all objects from the SharedPreferences.
      */
-    actual fun clear() {
-        encSharedPrefs.edit().clear().apply()
+    actual fun clear(): Boolean {
+        return encSharedPrefs.edit().clear().commit()
     }
 }
