@@ -258,7 +258,7 @@ actual open class KVault(
             kSecAttrService to CFBridgingRetain(serviceName),
             kSecAttrAccessGroup to CFBridgingRetain(accessGroup)
         )
-        val custom = arrayOf(*values.copyOf()).map { CFBridgingRetain(it) }
+        val custom = arrayOf(*values).map { CFBridgingRetain(it) }
         block.invoke(Context(standard), custom).apply {
             standard.values.plus(custom).forEach { CFBridgingRelease(it) }
         }
