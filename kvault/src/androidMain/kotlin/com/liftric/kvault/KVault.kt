@@ -22,72 +22,72 @@ actual open class KVault(private val context: Context) {
     /**
      * Saves a string value in the SharedPreferences.
      * @param key The key to store
-     * @param value The value to store
+     * @param stringValue The value to store
      */
-    actual fun set(key: String, value: String): Boolean {
+    actual fun set(key: String, stringValue: String): Boolean {
         return encSharedPrefs
             .edit()
-            .putString(key, value)
+            .putString(key, stringValue)
             .commit()
     }
 
     /**
      * Saves an int value in the SharedPreferences.
      * @param key The key to store
-     * @param value The value to store
+     * @param intValue The value to store
      */
-    actual fun set(key: String, value: Int): Boolean {
+    actual fun set(key: String, intValue: Int): Boolean {
         return encSharedPrefs
             .edit()
-            .putInt(key, value)
+            .putInt(key, intValue)
             .commit()
     }
 
     /**
      * Saves a long value in the SharedPreferences.
      * @param key The key to store
-     * @param value The value to store
+     * @param longValue The value to store
      */
-    actual fun set(key: String, value: Long): Boolean {
+    actual fun set(key: String, longValue: Long): Boolean {
         return encSharedPrefs
             .edit()
-            .putLong(key, value)
+            .putLong(key, longValue)
             .commit()
     }
 
     /**
      * Saves a float value in the SharedPreferences.
      * @param key The key to store
-     * @param value The value to store
+     * @param floatValue The value to store
      */
-    actual fun set(key: String, value: Float): Boolean {
+    actual fun set(key: String, floatValue: Float): Boolean {
         return encSharedPrefs
             .edit()
-            .putFloat(key, value)
+            .putFloat(key, floatValue)
             .commit()
     }
 
     /**
      * Saves a double value in the SharedPreferences.
      * @param key The key to store
-     * @param value The value to store
+     * @param doubleValue The value to store
      */
-    actual fun set(key: String, value: Double): Boolean {
+    actual fun set(key: String, doubleValue: Double): Boolean {
         return encSharedPrefs
             .edit()
-            .putLong(key, value.toRawBits())
+            .putLong(key, doubleValue.toRawBits())
             .commit()
     }
 
     /**
      * Saves a boolean value in the SharedPreferences.
      * @param key The key to store
-     * @param value The value to store
+     * @param boolValue The value to store
      */
-    actual fun set(key: String, value: Boolean): Boolean {
+    actual fun set(key: String, boolValue: Boolean): Boolean {
         return encSharedPrefs
             .edit()
-            .putBoolean(key, value)
+            .putBoolean(key, boolValue)
             .commit()
     }
 

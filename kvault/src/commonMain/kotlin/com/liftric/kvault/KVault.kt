@@ -4,44 +4,44 @@ expect open class KVault {
     /**
      * Saves a string value in the store.
      * @param key The key to store
-     * @param value The value to store
+     * @param stringValue The value to store
      */
-    fun set(key: String, value: String): Boolean
+    fun set(key: String, stringValue: String): Boolean
 
     /**
      * Saves an int value in the store.
      * @param key The key to store
-     * @param value The value to store
+     * @param intValue The value to store
      */
-    fun set(key: String, value: Int): Boolean
+    fun set(key: String, intValue: Int): Boolean
 
     /**
      * Saves a long value in the store.
      * @param key The key to store
-     * @param value The value to store
+     * @param longValue The value to store
      */
-    fun set(key: String, value: Long): Boolean
+    fun set(key: String, longValue: Long): Boolean
 
     /**
      * Saves a float value in the store.
      * @param key The key to store
-     * @param value The value to store
+     * @param floatValue The value to store
      */
-    fun set(key: String, value: Float): Boolean
+    fun set(key: String, floatValue: Float): Boolean
 
     /**
      * Saves a double value in the store.
      * @param key The key to store
-     * @param value The value to store
+     * @param doubleValue The value to store
      */
-    fun set(key: String, value: Double): Boolean
+    fun set(key: String, doubleValue: Double): Boolean
 
     /**
      * Saves a boolean value in the store.
      * @param key The key to store
-     * @param value The value to store
+     * @param boolValue The value to store
      */
-    fun set(key: String, value: Boolean): Boolean
+    fun set(key: String, boolValue: Boolean): Boolean
 
     /**
      * Checks if object with key exists in the store.
