@@ -172,6 +172,7 @@ actual open class KVault(private val context: Context) {
     /**
      * Deletes object with the given key from the SharedPreferences.
      * @param forKey The key to query
+     * @return True or false, depending on whether the object has been deleted
      */
     actual fun deleteObject(forKey: String): Boolean {
         return encSharedPrefs.edit().remove(forKey).commit()
@@ -179,6 +180,7 @@ actual open class KVault(private val context: Context) {
 
     /**
      * Deletes all objects from the SharedPreferences.
+     * @return True or false, depending on whether the objects have been deleted
      */
     actual fun clear(): Boolean {
         return encSharedPrefs.edit().clear().commit()

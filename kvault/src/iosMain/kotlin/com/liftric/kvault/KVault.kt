@@ -7,31 +7,33 @@ import platform.Security.*
 import platform.darwin.OSStatus
 import platform.darwin.noErr
 
+internal val NSBundle.Companion.identifier
+    get() = this.mainBundle.bundleIdentifier?: "com.liftric.KVault"
+
 /**
  * Keychain wrapper.
  *
- * @param serviceName Name of the service.
+ * @param serviceName Name of the service. Used to categories entries.
  * @param accessGroup Name of the access group. Used to share entries between apps.
- * @constructor Initiates a Keychain with the given properties.
+ * @constructor Initiates a Keychain with the given parameters.
  */
 actual open class KVault(
     val serviceName: String? = null,
     val accessGroup: String? = null
 ) {
     /**
-     * Initiates a Keychain with the bundle identifier as the service name and without an access group.
-     * If the bundle identifier is nil, it will fallback to `com.liftric.KVault`.
+     * Initiates a Keychain with the main bundle identifier as the service name and without an access group.
+     * If the main bundle identifier is null, it will fallback to `com.liftric.KVault`.
      */
     @Deprecated(
         """
-            Will be removed in a future version, 
-            please use the primary constructor. 
-            Check your service name before migrating.
-            """
-        ,
+        Will be removed in a future version, 
+        please use the primary constructor. 
+        Check your service name before migrating.
+        """,
         level = DeprecationLevel.WARNING
     )
-    constructor() : this(Constants.BundleIdentifier, null)
+    constructor() : this(NSBundle.identifier, null)
 
     /**
      * Saves a string value in the Keychain.
@@ -146,7 +148,7 @@ actual open class KVault(
      * @param forKey The key to query
      * @return True or false, depending on whether it is in the Keychain or not
      */
-    actual fun existsObject(forKey: String): Boolean = retain(forKey) { (account) ->
+    actual fun existsObject(forKey: String): Boolean = context(forKey) { (account) ->
         val query = query(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to account,
@@ -160,8 +162,9 @@ actual open class KVault(
     /**
      * Deletes object with the given key from the Keychain.
      * @param forKey The key to query
+     * @return True or false, depending on whether the object has been deleted
      */
-    actual fun deleteObject(forKey: String): Boolean = retain(forKey) { (account) ->
+    actual fun deleteObject(forKey: String): Boolean = context(forKey) { (account) ->
         val query = query(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to account
@@ -173,8 +176,11 @@ actual open class KVault(
 
     /**
      * Deletes all objects.
+     * If the service name and/or the access group are null, all items in the apps
+     * Keychain will be deleted.
+     * @return True or false, depending on whether the objects have been deleted
      */
-    actual fun clear(): Boolean = retain {
+    actual fun clear(): Boolean = context {
         val query = query(
             kSecClass to kSecClassGenericPassword
         )
@@ -195,7 +201,7 @@ actual open class KVault(
         }
     }
 
-    private fun add(key: String, value: NSData?): Boolean = retain(key, value) { (account, data) ->
+    private fun add(key: String, value: NSData?): Boolean = context(key, value) { (account, data) ->
         val query = query(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to account,
@@ -206,7 +212,7 @@ actual open class KVault(
             .validate()
     }
 
-    private fun update(value: Any?, forKey: String): Boolean = retain(forKey, value) { (account, data) ->
+    private fun update(value: Any?, forKey: String): Boolean = context(forKey, value) { (account, data) ->
         val query = query(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to account,
@@ -221,7 +227,7 @@ actual open class KVault(
             .validate()
     }
 
-    private fun value(forKey: String): NSData? = retain(forKey) { (account) ->
+    private fun value(forKey: String): NSData? = context(forKey) { (account) ->
         val query = query(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to account,
@@ -242,7 +248,7 @@ actual open class KVault(
 
     private class Context(val refs: Map<CFStringRef?, CFTypeRef?>) {
         fun query(vararg pairs: Pair<CFStringRef?, CFTypeRef?>): CFDictionaryRef? {
-            val map = mutableMapOf(*pairs).plus(refs).filter { it.value != null }
+            val map = mapOf(*pairs).plus(refs.filter { it.value != null })
             return CFDictionaryCreateMutable(
                 null, map.size.convert(), null, null
             ).apply {
@@ -253,7 +259,7 @@ actual open class KVault(
         }
     }
 
-    private fun <T> retain(vararg values: Any?, block: Context.(List<CFTypeRef?>) -> T): T = memScoped {
+    private fun <T> context(vararg values: Any?, block: Context.(List<CFTypeRef?>) -> T): T = memScoped {
         val standard = mapOf(
             kSecAttrService to CFBridgingRetain(serviceName),
             kSecAttrAccessGroup to CFBridgingRetain(accessGroup)

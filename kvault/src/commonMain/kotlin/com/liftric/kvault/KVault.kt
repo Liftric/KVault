@@ -95,11 +95,13 @@ expect open class KVault {
     /**
      * Deletes object with the given key from the store.
      * @param forKey The key to query
+     * @return True or false, depending on whether the object has been deleted
      */
     fun deleteObject(forKey: String): Boolean
 
     /**
      * Deletes all objects from the store.
+     * @return True or false, depending on whether the objects have been deleted
      */
     fun clear(): Boolean
 }
