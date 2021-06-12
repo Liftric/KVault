@@ -23,21 +23,26 @@ sourceSets {
 #### Android
 
 ```kotlin
-  val store = KVault(context = Context)
+  val store = KVault(context)
 ```
 
 #### iOS
 
 ```kotlin
-  val store = KVault(serviceName = "credentials", accessGroup = null)
+val store = KVault(serviceName = null, accessGroup = null)
 ```
+
+| Parameter    | Description                         |
+| :----------- | :---------------------------------- |
+| serviceName  | Used to categories objects.         |
+| accessGroup  | Used to share objects between apps. |
 
 ### Setting
 
 ```kotlin
-  val stringStoredSuccessfully: Boolean = store.set(key = "PASSWORD", value = "546hfbfzzeujfdbfdz")
-  val intStoredSuccessfully: Boolean = store.set(key = "SECRET", value = 45678765)
-  val floatStoredSuccessfully: Boolean = store.set(key = "HEIGHT", value = 1.79)
+val stringStored: Boolean = store.set(key = "LEET", stringValue = "1337")
+val intStored: Boolean = store.set(key = "ANSWER", intValue = 42)
+val floatStored: Boolean = store.set(key = "PI", floatValue = 3.14)
 ```
 
 #### Supported Types
@@ -52,14 +57,14 @@ sourceSets {
 ### Getting
 
 ```kotlin
-  val stringValue: String? = store.string(forKey = "PASSWORD")
-  val intValue: Int? = store.int(forKey = "SECRET")
+val stringValue: String? = store.string(forKey = "PASSWORD")
+val intValue: Int? = store.int(forKey = "SECRET")
 ```
 
 To check if an object is in the Keychain you can also use:
 
 ```kotlin
-  val existsObject: Boolean = store.existsObject(forKey = "PASSWORD")
+val existsObject: Boolean = store.existsObject(forKey = "PASSWORD")
 ```
 
 ### Deleting
@@ -67,17 +72,17 @@ To check if an object is in the Keychain you can also use:
 #### Single object
 
 ```kotlin
-  val isRemoved: Boolean = store.removeObject(forKey = "PASSWORD")
+val removed: Boolean = store.removeObject(forKey = "PASSWORD")
 ```
 
 #### All objects
 
 ##### iOS
 
-⚠️ If the service name and the access group are null it will delete all objects that are in the apps Keychain.
+⚠️ If the service name and the access group are not null, it will only delete the objects that match the query.
 
 ```kotlin
-  store.clear()
+val cleared: Boolean = store.clear()
 ```
 
 ## License
