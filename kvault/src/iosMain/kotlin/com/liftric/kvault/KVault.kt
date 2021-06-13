@@ -7,7 +7,7 @@ import platform.Security.*
 import platform.darwin.OSStatus
 import platform.darwin.noErr
 
-internal val NSBundle.Companion.identifier
+internal val NSBundle.Companion.mainIdentifier
     get() = this.mainBundle.bundleIdentifier?: "com.liftric.KVault"
 
 /**
@@ -33,7 +33,7 @@ actual open class KVault(
         """,
         level = DeprecationLevel.WARNING
     )
-    constructor() : this(NSBundle.identifier, null)
+    constructor() : this(NSBundle.mainIdentifier, null)
 
     /**
      * Saves a string value in the Keychain.
@@ -259,13 +259,13 @@ actual open class KVault(
         }
     }
 
-    private fun <T> context(vararg values: Any?, block: Context.(List<CFTypeRef?>) -> T): T = memScoped {
+    private fun <T> context(vararg values: Any?, block: Context.(List<CFTypeRef?>) -> T): T {
         val standard = mapOf(
             kSecAttrService to CFBridgingRetain(serviceName),
             kSecAttrAccessGroup to CFBridgingRetain(accessGroup)
         )
         val custom = arrayOf(*values).map { CFBridgingRetain(it) }
-        block.invoke(Context(standard), custom).apply {
+        return block.invoke(Context(standard), custom).apply {
             standard.values.plus(custom).forEach { CFBridgingRelease(it) }
         }
     }
