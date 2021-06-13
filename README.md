@@ -23,7 +23,7 @@ sourceSets {
 #### Android
 
 ```kotlin
-  val store = KVault(context)
+val store = KVault(context)
 ```
 
 #### iOS
