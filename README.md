@@ -72,7 +72,7 @@ val existsObject: Boolean = store.existsObject(forKey = "PASSWORD")
 #### Single object
 
 ```kotlin
-val removed: Boolean = store.removeObject(forKey = "PASSWORD")
+val isRemoved: Boolean = store.removeObject(forKey = "PASSWORD")
 ```
 
 #### All objects
@@ -82,7 +82,7 @@ val removed: Boolean = store.removeObject(forKey = "PASSWORD")
 ⚠️ If the service name and the access group are not null, it will only delete the objects that match the query.
 
 ```kotlin
-val cleared: Boolean = store.clear()
+val isCleared: Boolean = store.clear()
 ```
 
 ## License
