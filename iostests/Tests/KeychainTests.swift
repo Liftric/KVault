@@ -34,7 +34,7 @@ class KeychainTests: XCTestCase {
         ]
 
         testData.forEach {
-            sut.set(key: $0.key, value_____: $0.value)
+            sut.set(key: $0.key, stringValue: $0.value)
             XCTAssertNotNil(sut.string(forKey: $0.key), "\($0.key) should not be null")
             XCTAssertEqual($0.value, sut.string(forKey: $0.key), "\($0.key) should resolve \($0.value)")
             XCTAssertNotEqual(sut.string(forKey: $0.key),
@@ -55,7 +55,7 @@ class KeychainTests: XCTestCase {
         ]
 
         testData.forEach {
-            sut.set(key: $0.key, value___: $0.value)
+            sut.set(key: $0.key, intValue: $0.value)
             XCTAssertNotNil(sut.int(forKey: $0.key)?.int32Value, "\($0.key) should not be null")
             XCTAssertEqual($0.value, sut.int(forKey: $0.key)?.int32Value, "\($0.key) should resolve \($0.value)")
             XCTAssertNotEqual(sut.int(forKey: $0.key)?.int32Value, 1337,
@@ -75,7 +75,7 @@ class KeychainTests: XCTestCase {
         ]
 
         testData.forEach {
-            sut.set(key: $0.key, value____: $0.value)
+            sut.set(key: $0.key, longValue: $0.value)
             XCTAssertNotNil(sut.long(forKey: $0.key)?.int64Value, "\($0.key) should not be null")
             XCTAssertEqual($0.value, sut.long(forKey: $0.key)?.int64Value, "\($0.key) should resolve \($0.value)")
             XCTAssertNotEqual(sut.long(forKey: $0.key)?.int64Value, 1337,
@@ -95,7 +95,7 @@ class KeychainTests: XCTestCase {
         ]
 
         testData.forEach {
-            sut.set(key: $0.key, value__: $0.value)
+            sut.set(key: $0.key, floatValue: $0.value)
             XCTAssertNotNil(sut.float(forKey: $0.key)?.floatValue, "\($0.key) should not be null")
             XCTAssertEqual($0.value, sut.float(forKey: $0.key)?.floatValue, "\($0.key) should resolve \($0.value)")
             XCTAssertNotEqual(sut.float(forKey: $0.key)?.floatValue, 31337.31337,
@@ -115,7 +115,7 @@ class KeychainTests: XCTestCase {
         ]
 
         testData.forEach {
-            sut.set(key: $0.key, value_: $0.value)
+            sut.set(key: $0.key, doubleValue: $0.value)
             XCTAssertNotNil(sut.double(forKey: $0.key)?.doubleValue, "\($0.key) should not be null")
             XCTAssertEqual($0.value, sut.double(forKey: $0.key)?.doubleValue, "\($0.key) should resolve \($0.value)")
             XCTAssertNotEqual(sut.double(forKey: $0.key)?.doubleValue, 31337.31337,
@@ -134,7 +134,7 @@ class KeychainTests: XCTestCase {
         ]
 
         testData.forEach {
-            sut.set(key: $0.key, value: $0.value)
+            sut.set(key: $0.key, boolValue: $0.value)
             XCTAssertNotNil(sut.bool(forKey: $0.key)?.boolValue, "\($0.key) should not be null")
             XCTAssertEqual($0.value, sut.bool(forKey: $0.key)?.boolValue, "\($0.key) should resolve \($0.value)")
         }
@@ -146,23 +146,23 @@ class KeychainTests: XCTestCase {
 
     func testExistsObject() {
         XCTAssertFalse(sut.existsObject(forKey: "blank"), "Blank should not exist")
-        sut.set(key: "blank", value_____: "124")
-        sut.set(key: "bla", value___: 1)
+        sut.set(key: "blank", stringValue: "124")
+        sut.set(key: "bla", intValue: 1)
         XCTAssertTrue(sut.existsObject(forKey: "blank"), "Blank should exist")
     }
 
     func testDeleteObject() {
         XCTAssertFalse(sut.existsObject(forKey: "blank"), "Blank should not exist")
-        sut.set(key: "blank", value_____: "123")
+        sut.set(key: "blank", stringValue: "123")
         XCTAssertTrue(sut.existsObject(forKey: "blank"), "Blank should exist")
         sut.deleteObject(forKey: "blank")
         XCTAssertFalse(sut.existsObject(forKey: "blank"), "Blank should not exist anymore")
     }
 
     func testOverwrite() {
-        sut.set(key: "keyX", value_____: "dummyX")
+        sut.set(key: "keyX", stringValue: "dummyX")
         XCTAssertEqual("dummyX", sut.string(forKey: "keyX"))
-        sut.set(key: "keyX", value_____: "dummyXY")
+        sut.set(key: "keyX", stringValue: "dummyXY")
         XCTAssertEqual("dummyXY", sut.string(forKey: "keyX"))
         XCTAssertNotEqual("dummyX", sut.string(forKey: "keyX"))
     }
@@ -171,7 +171,7 @@ class KeychainTests: XCTestCase {
         let keys = ["key1", "key2", "key3", "key4", "key5"]
 
         keys.forEach {
-            sut.set(key: $0, value_____: "dummy")
+            sut.set(key: $0, stringValue: "dummy")
             XCTAssertTrue(sut.existsObject(forKey: $0), "\($0) should exist")
         }
 
@@ -189,7 +189,7 @@ class KeychainTests: XCTestCase {
 
         [sut, sut2].forEach { sut in
             keys.forEach {
-                sut.set(key: $0, value_____: "dummy")
+                sut.set(key: $0, stringValue: "dummy")
                 XCTAssertTrue(sut.existsObject(forKey: $0), "\($0) should exist")
             }
         }
@@ -205,7 +205,7 @@ class KeychainTests: XCTestCase {
         }
 
         keys.forEach {
-            sut2.set(key: $0, value_____: "dummy")
+            sut2.set(key: $0, stringValue: "dummy")
             XCTAssertTrue(sut2.existsObject(forKey: $0), "\($0) should exist")
         }
 
@@ -227,7 +227,7 @@ class KeychainTests: XCTestCase {
 
         [sut, sut2].forEach { sut in
             keys.forEach {
-                sut.set(key: $0, value_____: "dummy")
+                sut.set(key: $0, stringValue: "dummy")
                 XCTAssertTrue(sut.existsObject(forKey: $0), "\($0) should exist")
             }
         }

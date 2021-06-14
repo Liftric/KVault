@@ -13,6 +13,7 @@
 		3D20E9072659290E0063F320 /* kvault.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D20E9062659290E0063F320 /* kvault.framework */; };
 		3D20E9082659290E0063F320 /* kvault.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3D20E9062659290E0063F320 /* kvault.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3D20E90B265929B90063F320 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20E90A265929B90063F320 /* Keychain.swift */; };
+		3D4BC93E2673E8EF00D12CC3 /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4BC93D2673E8EF00D12CC3 /* DebugViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +51,7 @@
 		3D20E9062659290E0063F320 /* kvault.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = kvault.framework; path = ../kvault/build/bin/iosX64/debugFramework/kvault.framework; sourceTree = "<group>"; };
 		3D20E90A265929B90063F320 /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		3D20E90C26592A440063F320 /* TestApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TestApp.entitlements; sourceTree = "<group>"; };
+		3D4BC93D2673E8EF00D12CC3 /* DebugViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 			children = (
 				3D20E8D5265928990063F320 /* AppDelegate.swift */,
 				3D20E8D7265928990063F320 /* SceneDelegate.swift */,
+				3D4BC93D2673E8EF00D12CC3 /* DebugViewController.swift */,
 				3D20E90A265929B90063F320 /* Keychain.swift */,
 				3D20E8E32659289C0063F320 /* Info.plist */,
 			);
@@ -219,6 +222,7 @@
 			files = (
 				3D20E90B265929B90063F320 /* Keychain.swift in Sources */,
 				3D20E8D6265928990063F320 /* AppDelegate.swift in Sources */,
+				3D4BC93E2673E8EF00D12CC3 /* DebugViewController.swift in Sources */,
 				3D20E8D8265928990063F320 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
