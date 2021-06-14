@@ -1,4 +1,5 @@
-![CI](https://github.com/Liftric/kvault/workflows/CI/badge.svg) ![maven-central](https://img.shields.io/maven-central/v/com.liftric/kvault)
+![CI](https://github.com/Liftric/kvault/workflows/CI/badge.svg) ![maven-central](https://img.shields.io/maven-central/v/com.liftric/kvault?label=Maven%20Central) ![OSS Sonatype (Releases)](https://img.shields.io/nexus/r/com.liftric/kvault?label=OSS%20Sonatype%20%28Releases%29&server=https%3A%2F%2Fs01.oss.sonatype.org)
+
 
 # KVault
 
