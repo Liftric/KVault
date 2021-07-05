@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 
-actual open class KVault(private val context: Context) {
+actual open class KVault(context: Context) {
     private val encSharedPrefs: SharedPreferences
 
     init {
@@ -23,6 +23,7 @@ actual open class KVault(private val context: Context) {
      * Saves a string value in the SharedPreferences.
      * @param key The key to store
      * @param stringValue The value to store
+     * @return True or false, depending on whether the value has been stored in the SharedPreferences
      */
     actual fun set(key: String, stringValue: String): Boolean {
         return encSharedPrefs
@@ -35,6 +36,7 @@ actual open class KVault(private val context: Context) {
      * Saves an int value in the SharedPreferences.
      * @param key The key to store
      * @param intValue The value to store
+     * @return True or false, depending on whether the value has been stored in the SharedPreferences
      */
     actual fun set(key: String, intValue: Int): Boolean {
         return encSharedPrefs
@@ -47,6 +49,7 @@ actual open class KVault(private val context: Context) {
      * Saves a long value in the SharedPreferences.
      * @param key The key to store
      * @param longValue The value to store
+     * @return True or false, depending on whether the value has been stored in the SharedPreferences
      */
     actual fun set(key: String, longValue: Long): Boolean {
         return encSharedPrefs
@@ -59,6 +62,7 @@ actual open class KVault(private val context: Context) {
      * Saves a float value in the SharedPreferences.
      * @param key The key to store
      * @param floatValue The value to store
+     * @return True or false, depending on whether the value has been stored in the SharedPreferences
      */
     actual fun set(key: String, floatValue: Float): Boolean {
         return encSharedPrefs
@@ -71,6 +75,7 @@ actual open class KVault(private val context: Context) {
      * Saves a double value in the SharedPreferences.
      * @param key The key to store
      * @param doubleValue The value to store
+     * @return True or false, depending on whether the value has been stored in the SharedPreferences
      */
     actual fun set(key: String, doubleValue: Double): Boolean {
         return encSharedPrefs
@@ -83,6 +88,7 @@ actual open class KVault(private val context: Context) {
      * Saves a boolean value in the SharedPreferences.
      * @param key The key to store
      * @param boolValue The value to store
+     * @return True or false, depending on whether the value has been stored in the SharedPreferences
      */
     actual fun set(key: String, boolValue: Boolean): Boolean {
         return encSharedPrefs
@@ -94,7 +100,7 @@ actual open class KVault(private val context: Context) {
     /**
      * Checks if object with key exists in the SharedPreferences.
      * @param forKey The key to query
-     * @return True or false, depending on wether it is in the shared preferences or not
+     * @return True or false, depending on whether the value has been stored in the SharedPreferences
      */
     actual fun existsObject(forKey: String): Boolean {
         return encSharedPrefs.contains(forKey)
@@ -112,61 +118,66 @@ actual open class KVault(private val context: Context) {
     /**
      * Returns the int value of an object in the SharedPreferences.
      * @param forKey The key to query
-     * @return The stored string value, or null if it is missing
+     * @return The stored int value, or null if it is missing
      */
     actual fun int(forKey: String): Int? {
-        if (existsObject(forKey)) {
-            return encSharedPrefs.getInt(forKey, Int.MIN_VALUE)
+        return if (existsObject(forKey)) {
+            encSharedPrefs.getInt(forKey, Int.MIN_VALUE)
+        } else {
+            null
         }
-        return null
     }
 
     /**
      * Returns the long value of an object in the SharedPreferences.
      * @param forKey The key to query
-     * @return The stored string value, or null if it is missing
+     * @return The stored long value, or null if it is missing
      */
     actual fun long(forKey: String): Long? {
-        if (existsObject(forKey)) {
-            return encSharedPrefs.getLong(forKey, Long.MIN_VALUE)
+        return if (existsObject(forKey)) {
+            encSharedPrefs.getLong(forKey, Long.MIN_VALUE)
+        } else {
+            null
         }
-        return null
     }
 
     /**
      * Returns the float value of an object in the SharedPreferences.
      * @param forKey The key to query
-     * @return The stored string value, or null if it is missing
+     * @return The stored float value, or null if it is missing
      */
     actual fun float(forKey: String): Float? {
-        if (existsObject(forKey)) {
-            return encSharedPrefs.getFloat(forKey, Float.MIN_VALUE)
+        return if (existsObject(forKey)) {
+            encSharedPrefs.getFloat(forKey, Float.MIN_VALUE)
+        } else {
+            null
         }
-        return null
     }
 
     /**
      * Returns the double value of an object in the SharedPreferences.
      * @param forKey The key to query
-     * @return The stored string value, or null if it is missing
+     * @return The stored double value, or null if it is missing
      */
     actual fun double(forKey: String): Double? {
-        if (existsObject(forKey)) {
-            return Double.fromBits(encSharedPrefs.getLong(forKey, Double.MIN_VALUE.toRawBits()))
+        return if (existsObject(forKey)) {
+            Double.fromBits(encSharedPrefs.getLong(forKey, Double.MIN_VALUE.toRawBits()))
+        } else {
+            null
         }
-        return null
     }
 
     /**
      * Returns the boolean value of an object in the SharedPreferences.
      * @param forKey The key to query
-     * @return The stored string value, or null if it is missing
+     * @return The stored boolean value, or null if it is missing
      */
     actual fun bool(forKey: String): Boolean? {
-        if (existsObject(forKey)) {
-            return encSharedPrefs.getBoolean(forKey, false)
+        return if (existsObject(forKey)) {
+            encSharedPrefs.getBoolean(forKey, false)
+        } else {
+            null
         }
-        return null
     }
 
     /**
@@ -175,7 +186,10 @@ actual open class KVault(private val context: Context) {
      * @return True or false, depending on whether the object has been deleted
      */
     actual fun deleteObject(forKey: String): Boolean {
-        return encSharedPrefs.edit().remove(forKey).commit()
+        return encSharedPrefs
+            .edit()
+            .remove(forKey)
+            .commit()
     }
 
     /**
@@ -183,6 +197,9 @@ actual open class KVault(private val context: Context) {
      * @return True or false, depending on whether the objects have been deleted
      */
     actual fun clear(): Boolean {
-        return encSharedPrefs.edit().clear().commit()
+        return encSharedPrefs
+            .edit()
+            .clear()
+            .commit()
     }
 }

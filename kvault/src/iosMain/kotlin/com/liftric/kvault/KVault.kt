@@ -39,6 +39,7 @@ actual open class KVault(
      * Saves a string value in the Keychain.
      * @param key The key to store
      * @param stringValue The value to store
+     * @return True or false, depending on whether the value has been stored in the Keychain
      */
     actual fun set(key: String, stringValue: String): Boolean {
         return addOrUpdate(key, stringValue.toNSData())
@@ -48,6 +49,7 @@ actual open class KVault(
      * Saves an int value in the Keychain.
      * @param key The key to store
      * @param intValue The value to store
+     * @return True or false, depending on whether the value has been stored in the Keychain
      */
     actual fun set(key: String, intValue: Int): Boolean {
         return addOrUpdate(key, NSNumber(int = intValue).toNSData())
@@ -57,6 +59,7 @@ actual open class KVault(
      * Saves a long value in the Keychain.
      * @param key The key to store
      * @param longValue The value to store
+     * @return True or false, depending on whether the value has been stored in the Keychain
      */
     actual fun set(key: String, longValue: Long): Boolean {
         return addOrUpdate(key, NSNumber(long = longValue).toNSData())
@@ -66,6 +69,7 @@ actual open class KVault(
      * Saves a float value in the Keychain.
      * @param key The key to store
      * @param floatValue The value to store
+     * @return True or false, depending on whether the value has been stored in the Keychain
      */
     actual fun set(key: String, floatValue: Float): Boolean {
         return addOrUpdate(key, NSNumber(float = floatValue).toNSData())
@@ -75,6 +79,7 @@ actual open class KVault(
      * Saves a double value in the Keychain.
      * @param key The key to store
      * @param doubleValue The value to store
+     * @return True or false, depending on whether the value has been stored in the Keychain
      */
     actual fun set(key: String, doubleValue: Double): Boolean {
         return addOrUpdate(key, NSNumber(double = doubleValue).toNSData())
@@ -84,6 +89,7 @@ actual open class KVault(
      * Saves a boolean value in the Keychain.
      * @param key The key to store
      * @param boolValue The value to store
+     * @return True or false, depending on whether the value has been stored in the Keychain
      */
     actual fun set(key: String, boolValue: Boolean): Boolean {
         return addOrUpdate(key, NSNumber(bool = boolValue).toNSData())
@@ -101,7 +107,7 @@ actual open class KVault(
     /**
      * Returns the int value of an object in the Keychain.
      * @param forKey The key to query
-     * @return The stored string value, or null if it is missing
+     * @return The stored int value, or null if it is missing
      */
     actual fun int(forKey: String): Int? {
         return value(forKey)?.toNSNumber()?.intValue
@@ -110,7 +116,7 @@ actual open class KVault(
     /**
      * Returns the long value of an object in the Keychain.
      * @param forKey The key to query
-     * @return The stored string value, or null if it is missing
+     * @return The stored long value, or null if it is missing
      */
     actual fun long(forKey: String): Long? {
         return value(forKey)?.toNSNumber()?.longValue
@@ -119,7 +125,7 @@ actual open class KVault(
     /**
      * Returns the float value of an object in the Keychain.
      * @param forKey The key to query
-     * @return The stored string value, or null if it is missing
+     * @return The stored float value, or null if it is missing
      */
     actual fun float(forKey: String): Float? {
         return value(forKey)?.toNSNumber()?.floatValue
@@ -128,7 +134,7 @@ actual open class KVault(
     /**
      * Returns the double value of an object in the Keychain.
      * @param forKey The key to query
-     * @return The stored string value, or null if it is missing
+     * @return The stored double value, or null if it is missing
      */
     actual fun double(forKey: String): Double? {
         return value(forKey)?.toNSNumber()?.doubleValue
@@ -137,7 +143,7 @@ actual open class KVault(
     /**
      * Returns the boolean value of an object in the Keychain.
      * @param forKey The key to query
-     * @return The stored string value, or null if it is missing
+     * @return The stored boolean value, or null if it is missing
      */
     actual fun bool(forKey: String): Boolean? {
         return value(forKey)?.toNSNumber()?.boolValue
@@ -176,7 +182,7 @@ actual open class KVault(
 
     /**
      * Deletes all objects.
-     * If the service name and/or the access group are null, all items in the apps
+     * If the service name and/or the access group are null, all items in the apps'
      * Keychain will be deleted.
      * @return True or false, depending on whether the objects have been deleted
      */
@@ -195,7 +201,7 @@ actual open class KVault(
 
     private fun addOrUpdate(key: String, value: NSData?): Boolean {
         return if(existsObject(key)) {
-            update(value, key)
+            update(key, value)
         } else {
             add(key, value)
         }
@@ -212,7 +218,7 @@ actual open class KVault(
             .validate()
     }
 
-    private fun update(value: Any?, forKey: String): Boolean = context(forKey, value) { (account, data) ->
+    private fun update(key: String, value: Any?): Boolean = context(key, value) { (account, data) ->
         val query = query(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to account,
