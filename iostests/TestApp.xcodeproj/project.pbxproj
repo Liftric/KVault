@@ -10,10 +10,10 @@
 		3D20E8D6265928990063F320 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20E8D5265928990063F320 /* AppDelegate.swift */; };
 		3D20E8D8265928990063F320 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20E8D7265928990063F320 /* SceneDelegate.swift */; };
 		3D20E8ED2659289C0063F320 /* KeychainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20E8EC2659289C0063F320 /* KeychainTests.swift */; };
-		3D20E9072659290E0063F320 /* kvault.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D20E9062659290E0063F320 /* kvault.framework */; };
-		3D20E9082659290E0063F320 /* kvault.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3D20E9062659290E0063F320 /* kvault.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3D20E90B265929B90063F320 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D20E90A265929B90063F320 /* Keychain.swift */; };
 		3D4BC93E2673E8EF00D12CC3 /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4BC93D2673E8EF00D12CC3 /* DebugViewController.swift */; };
+		3DBBD37726DD240D00DF9391 /* kvault.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DBBD37626DD240D00DF9391 /* kvault.framework */; };
+		3DBBD37826DD240D00DF9391 /* kvault.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3DBBD37626DD240D00DF9391 /* kvault.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,13 +27,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		3D20E9092659290E0063F320 /* Embed Frameworks */ = {
+		3DBBD37926DD240D00DF9391 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				3D20E9082659290E0063F320 /* kvault.framework in Embed Frameworks */,
+				3DBBD37826DD240D00DF9391 /* kvault.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -52,6 +52,7 @@
 		3D20E90A265929B90063F320 /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		3D20E90C26592A440063F320 /* TestApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TestApp.entitlements; sourceTree = "<group>"; };
 		3D4BC93D2673E8EF00D12CC3 /* DebugViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugViewController.swift; sourceTree = "<group>"; };
+		3DBBD37626DD240D00DF9391 /* kvault.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = kvault.framework; path = ../build/bin/iosX64/debugFramework/kvault.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,7 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D20E9072659290E0063F320 /* kvault.framework in Frameworks */,
+				3DBBD37726DD240D00DF9391 /* kvault.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,6 +118,7 @@
 		3D20E9052659290E0063F320 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3DBBD37626DD240D00DF9391 /* kvault.framework */,
 				3D20E9062659290E0063F320 /* kvault.framework */,
 			);
 			name = Frameworks;
@@ -132,7 +134,7 @@
 				3D20E8CE265928990063F320 /* Sources */,
 				3D20E8CF265928990063F320 /* Frameworks */,
 				3D20E8D0265928990063F320 /* Resources */,
-				3D20E9092659290E0063F320 /* Embed Frameworks */,
+				3DBBD37926DD240D00DF9391 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -371,7 +373,7 @@
 				CODE_SIGN_ENTITLEMENTS = TestApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
-				FRAMEWORK_SEARCH_PATHS = "../kvault/build/bin/iosX64/debugFramework/**";
+				FRAMEWORK_SEARCH_PATHS = "../build/bin/iosX64/debugFramework/**";
 				INFOPLIST_FILE = Sources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -393,7 +395,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TestApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				FRAMEWORK_SEARCH_PATHS = "../kvault/build/bin/iosX64/debugFramework/**";
+				FRAMEWORK_SEARCH_PATHS = "../build/bin/iosX64/debugFramework/**";
 				INFOPLIST_FILE = Sources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
 				LD_RUNPATH_SEARCH_PATHS = (
