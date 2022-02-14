@@ -7,11 +7,9 @@ import platform.Security.*
 import platform.darwin.OSStatus
 import platform.darwin.noErr
 
-internal val NSBundle.Companion.mainIdentifier
-    get() = this.mainBundle.bundleIdentifier?: "com.liftric.KVault"
-
 /**
  * Keychain wrapper.
+ * Note: Using the deprecated init() the service name was the apps bundle identifier or if null "com.liftric.KVault".
  *
  * @param serviceName Name of the service. Used to categories entries.
  * @param accessGroup Name of the access group. Used to share entries between apps.
@@ -21,20 +19,6 @@ actual open class KVault(
     val serviceName: String? = null,
     val accessGroup: String? = null
 ) {
-    /**
-     * Initiates a Keychain with the main bundle identifier as the service name and without an access group.
-     * If the main bundle identifier is null, it will fallback to `com.liftric.KVault`.
-     */
-    @Deprecated(
-        """
-        Will be removed in a future version, 
-        please use the primary constructor. 
-        Check your service name before migrating.
-        """,
-        level = DeprecationLevel.WARNING
-    )
-    constructor() : this(NSBundle.mainIdentifier, null)
-
     /**
      * Saves a string value in the Keychain.
      * @param key The key to store
