@@ -24,19 +24,23 @@ sourceSets {
 #### Android
 
 ```kotlin
-val store = KVault(context)
+val store = KVault(<context>, <fileName>)
 ```
+
+| Parameter           | Description                         |
+| :------------------ | :---------------------------------- |
+| fileName (optional) | Name of the shared preferences file |
 
 #### iOS
 
 ```kotlin
-val store = KVault(serviceName = null, accessGroup = null)
+val store = KVault(<serviceName>, <accessGroup>)
 ```
 
-| Parameter    | Description                         |
-| :----------- | :---------------------------------- |
-| serviceName  | Used to categories objects.         |
-| accessGroup  | Used to share objects between apps. |
+| Parameter              | Description                         |
+| :--------------------- | :---------------------------------- |
+| serviceName (optional) | Used to categories objects          |
+| accessGroup (optional) | Used to share objects between apps  |
 
 ### Setting
 

@@ -5,14 +5,14 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 
-actual open class KVault(context: Context) {
+actual open class KVault(context: Context, fileName: String? = null) {
     private val encSharedPrefs: SharedPreferences
 
     init {
         val masterKey = MasterKey.Builder(context).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
         encSharedPrefs = EncryptedSharedPreferences.create(
             context,
-            "secure-shared-preferences",
+            fileName ?: "secure-shared-preferences",
             masterKey,
             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
