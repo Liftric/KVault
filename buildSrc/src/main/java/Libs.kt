@@ -6,12 +6,12 @@ object Android {
 }
 
 object Versions {
-    const val Gradle = "7.0.0"
-    const val Kotlin = "1.5.30"
-    const val Versioning = "2.14.0"
+    const val Gradle = "7.1.1"
+    const val Kotlin = "1.6.10"
+    const val Versioning = "2.15.1"
     const val Crypto = "1.1.0-alpha03"
     const val RoboElectric = "4.5.1"
-    const val TestCore = "1.2.0"
+    const val TestCore = "1.4.0"
 }
 
 object Libs {
