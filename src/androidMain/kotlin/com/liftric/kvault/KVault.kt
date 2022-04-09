@@ -181,6 +181,14 @@ actual open class KVault(context: Context, fileName: String? = null) {
     }
 
     /**
+     * Returns all keys of the objects in the SharedPreferences.
+     * @return A list with all keys
+     */
+    actual fun allKeys(): List<String> {
+        return encSharedPrefs.all.map { it.key }
+    }
+
+    /**
      * Deletes object with the given key from the SharedPreferences.
      * @param forKey The key to query
      * @return True or false, depending on whether the object has been deleted
