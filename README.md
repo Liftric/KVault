@@ -66,10 +66,16 @@ val stringValue: String? = store.string(forKey = "PASSWORD")
 val intValue: Int? = store.int(forKey = "SECRET")
 ```
 
-To check if an object is in the Keychain you can also use:
+To check if an object is stored you can use:
 
 ```kotlin
 val existsObject: Boolean = store.existsObject(forKey = "PASSWORD")
+```
+
+To check for which keys objects are stored:
+
+```kotlin
+val allKeys: List<String> = store.allKeys()
 ```
 
 ### Deleting
@@ -81,10 +87,6 @@ val isRemoved: Boolean = store.removeObject(forKey = "PASSWORD")
 ```
 
 #### All objects
-
-##### iOS
-
-⚠️ If the service name and the access group are not null, it will only delete the objects that match the query.
 
 ```kotlin
 val isCleared: Boolean = store.clear()
