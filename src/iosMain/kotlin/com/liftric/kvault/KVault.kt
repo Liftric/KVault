@@ -137,6 +137,7 @@ actual open class KVault(
      * Returns all keys of the objects in the Keychain.
      * @return A list with all keys
      */
+    @Suppress("UNCHECKED_CAST")
     actual fun allKeys(): List<String> = context {
         val query = query(
             kSecClass to kSecClassGenericPassword,
