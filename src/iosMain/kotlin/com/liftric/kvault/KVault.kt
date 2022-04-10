@@ -140,7 +140,8 @@ actual open class KVault(
     actual fun allKeys(): List<String> = context {
         val query = query(
             kSecClass to kSecClassGenericPassword,
-            kSecReturnData to kCFBooleanTrue
+            kSecReturnAttributes to kCFBooleanTrue,
+            kSecMatchLimit to kSecMatchLimitAll
         )
 
         memScoped {
@@ -148,7 +149,7 @@ actual open class KVault(
             val isValid = SecItemCopyMatching(query, result.ptr).validate()
             if (isValid) {
                 val items = CFBridgingRelease(result.value) as? List<Map<String, Any>>
-                items?.flatMap { it.map { it.key} } ?: listOf()
+                items?.mapNotNull { it["acct"] as? String } ?: listOf()
             } else {
                 listOf()
             }
