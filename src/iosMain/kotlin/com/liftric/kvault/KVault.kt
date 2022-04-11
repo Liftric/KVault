@@ -13,11 +13,13 @@ import platform.darwin.noErr
  *
  * @param serviceName Name of the service. Used to categories entries.
  * @param accessGroup Name of the access group. Used to share entries between apps.
+ * @param accessibility Level of the accessibility for the Keychain instance.
  * @constructor Initiates a Keychain with the given parameters.
  */
 actual open class KVault(
     val serviceName: String? = null,
-    val accessGroup: String? = null
+    val accessGroup: String? = null,
+    val accessibility: KSecAttrAccessible? = KSecAttrAccessible.WhenUnlocked
 ) {
     /**
      * Saves a string value in the Keychain.
@@ -142,7 +144,8 @@ actual open class KVault(
         val query = query(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to account,
-            kSecReturnData to kCFBooleanFalse
+            kSecReturnData to kCFBooleanFalse,
+            accessibility?.value to kSecAttrAccessible
         )
 
         SecItemCopyMatching(query, null)
@@ -157,7 +160,8 @@ actual open class KVault(
     actual fun deleteObject(forKey: String): Boolean = context(forKey) { (account) ->
         val query = query(
             kSecClass to kSecClassGenericPassword,
-            kSecAttrAccount to account
+            kSecAttrAccount to account,
+            accessibility?.value to kSecAttrAccessible
         )
 
         SecItemDelete(query)
@@ -172,7 +176,8 @@ actual open class KVault(
      */
     actual fun clear(): Boolean = context {
         val query = query(
-            kSecClass to kSecClassGenericPassword
+            kSecClass to kSecClassGenericPassword,
+            accessibility?.value to kSecAttrAccessible
         )
 
         SecItemDelete(query)
@@ -184,7 +189,7 @@ actual open class KVault(
     // ===============
 
     private fun addOrUpdate(key: String, value: NSData?): Boolean {
-        return if(existsObject(key)) {
+        return if (existsObject(key)) {
             update(key, value)
         } else {
             add(key, value)
@@ -195,7 +200,8 @@ actual open class KVault(
         val query = query(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to account,
-            kSecValueData to data
+            kSecValueData to data,
+            accessibility?.value to kSecAttrAccessible
         )
 
         SecItemAdd(query, null)
@@ -206,7 +212,8 @@ actual open class KVault(
         val query = query(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to account,
-            kSecReturnData to kCFBooleanFalse
+            kSecReturnData to kCFBooleanFalse,
+            accessibility?.value to kSecAttrAccessible
         )
 
         val updateQuery = query(
@@ -222,7 +229,8 @@ actual open class KVault(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to account,
             kSecReturnData to kCFBooleanTrue,
-            kSecMatchLimit to kSecMatchLimitOne
+            kSecMatchLimit to kSecMatchLimitOne,
+            accessibility?.value to kSecAttrAccessible
         )
 
         memScoped {
@@ -252,7 +260,8 @@ actual open class KVault(
     private fun <T> context(vararg values: Any?, block: Context.(List<CFTypeRef?>) -> T): T {
         val standard = mapOf(
             kSecAttrService to CFBridgingRetain(serviceName),
-            kSecAttrAccessGroup to CFBridgingRetain(accessGroup)
+            kSecAttrAccessGroup to CFBridgingRetain(accessGroup),
+            kSecAttrAccessible to CFBridgingRetain(accessibility)
         )
         val custom = arrayOf(*values).map { CFBridgingRetain(it) }
         return block.invoke(Context(standard), custom).apply {
@@ -260,7 +269,9 @@ actual open class KVault(
         }
     }
 
-    private fun String.toNSData(): NSData? = NSString.create(string = this).dataUsingEncoding(NSUTF8StringEncoding)
+    private fun String.toNSData(): NSData? =
+        NSString.create(string = this).dataUsingEncoding(NSUTF8StringEncoding)
+
     private fun NSNumber.toNSData() = NSKeyedArchiver.archivedDataWithRootObject(this)
     private fun NSData.toNSNumber() = NSKeyedUnarchiver.unarchiveObjectWithData(this) as? NSNumber
 
