@@ -144,6 +144,23 @@ class KeychainTests: XCTestCase {
         }
     }
 
+    func testSetGetAll() throws {
+        let boolData = ("bool", true)
+        sut.set(key: boolData.0, boolValue: boolData.1)
+
+        let doubleData = ("double", 0.0)
+        sut.set(key: doubleData.0, doubleValue: doubleData.1)
+
+        let longData = ("long", 1)
+        sut.set(key: longData.0, longValue: Int64(longData.1))
+
+        let allKeys = sut.allKeys()
+        XCTAssertEqual(allKeys.count, 3)
+        XCTAssertEqual(allKeys[0], boolData.0)
+        XCTAssertEqual(allKeys[1], doubleData.0)
+        XCTAssertEqual(allKeys[2], longData.0)
+    }
+
     func testExistsObject() {
         XCTAssertFalse(sut.existsObject(forKey: "blank"), "Blank should not exist")
         sut.set(key: "blank", stringValue: "124")

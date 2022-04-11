@@ -134,6 +134,30 @@ actual open class KVault(
     }
 
     /**
+     * Returns all keys of the objects in the Keychain.
+     * @return A list with all keys
+     */
+    @Suppress("UNCHECKED_CAST")
+    actual fun allKeys(): List<String> = context {
+        val query = query(
+            kSecClass to kSecClassGenericPassword,
+            kSecReturnAttributes to kCFBooleanTrue,
+            kSecMatchLimit to kSecMatchLimitAll
+        )
+
+        memScoped {
+            val result = alloc<CFTypeRefVar>()
+            val isValid = SecItemCopyMatching(query, result.ptr).validate()
+            if (isValid) {
+                val items = CFBridgingRelease(result.value) as? List<Map<String, Any>>
+                items?.mapNotNull { it["acct"] as? String } ?: listOf()
+            } else {
+                listOf()
+            }
+        }
+    }
+
+    /**
      * Checks if object with the given key exists in the Keychain.
      * @param forKey The key to query
      * @return True or false, depending on whether it is in the Keychain or not

@@ -157,6 +157,24 @@ abstract class AbstractKVaultTest(private val keychain: KVault) {
     }
 
     @Test
+    fun testSetGetAll() {
+        val boolData = Pair("bool", true)
+        keychain.set(boolData.first, boolData.second)
+
+        val doubleData = Pair("double", Double.MIN_VALUE)
+        keychain.set(doubleData.first, doubleData.second)
+
+        val longData = Pair("long", Long.MAX_VALUE)
+        keychain.set(longData.first, longData.second)
+
+        val allKeys = keychain.allKeys()
+        assertEquals(allKeys.size, 3)
+        assertEquals(allKeys[0], boolData.first)
+        assertEquals(allKeys[1], doubleData.first)
+        assertEquals(allKeys[2], longData.first)
+    }
+
+    @Test
     fun testExistsObject() {
         assertFalse(keychain.existsObject("blank"), "blank should not exist")
         keychain.set("blank", "123")

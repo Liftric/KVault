@@ -93,6 +93,12 @@ expect open class KVault {
     fun bool(forKey: String): Boolean?
 
     /**
+     * Returns all keys of the stored objects.
+     * @return A list with all keys
+     */
+    fun allKeys(): List<String>
+
+    /**
      * Deletes object with the given key from the store.
      * @param forKey The key to query
      * @return True or false, depending on whether the object has been deleted
