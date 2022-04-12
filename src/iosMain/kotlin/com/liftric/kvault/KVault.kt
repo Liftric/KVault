@@ -19,8 +19,23 @@ import platform.darwin.noErr
 actual open class KVault(
     val serviceName: String? = null,
     val accessGroup: String? = null,
-    val accessibility: KSecAttrAccessible? = KSecAttrAccessible.WhenUnlocked
+    val accessibility: Accessible = Accessible.WhenUnlocked
 ) {
+    /**
+     * kSecAttrAccessible attributes wrapper.
+     * attribute enables you to control item availability relative to the lock state of the device.
+     * It also lets you specify eligibility for restoration to a new device.
+     * If the attribute ends with the string ThisDeviceOnly, the item can be restored to the same device
+     * that created a backup, but it isn’t migrated when restoring another device’s backup data.
+     */
+    enum class Accessible(val value: CFStringRef?) {
+        WhenPasscodeSetThisDeviceOnly(kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly),
+        WhenUnlockedThisDeviceOnly(kSecAttrAccessibleWhenUnlockedThisDeviceOnly),
+        WhenUnlocked(kSecAttrAccessibleWhenUnlocked),
+        AfterFirstUnlock(kSecAttrAccessibleAfterFirstUnlock),
+        AfterFirstUnlockThisDeviceOnly(kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly)
+    }
+
     /**
      * Saves a string value in the Keychain.
      * @param key The key to store
@@ -145,8 +160,8 @@ actual open class KVault(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to account,
             kSecReturnData to kCFBooleanFalse,
-            accessibility?.value to kSecAttrAccessible
-        )
+
+            )
 
         SecItemCopyMatching(query, null)
             .validate()
@@ -160,8 +175,7 @@ actual open class KVault(
     actual fun deleteObject(forKey: String): Boolean = context(forKey) { (account) ->
         val query = query(
             kSecClass to kSecClassGenericPassword,
-            kSecAttrAccount to account,
-            accessibility?.value to kSecAttrAccessible
+            kSecAttrAccount to account
         )
 
         SecItemDelete(query)
@@ -176,8 +190,7 @@ actual open class KVault(
      */
     actual fun clear(): Boolean = context {
         val query = query(
-            kSecClass to kSecClassGenericPassword,
-            accessibility?.value to kSecAttrAccessible
+            kSecClass to kSecClassGenericPassword
         )
 
         SecItemDelete(query)
@@ -201,11 +214,11 @@ actual open class KVault(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to account,
             kSecValueData to data,
-            accessibility?.value to kSecAttrAccessible
+            kSecAttrAccessible to accessibility.value
         )
-
         SecItemAdd(query, null)
             .validate()
+
     }
 
     private fun update(key: String, value: Any?): Boolean = context(key, value) { (account, data) ->
@@ -213,7 +226,7 @@ actual open class KVault(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to account,
             kSecReturnData to kCFBooleanFalse,
-            accessibility?.value to kSecAttrAccessible
+            kSecAttrAccessible to  accessibility.value
         )
 
         val updateQuery = query(
@@ -230,7 +243,7 @@ actual open class KVault(
             kSecAttrAccount to account,
             kSecReturnData to kCFBooleanTrue,
             kSecMatchLimit to kSecMatchLimitOne,
-            accessibility?.value to kSecAttrAccessible
+            kSecAttrAccessible to accessibility.value
         )
 
         memScoped {
@@ -260,8 +273,7 @@ actual open class KVault(
     private fun <T> context(vararg values: Any?, block: Context.(List<CFTypeRef?>) -> T): T {
         val standard = mapOf(
             kSecAttrService to CFBridgingRetain(serviceName),
-            kSecAttrAccessGroup to CFBridgingRetain(accessGroup),
-            kSecAttrAccessible to CFBridgingRetain(accessibility)
+            kSecAttrAccessGroup to CFBridgingRetain(accessGroup)
         )
         val custom = arrayOf(*values).map { CFBridgingRetain(it) }
         return block.invoke(Context(standard), custom).apply {

@@ -14,14 +14,14 @@ public struct Keychain {
     // MARK: - Keychain
 
     public static var `default`: KVault {
-        KVault(serviceName: "com.liftric.default", accessGroup: nil, accessibility: KSecAttrAccessible.afterfirstunlock)
+        KVault(serviceName: "com.liftric.default", accessGroup: nil, accessibility: KVault.Accessible.afterfirstunlock)
     }
 
     public static var scoped: KVault {
-        KVault(serviceName: "com.liftric.test", accessGroup: nil, accessibility: KSecAttrAccessible.afterfirstunlock)
+        KVault(serviceName: "com.liftric.test", accessGroup: nil, accessibility: KVault.Accessible.afterfirstunlock)
     }
 
     public static var global: KVault {
-        KVault(serviceName: nil, accessGroup: nil, accessibility: KSecAttrAccessible.afterfirstunlock)
+        KVault(serviceName: nil, accessGroup: nil, accessibility: KVault.Accessible.afterfirstunlock)
     }
 }
