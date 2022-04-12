@@ -12,6 +12,7 @@ object Versions {
     const val Crypto = "1.1.0-alpha03"
     const val RoboElectric = "4.5.1"
     const val TestCore = "1.4.0"
+    const val Nexus = "1.1.0"
 }
 
 object Libs {
@@ -22,6 +23,7 @@ object Libs {
     const val MavenPublish = "maven-publish"
     const val Versioning = "net.nemerosa.versioning"
     const val Crypto = "androidx.security:security-crypto:${Versions.Crypto}"
+    const val Nexus = "io.github.gradle-nexus.publish-plugin"
 }
 
 object TestLibs {

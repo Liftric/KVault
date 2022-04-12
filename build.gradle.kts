@@ -7,6 +7,7 @@ plugins {
     id(Libs.MavenPublish)
     id(Libs.Versioning) version Versions.Versioning
     id(Libs.Signing)
+    id(Libs.Nexus) version Versions.Nexus
 }
 
 repositories {
@@ -110,20 +111,19 @@ val javadocJar by tasks.registering(Jar::class) {
     archiveClassifier.set("javadoc")
 }
 
-publishing {
+nexusPublishing {
     repositories {
-        maven {
-            name = "sonatype"
-            setUrl("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-            credentials {
-                username = ossrhUsername
-                password = ossrhPassword
-            }
+        sonatype {
+            username.set(ossrhUsername)
+            password.set(ossrhPassword)
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
         }
     }
+}
 
+publishing {
     publications.withType<MavenPublication> {
-
         artifact(javadocJar.get())
 
         pom {
