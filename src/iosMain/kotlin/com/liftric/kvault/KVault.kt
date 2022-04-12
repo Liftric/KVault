@@ -160,7 +160,6 @@ actual open class KVault(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to account,
             kSecReturnData to kCFBooleanFalse,
-
             )
 
         SecItemCopyMatching(query, null)
