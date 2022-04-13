@@ -160,7 +160,6 @@ actual open class KVault(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to account,
             kSecReturnData to kCFBooleanFalse,
-
             )
 
         SecItemCopyMatching(query, null)
@@ -226,7 +225,6 @@ actual open class KVault(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to account,
             kSecReturnData to kCFBooleanFalse,
-            kSecAttrAccessible to  accessibility.value
         )
 
         val updateQuery = query(
