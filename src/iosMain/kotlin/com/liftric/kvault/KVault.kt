@@ -241,7 +241,6 @@ actual open class KVault(
             kSecAttrAccount to account,
             kSecReturnData to kCFBooleanTrue,
             kSecMatchLimit to kSecMatchLimitOne,
-            kSecAttrAccessible to accessibility.value
         )
 
         memScoped {
