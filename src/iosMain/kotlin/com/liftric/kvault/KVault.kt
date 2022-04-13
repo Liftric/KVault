@@ -13,12 +13,29 @@ import platform.darwin.noErr
  *
  * @param serviceName Name of the service. Used to categories entries.
  * @param accessGroup Name of the access group. Used to share entries between apps.
+ * @param accessibility Level of the accessibility for the Keychain instance.
  * @constructor Initiates a Keychain with the given parameters.
  */
 actual open class KVault(
     val serviceName: String? = null,
-    val accessGroup: String? = null
+    val accessGroup: String? = null,
+    val accessibility: Accessible = Accessible.WhenUnlocked
 ) {
+    /**
+     * kSecAttrAccessible attributes wrapper.
+     * attribute enables you to control item availability relative to the lock state of the device.
+     * It also lets you specify eligibility for restoration to a new device.
+     * If the attribute ends with the string ThisDeviceOnly, the item can be restored to the same device
+     * that created a backup, but it isn’t migrated when restoring another device’s backup data.
+     */
+    enum class Accessible(val value: CFStringRef?) {
+        WhenPasscodeSetThisDeviceOnly(kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly),
+        WhenUnlockedThisDeviceOnly(kSecAttrAccessibleWhenUnlockedThisDeviceOnly),
+        WhenUnlocked(kSecAttrAccessibleWhenUnlocked),
+        AfterFirstUnlock(kSecAttrAccessibleAfterFirstUnlock),
+        AfterFirstUnlockThisDeviceOnly(kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly)
+    }
+
     /**
      * Saves a string value in the Keychain.
      * @param key The key to store
@@ -166,8 +183,8 @@ actual open class KVault(
         val query = query(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to account,
-            kSecReturnData to kCFBooleanFalse
-        )
+            kSecReturnData to kCFBooleanFalse,
+            )
 
         SecItemCopyMatching(query, null)
             .validate()
@@ -208,7 +225,7 @@ actual open class KVault(
     // ===============
 
     private fun addOrUpdate(key: String, value: NSData?): Boolean {
-        return if(existsObject(key)) {
+        return if (existsObject(key)) {
             update(key, value)
         } else {
             add(key, value)
@@ -219,18 +236,19 @@ actual open class KVault(
         val query = query(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to account,
-            kSecValueData to data
+            kSecValueData to data,
+            kSecAttrAccessible to accessibility.value
         )
-
         SecItemAdd(query, null)
             .validate()
+
     }
 
     private fun update(key: String, value: Any?): Boolean = context(key, value) { (account, data) ->
         val query = query(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to account,
-            kSecReturnData to kCFBooleanFalse
+            kSecReturnData to kCFBooleanFalse,
         )
 
         val updateQuery = query(
@@ -246,7 +264,7 @@ actual open class KVault(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to account,
             kSecReturnData to kCFBooleanTrue,
-            kSecMatchLimit to kSecMatchLimitOne
+            kSecMatchLimit to kSecMatchLimitOne,
         )
 
         memScoped {
@@ -284,7 +302,9 @@ actual open class KVault(
         }
     }
 
-    private fun String.toNSData(): NSData? = NSString.create(string = this).dataUsingEncoding(NSUTF8StringEncoding)
+    private fun String.toNSData(): NSData? =
+        NSString.create(string = this).dataUsingEncoding(NSUTF8StringEncoding)
+
     private fun NSNumber.toNSData() = NSKeyedArchiver.archivedDataWithRootObject(this)
     private fun NSData.toNSNumber() = NSKeyedUnarchiver.unarchiveObjectWithData(this) as? NSNumber
 
