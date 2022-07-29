@@ -1,90 +1,41 @@
 package com.liftric.kvault
 
-import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
-
 /**
  * Abstraction for using properties as delegates
  * example:
  * var userId by stringPref(USER_ID_KEY)
+ * @param S is a class that is going to inherit that class
+ * @param key is totally optional, it will use property name if you dont provide it
  */
-abstract class KVaultPref {
-
+abstract class KVaultPref<S> {
     abstract val kvault: KVault
+    fun stringPref(key: String? = null, defaultValue: String = "") = kvault.stringPref<S>(key, defaultValue)
+    fun stringPrefNullable(key: String? = null, defaultValue: String? = null) =
+        kvault.stringPrefNullable<S>(key, defaultValue)
 
-    fun stringPref(key: String, defaultValue: String = "") = readWriteProp(
-        defaultValue = defaultValue,
-        getValue = {
-            kvault.string(key)
-        },
-        setValue = { value ->
-            kvault.set(key, value)
-        }
-    )
+    fun booleanPref(key: String? = null, defaultValue: Boolean = false) =
+        kvault.booleanPref<S>(key, defaultValue)
+    fun booleanPrefNullable(key: String? = null, defaultValue: Boolean? = null) =
+        kvault.booleanPrefNullable<S>(key, defaultValue)
 
-    fun booleanPref(key: String, defaultValue: Boolean = false) = readWriteProp(
-        defaultValue = defaultValue,
-        getValue = {
-            kvault.bool(key)
-        },
-        setValue = { value ->
-            kvault.set(key, value)
-        }
-    )
+    fun longPref(key: String? = null, defaultValue: Long = 0) = kvault.longPref<S>(key, defaultValue)
+    fun longPrefNullable(key: String? = null, defaultValue: Long? = null) =
+        kvault.longPrefNullable<S>(key, defaultValue)
 
-    fun longPref(key: String, defaultValue: Long = 0) = readWriteProp(
-        defaultValue = defaultValue,
-        getValue = {
-            kvault.long(key)
-        },
-        setValue = { value ->
-            kvault.set(key, value)
-        }
-    )
+    fun intPref(key: String? = null, defaultValue: Int = 0) = kvault.intPref<S>(key, defaultValue)
+    fun intPrefNullable(key: String? = null, defaultValue: Int? = null) =
+        kvault.intPrefNullable<S>(key, defaultValue)
 
-    fun intPref(key: String, defaultValue: Int = 0) = readWriteProp(
-        defaultValue = defaultValue,
-        getValue = {
-            kvault.int(key)
-        },
-        setValue = { value ->
-            kvault.set(key, value)
-        }
-    )
+    fun floatPref(key: String? = null, defaultValue: Float = 0.0f) = kvault.floatPref<S>(key, defaultValue)
+    fun floatPrefNullable(key: String? = null, defaultValue: Float? = null) =
+        kvault.floatPrefNullable<S>(key, defaultValue)
 
-    fun floatPref(key: String, defaultValue: Float = 0.0f) = readWriteProp(
-        defaultValue = defaultValue,
-        getValue = {
-            kvault.float(key)
-        },
-        setValue = { value ->
-            kvault.set(key, value)
-        }
-    )
+    fun doublePref(key: String? = null, defaultValue: Double = 0.0) =
+        kvault.doublePrefNullable<S>(key, defaultValue)
 
-    fun doublePref(key: String, defaultValue: Double = 0.0) = readWriteProp(
-        defaultValue = defaultValue,
-        getValue = {
-            kvault.double(key)
-        },
-        setValue = { value ->
-            kvault.set(key, value)
-        }
-    )
+    fun doublePrefNullable(key: String? = null, defaultValue: Double? = null) =
+        kvault.doublePrefNullable<S>(key, defaultValue)
 
-    private fun <T> readWriteProp(
-        defaultValue: T,
-        getValue: () -> T?,
-        setValue: (T) -> Unit
-    ): ReadWriteProperty<KVaultPref, T> {
-        return object : ReadWriteProperty<KVaultPref, T> {
-            override fun getValue(thisRef: KVaultPref, property: KProperty<*>): T {
-                return getValue() ?: defaultValue
-            }
-
-            override fun setValue(thisRef: KVaultPref, property: KProperty<*>, value: T) {
-                setValue(value)
-            }
-        }
-    }
+    fun exists(key: String? = null) =
+        kvault.exists<S>(key)
 }
