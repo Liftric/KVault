@@ -4,7 +4,7 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-fun <S> KVault.stringVault(key: String? = null, defaultValue: String = "") = readWriteProp(
+fun KVault.stringVault(key: String? = null, defaultValue: String = "") = readWriteProp(
     defaultValue = defaultValue,
     getValue = { prop ->
         val newKey = key ?: prop.name
@@ -16,7 +16,7 @@ fun <S> KVault.stringVault(key: String? = null, defaultValue: String = "") = rea
     }
 )
 
-fun <S> KVault.stringVaultNullable(key: String? = null, defaultValue: String? = null) =
+fun KVault.stringVaultNullable(key: String? = null, defaultValue: String? = null) =
     readWritePropNullable(
         defaultValue = defaultValue,
         getValue = { prop ->
@@ -29,7 +29,7 @@ fun <S> KVault.stringVaultNullable(key: String? = null, defaultValue: String? = 
         }
     )
 
-fun <S> KVault.booleanVault(key: String? = null, defaultValue: Boolean = false) = readWriteProp(
+fun KVault.booleanVault(key: String? = null, defaultValue: Boolean = false) = readWriteProp(
     defaultValue = defaultValue,
     getValue = { prop ->
         val newKey = key ?: prop.name
@@ -41,7 +41,7 @@ fun <S> KVault.booleanVault(key: String? = null, defaultValue: Boolean = false) 
     }
 )
 
-fun <S> KVault.booleanVaultNullable(key: String? = null, defaultValue: Boolean? = null) =
+fun KVault.booleanVaultNullable(key: String? = null, defaultValue: Boolean? = null) =
     readWritePropNullable(
         defaultValue = defaultValue,
         getValue = { prop ->
@@ -54,7 +54,7 @@ fun <S> KVault.booleanVaultNullable(key: String? = null, defaultValue: Boolean? 
         }
     )
 
-fun <S> KVault.longVault(key: String? = null, defaultValue: Long = 0) = readWriteProp(
+fun KVault.longVault(key: String? = null, defaultValue: Long = 0) = readWriteProp(
     defaultValue = defaultValue,
     getValue = { prop ->
         val newKey = key ?: prop.name
@@ -66,7 +66,7 @@ fun <S> KVault.longVault(key: String? = null, defaultValue: Long = 0) = readWrit
     }
 )
 
-fun <S> KVault.longVaultNullable(key: String? = null, defaultValue: Long? = null) =
+fun KVault.longVaultNullable(key: String? = null, defaultValue: Long? = null) =
     readWritePropNullable(
         defaultValue = defaultValue,
         getValue = { prop ->
@@ -79,7 +79,7 @@ fun <S> KVault.longVaultNullable(key: String? = null, defaultValue: Long? = null
         }
     )
 
-fun <S> KVault.intVault(key: String? = null, defaultValue: Int = 0) = readWriteProp(
+fun KVault.intVault(key: String? = null, defaultValue: Int = 0) = readWriteProp(
     defaultValue = defaultValue,
     getValue = { prop ->
         val newKey = key ?: prop.name
@@ -91,7 +91,7 @@ fun <S> KVault.intVault(key: String? = null, defaultValue: Int = 0) = readWriteP
     }
 )
 
-fun <S> KVault.intVaultNullable(key: String? = null, defaultValue: Int? = null) =
+fun KVault.intVaultNullable(key: String? = null, defaultValue: Int? = null) =
     readWritePropNullable(
         defaultValue = defaultValue,
         getValue = { prop ->
@@ -104,7 +104,7 @@ fun <S> KVault.intVaultNullable(key: String? = null, defaultValue: Int? = null) 
         }
     )
 
-fun <S> KVault.floatVault(key: String? = null, defaultValue: Float = 0.0f) = readWriteProp(
+fun KVault.floatVault(key: String? = null, defaultValue: Float = 0.0f) = readWriteProp(
     defaultValue = defaultValue,
     getValue = { prop ->
         val newKey = key ?: prop.name
@@ -116,7 +116,7 @@ fun <S> KVault.floatVault(key: String? = null, defaultValue: Float = 0.0f) = rea
     }
 )
 
-fun <S> KVault.floatVaultNullable(key: String? = null, defaultValue: Float? = null) =
+fun KVault.floatVaultNullable(key: String? = null, defaultValue: Float? = null) =
     readWritePropNullable(
         defaultValue = defaultValue,
         getValue = { prop ->
@@ -129,7 +129,7 @@ fun <S> KVault.floatVaultNullable(key: String? = null, defaultValue: Float? = nu
         }
     )
 
-fun <S> KVault.doubleVault(key: String? = null, defaultValue: Double = 0.0) = readWriteProp(
+fun KVault.doubleVault(key: String? = null, defaultValue: Double = 0.0) = readWriteProp(
     defaultValue = defaultValue,
     getValue = { prop ->
         val newKey = key ?: prop.name
@@ -141,7 +141,7 @@ fun <S> KVault.doubleVault(key: String? = null, defaultValue: Double = 0.0) = re
     }
 )
 
-fun <S> KVault.doubleVaultNullable(key: String? = null, defaultValue: Double? = null) =
+fun KVault.doubleVaultNullable(key: String? = null, defaultValue: Double? = null) =
     readWritePropNullable(
         defaultValue = defaultValue,
         getValue = { prop ->
