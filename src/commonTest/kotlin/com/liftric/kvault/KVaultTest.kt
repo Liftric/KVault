@@ -212,6 +212,4 @@ abstract class AbstractKVaultTest(private val keychain: KVault) {
             assertFalse(keychain.existsObject(it), "$it should not exist after clear")
         }
     }
-
-
 }

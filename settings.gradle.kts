@@ -21,8 +21,8 @@ dependencyResolutionManagement {
             version("crypto", "1.1.0-alpha03")
 
             library("security-crypto", "androidx.security", "security-crypto").versionRef("crypto")
-            library("androidx-test-core", "androidx.test", "core").version("1.2.0")
-            library("roboelectric", "org.robolectric", "robolectric").version("4.5.1")
+            library("androidx-test-core", "androidx.test", "core").version("1.4.0")
+            library("roboelectric", "org.robolectric", "robolectric").version("4.9")
 
             plugin("versioning", "net.nemerosa.versioning").version("3.0.0")
         }
