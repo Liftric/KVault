@@ -2,11 +2,11 @@ import org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeSimulatorTes
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id(Libs.AndroidLibrary) version Versions.Gradle
-    kotlin(Libs.Multiplatform) version Versions.Kotlin
-    id(Libs.MavenPublish)
-    id(Libs.Versioning) version Versions.Versioning
-    id(Libs.Signing)
+    kotlin("multiplatform") version libs.versions.kotlin
+    id("com.android.library") version libs.versions.android.tools.gradle
+    id("maven-publish")
+    id("signing")
+    alias(libs.plugins.versioning)
 }
 
 repositories {
@@ -26,29 +26,25 @@ kotlin {
     }
 
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-            }
-        }
+        val commonMain by getting
         val commonTest by getting {
             dependencies {
-                implementation(kotlin(TestLibs.TestCommon))
-                implementation(kotlin(TestLibs.TestAnnotations))
+                implementation(kotlin("test"))
+                implementation(kotlin("test-common"))
+                implementation(kotlin("test-annotations-common"))
             }
         }
         val androidMain by getting {
             dependencies {
-                implementation(Libs.Crypto)
+                implementation(libs.security.crypto)
             }
         }
         val androidTest by getting {
             dependencies {
-                implementation(kotlin(TestLibs.Test))
-                implementation(kotlin(TestLibs.TestJunit))
-                implementation(TestLibs.RoboElectrics) {
-                    exclude(Exclude.GoogleAutoService, Exclude.AutoService)
-                }
-                implementation(TestLibs.TestCore)
+                implementation(libs.roboelectric)
+                implementation(kotlin("test"))
+                implementation(kotlin("test-junit"))
+                implementation(libs.androidx.test.core)
             }
         }
         val iosMain by getting
@@ -78,12 +74,13 @@ tasks {
 }
 
 android {
-    compileSdk = Android.CompileSdk
+    namespace = "com.liftric.kvault"
+    compileSdk = 33
 
     defaultConfig {
-        minSdk = Android.MinSdk
-        targetSdk = Android.TargetSdk
-        testInstrumentationRunner = Android.TestRunner
+        minSdk = 21
+        targetSdk = 33
+        testInstrumentationRunner = "androidx.test.runner"
     }
 
     compileOptions {
