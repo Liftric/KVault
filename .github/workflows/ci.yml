@@ -24,8 +24,8 @@ jobs:
       - name: Build testapp and test kvault (iOS)
         run: |
           cd iostests
-          sudo xcode-select -switch /Applications/Xcode_12.4.app
-          xcodebuild clean test -project TestApp.xcodeproj -scheme TestApp -destination "platform=iOS Simulator,OS=14.4,name=iPhone 12" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
+          sudo xcode-select -switch /Applications/Xcode_14.2.app
+          xcodebuild clean test -project TestApp.xcodeproj -scheme TestApp -destination "platform=iOS Simulator,OS=16.3,name=iPhone 14" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
       - name: Upload test result
         uses: actions/upload-artifact@v2
         if: ${{ always() }}
