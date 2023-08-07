@@ -35,11 +35,11 @@ class DebugViewController: UIViewController {
     }
     
     @objc func debug() {
-        let vault = KVault(serviceName: "DEBUG", accessGroup: nil, accessibility: KVault.Accessible.afterfirstunlock)
+        let vault = KVaultKeychain(serviceName: "DEBUG", accessGroup: nil, accessibility: KVaultKeychain.Accessible.afterfirstunlock)
         self.performOperations(on: vault)
     }
     
-    private func performOperations(on vault: KVault) {
+    private func performOperations(on vault: KVaultKeychain) {
         vault.set(key: keyA, boolValue: true)
         print("Value for \(keyA): \(vault.bool(forKey: keyA) ?? false)")
         
