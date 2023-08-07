@@ -24,7 +24,7 @@ sourceSets {
 #### Android
 
 ```kotlin
-val store = KVault(context, "<fileName>")
+val store = KVaultEncryptedSharedPreferences(context, "<fileName>")
 ```
 
 | Parameter           | Description                         |
@@ -34,7 +34,7 @@ val store = KVault(context, "<fileName>")
 #### iOS
 
 ```kotlin
-val store = KVault("<serviceName>", "<accessGroup>")
+val store = KVaultKeychain("<serviceName>", "<accessGroup>")
 ```
 
 | Parameter              | Description                         |

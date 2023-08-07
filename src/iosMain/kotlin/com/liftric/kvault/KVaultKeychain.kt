@@ -16,11 +16,11 @@ import platform.darwin.noErr
  * @param accessibility Level of the accessibility for the Keychain instance.
  * @constructor Initiates a Keychain with the given parameters.
  */
-actual open class KVault(
+open class KVaultKeychain(
     val serviceName: String? = null,
     val accessGroup: String? = null,
     val accessibility: Accessible = Accessible.WhenUnlocked
-) {
+) : KVault {
     /**
      * kSecAttrAccessible attributes wrapper.
      * attribute enables you to control item availability relative to the lock state of the device.
@@ -42,7 +42,7 @@ actual open class KVault(
      * @param stringValue The value to store
      * @return True or false, depending on whether the value has been stored in the Keychain
      */
-    actual fun set(key: String, stringValue: String): Boolean {
+    override fun set(key: String, stringValue: String): Boolean {
         return addOrUpdate(key, stringValue.toNSData())
     }
 
@@ -52,7 +52,7 @@ actual open class KVault(
      * @param intValue The value to store
      * @return True or false, depending on whether the value has been stored in the Keychain
      */
-    actual fun set(key: String, intValue: Int): Boolean {
+    override fun set(key: String, intValue: Int): Boolean {
         return addOrUpdate(key, NSNumber(int = intValue).toNSData())
     }
 
@@ -62,7 +62,7 @@ actual open class KVault(
      * @param longValue The value to store
      * @return True or false, depending on whether the value has been stored in the Keychain
      */
-    actual fun set(key: String, longValue: Long): Boolean {
+    override fun set(key: String, longValue: Long): Boolean {
         return addOrUpdate(key, NSNumber(long = longValue).toNSData())
     }
 
@@ -72,7 +72,7 @@ actual open class KVault(
      * @param floatValue The value to store
      * @return True or false, depending on whether the value has been stored in the Keychain
      */
-    actual fun set(key: String, floatValue: Float): Boolean {
+    override fun set(key: String, floatValue: Float): Boolean {
         return addOrUpdate(key, NSNumber(float = floatValue).toNSData())
     }
 
@@ -82,7 +82,7 @@ actual open class KVault(
      * @param doubleValue The value to store
      * @return True or false, depending on whether the value has been stored in the Keychain
      */
-    actual fun set(key: String, doubleValue: Double): Boolean {
+    override fun set(key: String, doubleValue: Double): Boolean {
         return addOrUpdate(key, NSNumber(double = doubleValue).toNSData())
     }
 
@@ -92,7 +92,7 @@ actual open class KVault(
      * @param boolValue The value to store
      * @return True or false, depending on whether the value has been stored in the Keychain
      */
-    actual fun set(key: String, boolValue: Boolean): Boolean {
+    override fun set(key: String, boolValue: Boolean): Boolean {
         return addOrUpdate(key, NSNumber(bool = boolValue).toNSData())
     }
 
@@ -101,7 +101,7 @@ actual open class KVault(
      * @param forKey The key to query
      * @return The stored string value, or null if it is missing
      */
-    actual fun string(forKey: String): String? {
+    override fun string(forKey: String): String? {
         return value(forKey)?.stringValue
     }
 
@@ -110,7 +110,7 @@ actual open class KVault(
      * @param forKey The key to query
      * @return The stored int value, or null if it is missing
      */
-    actual fun int(forKey: String): Int? {
+    override fun int(forKey: String): Int? {
         return value(forKey)?.toNSNumber()?.intValue
     }
 
@@ -119,7 +119,7 @@ actual open class KVault(
      * @param forKey The key to query
      * @return The stored long value, or null if it is missing
      */
-    actual fun long(forKey: String): Long? {
+    override fun long(forKey: String): Long? {
         return value(forKey)?.toNSNumber()?.longValue
     }
 
@@ -128,7 +128,7 @@ actual open class KVault(
      * @param forKey The key to query
      * @return The stored float value, or null if it is missing
      */
-    actual fun float(forKey: String): Float? {
+    override fun float(forKey: String): Float? {
         return value(forKey)?.toNSNumber()?.floatValue
     }
 
@@ -137,7 +137,7 @@ actual open class KVault(
      * @param forKey The key to query
      * @return The stored double value, or null if it is missing
      */
-    actual fun double(forKey: String): Double? {
+    override fun double(forKey: String): Double? {
         return value(forKey)?.toNSNumber()?.doubleValue
     }
 
@@ -146,7 +146,7 @@ actual open class KVault(
      * @param forKey The key to query
      * @return The stored boolean value, or null if it is missing
      */
-    actual fun bool(forKey: String): Boolean? {
+    override fun bool(forKey: String): Boolean? {
         return value(forKey)?.toNSNumber()?.boolValue
     }
 
@@ -155,7 +155,7 @@ actual open class KVault(
      * @return A list with all keys
      */
     @Suppress("UNCHECKED_CAST")
-    actual fun allKeys(): List<String> = context {
+    override fun allKeys(): List<String> = context {
         val query = query(
             kSecClass to kSecClassGenericPassword,
             kSecReturnAttributes to kCFBooleanTrue,
@@ -179,7 +179,7 @@ actual open class KVault(
      * @param forKey The key to query
      * @return True or false, depending on whether it is in the Keychain or not
      */
-    actual fun existsObject(forKey: String): Boolean = context(forKey) { (account) ->
+    override fun existsObject(forKey: String): Boolean = context(forKey) { (account) ->
         val query = query(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to account,
@@ -195,7 +195,7 @@ actual open class KVault(
      * @param forKey The key to query
      * @return True or false, depending on whether the object has been deleted
      */
-    actual fun deleteObject(forKey: String): Boolean = context(forKey) { (account) ->
+    override fun deleteObject(forKey: String): Boolean = context(forKey) { (account) ->
         val query = query(
             kSecClass to kSecClassGenericPassword,
             kSecAttrAccount to account
@@ -211,7 +211,7 @@ actual open class KVault(
      * Keychain will be deleted.
      * @return True or false, depending on whether the objects have been deleted
      */
-    actual fun clear(): Boolean = context {
+    override fun clear(): Boolean = context {
         val query = query(
             kSecClass to kSecClassGenericPassword
         )

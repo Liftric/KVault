@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 
-actual open class KVault(context: Context, fileName: String? = null) {
+open class KVaultEncryptedSharedPreferences(context: Context, fileName: String? = null) : KVault {
     private val encSharedPrefs: SharedPreferences
 
     init {
@@ -25,7 +25,7 @@ actual open class KVault(context: Context, fileName: String? = null) {
      * @param stringValue The value to store
      * @return True or false, depending on whether the value has been stored in the SharedPreferences
      */
-    actual fun set(key: String, stringValue: String): Boolean {
+    override fun set(key: String, stringValue: String): Boolean {
         return encSharedPrefs
             .edit()
             .putString(key, stringValue)
@@ -38,7 +38,7 @@ actual open class KVault(context: Context, fileName: String? = null) {
      * @param intValue The value to store
      * @return True or false, depending on whether the value has been stored in the SharedPreferences
      */
-    actual fun set(key: String, intValue: Int): Boolean {
+    override fun set(key: String, intValue: Int): Boolean {
         return encSharedPrefs
             .edit()
             .putInt(key, intValue)
@@ -51,7 +51,7 @@ actual open class KVault(context: Context, fileName: String? = null) {
      * @param longValue The value to store
      * @return True or false, depending on whether the value has been stored in the SharedPreferences
      */
-    actual fun set(key: String, longValue: Long): Boolean {
+    override fun set(key: String, longValue: Long): Boolean {
         return encSharedPrefs
             .edit()
             .putLong(key, longValue)
@@ -64,7 +64,7 @@ actual open class KVault(context: Context, fileName: String? = null) {
      * @param floatValue The value to store
      * @return True or false, depending on whether the value has been stored in the SharedPreferences
      */
-    actual fun set(key: String, floatValue: Float): Boolean {
+    override fun set(key: String, floatValue: Float): Boolean {
         return encSharedPrefs
             .edit()
             .putFloat(key, floatValue)
@@ -77,7 +77,7 @@ actual open class KVault(context: Context, fileName: String? = null) {
      * @param doubleValue The value to store
      * @return True or false, depending on whether the value has been stored in the SharedPreferences
      */
-    actual fun set(key: String, doubleValue: Double): Boolean {
+    override fun set(key: String, doubleValue: Double): Boolean {
         return encSharedPrefs
             .edit()
             .putLong(key, doubleValue.toRawBits())
@@ -90,7 +90,7 @@ actual open class KVault(context: Context, fileName: String? = null) {
      * @param boolValue The value to store
      * @return True or false, depending on whether the value has been stored in the SharedPreferences
      */
-    actual fun set(key: String, boolValue: Boolean): Boolean {
+    override fun set(key: String, boolValue: Boolean): Boolean {
         return encSharedPrefs
             .edit()
             .putBoolean(key, boolValue)
@@ -102,7 +102,7 @@ actual open class KVault(context: Context, fileName: String? = null) {
      * @param forKey The key to query
      * @return True or false, depending on whether the value has been stored in the SharedPreferences
      */
-    actual fun existsObject(forKey: String): Boolean {
+    override fun existsObject(forKey: String): Boolean {
         return encSharedPrefs.contains(forKey)
     }
 
@@ -111,7 +111,7 @@ actual open class KVault(context: Context, fileName: String? = null) {
      * @param forKey The key to query
      * @return The stored string value, or null if it is missing
      */
-    actual fun string(forKey: String): String? {
+    override fun string(forKey: String): String? {
         return encSharedPrefs.getString(forKey, null)
     }
 
@@ -120,7 +120,7 @@ actual open class KVault(context: Context, fileName: String? = null) {
      * @param forKey The key to query
      * @return The stored int value, or null if it is missing
      */
-    actual fun int(forKey: String): Int? {
+    override fun int(forKey: String): Int? {
         return if (existsObject(forKey)) {
             encSharedPrefs.getInt(forKey, Int.MIN_VALUE)
         } else {
@@ -133,7 +133,7 @@ actual open class KVault(context: Context, fileName: String? = null) {
      * @param forKey The key to query
      * @return The stored long value, or null if it is missing
      */
-    actual fun long(forKey: String): Long? {
+    override fun long(forKey: String): Long? {
         return if (existsObject(forKey)) {
             encSharedPrefs.getLong(forKey, Long.MIN_VALUE)
         } else {
@@ -146,7 +146,7 @@ actual open class KVault(context: Context, fileName: String? = null) {
      * @param forKey The key to query
      * @return The stored float value, or null if it is missing
      */
-    actual fun float(forKey: String): Float? {
+    override fun float(forKey: String): Float? {
         return if (existsObject(forKey)) {
             encSharedPrefs.getFloat(forKey, Float.MIN_VALUE)
         } else {
@@ -159,7 +159,7 @@ actual open class KVault(context: Context, fileName: String? = null) {
      * @param forKey The key to query
      * @return The stored double value, or null if it is missing
      */
-    actual fun double(forKey: String): Double? {
+    override fun double(forKey: String): Double? {
         return if (existsObject(forKey)) {
             Double.fromBits(encSharedPrefs.getLong(forKey, Double.MIN_VALUE.toRawBits()))
         } else {
@@ -172,7 +172,7 @@ actual open class KVault(context: Context, fileName: String? = null) {
      * @param forKey The key to query
      * @return The stored boolean value, or null if it is missing
      */
-    actual fun bool(forKey: String): Boolean? {
+    override fun bool(forKey: String): Boolean? {
         return if (existsObject(forKey)) {
             encSharedPrefs.getBoolean(forKey, false)
         } else {
@@ -184,7 +184,7 @@ actual open class KVault(context: Context, fileName: String? = null) {
      * Returns all keys of the objects in the SharedPreferences.
      * @return A list with all keys
      */
-    actual fun allKeys(): List<String> {
+    override fun allKeys(): List<String> {
         return encSharedPrefs.all.map { it.key }
     }
 
@@ -193,7 +193,7 @@ actual open class KVault(context: Context, fileName: String? = null) {
      * @param forKey The key to query
      * @return True or false, depending on whether the object has been deleted
      */
-    actual fun deleteObject(forKey: String): Boolean {
+    override fun deleteObject(forKey: String): Boolean {
         return encSharedPrefs
             .edit()
             .remove(forKey)
@@ -204,7 +204,7 @@ actual open class KVault(context: Context, fileName: String? = null) {
      * Deletes all objects from the SharedPreferences.
      * @return True or false, depending on whether the objects have been deleted
      */
-    actual fun clear(): Boolean {
+    override fun clear(): Boolean {
         return encSharedPrefs
             .edit()
             .clear()

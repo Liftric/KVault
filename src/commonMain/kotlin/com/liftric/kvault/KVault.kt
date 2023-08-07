@@ -1,6 +1,6 @@
 package com.liftric.kvault
 
-expect open class KVault {
+interface KVault {
     /**
      * Saves a string value in the store.
      * @param key The key to store
