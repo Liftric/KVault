@@ -66,7 +66,9 @@ tasks {
     val iosX64Test by existing(KotlinNativeSimulatorTest::class) {
         filter.excludeTestsMatching("com.liftric.kvault.KVaultTest")
     }
-
+    val iosSimulatorArm64Test by existing(KotlinNativeSimulatorTest::class) {
+        filter.excludeTestsMatching("com.liftric.kvault.KVaultTest")
+    }
     withType<KotlinCompile> {
         kotlinOptions {
             jvmTarget = "11"
