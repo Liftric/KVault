@@ -17,8 +17,8 @@ dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
             version("android-tools-gradle", "7.3.0")
-            version("kotlin", "1.8.10")
-            version("crypto", "1.1.0-alpha05")
+            version("kotlin", "1.9.10")
+            version("crypto", "1.1.0-alpha06")
 
             library("security-crypto", "androidx.security", "security-crypto").versionRef("crypto")
             library("androidx-test-core", "androidx.test", "core").version("1.5.0")
