@@ -2,6 +2,7 @@ package com.liftric.kvault
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Base64
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 
@@ -98,6 +99,17 @@ actual open class KVault(context: Context, fileName: String? = null) {
     }
 
     /**
+     * Saves a byte array value in the store.
+     * @param key The key to store
+     * @param dataValue The value to store
+     */
+    actual fun set(key: String, dataValue: ByteArray): Boolean =
+        encSharedPrefs
+            .edit()
+            .putString(key, Base64.encodeToString(dataValue, Base64.DEFAULT))
+            .commit()
+
+    /**
      * Checks if object with key exists in the SharedPreferences.
      * @param forKey The key to query
      * @return True or false, depending on whether the value has been stored in the SharedPreferences
@@ -177,6 +189,17 @@ actual open class KVault(context: Context, fileName: String? = null) {
             encSharedPrefs.getBoolean(forKey, false)
         } else {
             null
+        }
+    }
+
+    /**
+     * Returns the data value of an object in the store.
+     * @param forKey The key to query
+     * @return The stored bytes value
+     */
+    actual fun data(forKey: String): ByteArray? {
+        return encSharedPrefs.getString(forKey, null)?.let {
+            Base64.decode(it, Base64.DEFAULT)
         }
     }
 

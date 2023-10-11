@@ -157,6 +157,23 @@ abstract class AbstractKVaultTest(private val keychain: KVault) {
     }
 
     @Test
+    fun testSetGetData() {
+        val testData = mapOf(
+            "data1" to "Hello World!".encodeToByteArray(),
+            "data2" to "Foo bar".encodeToByteArray(),
+            "data3" to "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.".encodeToByteArray()
+        )
+        testData.values.toTypedArray().last() // - Why this line?
+        testData.forEach {
+            keychain.set(it.key, it.value)
+            assertContentEquals(it.value, keychain.data(it.key), "${it.key} should resolve to ${it.value.decodeToString()}")
+        }
+        funnelAssertion<ByteArray>(testData.keys.toList()) {
+            keychain.data(it)
+        }
+    }
+
+    @Test
     fun testSetGetAll() {
         val boolData = Pair("bool", true)
         keychain.set(boolData.first, boolData.second)
