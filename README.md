@@ -58,6 +58,7 @@ val floatStored: Boolean = store.set(key = "PI", floatValue = 3.14)
 - Float
 - Double
 - Bool
+- ByteArray
 
 ### Getting
 
