@@ -39,7 +39,7 @@ kotlin {
                 implementation(libs.security.crypto)
             }
         }
-        val androidTest by getting {
+        val androidUnitTest by getting {
             dependencies {
                 implementation(libs.roboelectric)
                 implementation(kotlin("test"))
@@ -57,6 +57,7 @@ kotlin {
         }
         all {
             languageSettings.optIn("kotlin.ExperimentalUnsignedTypes")
+            languageSettings.optIn("kotlinx.cinterop.ExperimentalForeignApi")
         }
     }
 }
@@ -65,7 +66,9 @@ tasks {
     val iosX64Test by existing(KotlinNativeSimulatorTest::class) {
         filter.excludeTestsMatching("com.liftric.kvault.KVaultTest")
     }
-
+    val iosSimulatorArm64Test by existing(KotlinNativeSimulatorTest::class) {
+        filter.excludeTestsMatching("com.liftric.kvault.KVaultTest")
+    }
     withType<KotlinCompile> {
         kotlinOptions {
             jvmTarget = "11"

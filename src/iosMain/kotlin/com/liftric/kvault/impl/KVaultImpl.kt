@@ -1,10 +1,13 @@
 package com.liftric.kvault.impl
 
 import com.liftric.kvault.KVault
+import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.alloc
+import kotlinx.cinterop.allocArrayOf
 import kotlinx.cinterop.convert
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.ptr
+import kotlinx.cinterop.usePinned
 import kotlinx.cinterop.value
 import platform.CoreFoundation.CFAutorelease
 import platform.CoreFoundation.CFDictionaryAddValue
@@ -48,6 +51,7 @@ import platform.Security.kSecReturnData
 import platform.Security.kSecValueData
 import platform.darwin.OSStatus
 import platform.darwin.noErr
+import platform.posix.memcpy
 
 /**
  * Keychain wrapper.
@@ -139,6 +143,15 @@ actual open class KVaultImpl(
     }
 
     /**
+     * Saves a byte array value in the store.
+     * @param key The key to store
+     * @param dataValue The value to store
+     */
+    actual override fun set(key: String, dataValue: ByteArray): Boolean {
+        return addOrUpdate(key, dataValue.toNSData())
+    }
+
+    /**
      * Returns the string value of an object in the Keychain.
      * @param forKey The key to query
      * @return The stored string value, or null if it is missing
@@ -190,6 +203,15 @@ actual open class KVaultImpl(
      */
     actual override fun bool(forKey: String): Boolean? {
         return value(forKey)?.toNSNumber()?.boolValue
+    }
+
+    /**
+     * Returns the data value of an object in the store.
+     * @param forKey The key to query
+     * @return The stored bytes value
+     */
+    actual override fun data(forKey: String): ByteArray? {
+        return value(forKey)?.toByteArray()
     }
 
     /**
@@ -352,6 +374,20 @@ actual open class KVaultImpl(
 
     private val NSData.stringValue: String?
         get() = NSString.create(this, NSUTF8StringEncoding) as String?
+
+    private fun NSData.toByteArray(): ByteArray =
+        ByteArray(length.toInt()).apply {
+            if (isNotEmpty()) {
+                usePinned {
+                    memcpy(it.addressOf(0), this@toByteArray.bytes, this@toByteArray.length)
+                }
+            }
+        }
+
+    private fun ByteArray.toNSData(): NSData =
+        memScoped {
+            NSData.create(bytes = allocArrayOf(this@toNSData), length = this@toNSData.size.convert())
+        }
 
     private fun OSStatus.validate(): Boolean = toUInt() == noErr
 }

@@ -46,6 +46,13 @@ expect open class KVaultImpl: KVault {
     override fun set(key: String, boolValue: Boolean): Boolean
 
     /**
+     * Saves a byte array value in the store.
+     * @param key The key to store
+     * @param dataValue The value to store
+     */
+    override fun set(key: String, dataValue: ByteArray): Boolean
+
+    /**
      * Checks if object with key exists in the store.
      * @param forKey The key to query
      * @return True or false, depending on wether it is in the store or not
@@ -93,6 +100,13 @@ expect open class KVaultImpl: KVault {
      * @return The stored boolean value
      */
     override fun bool(forKey: String): Boolean?
+
+    /**
+     * Returns the data value of an object in the store.
+     * @param forKey The key to query
+     * @return The stored bytes value
+     */
+    override fun data(forKey: String): ByteArray?
 
     /**
      * Returns all keys of the stored objects.
