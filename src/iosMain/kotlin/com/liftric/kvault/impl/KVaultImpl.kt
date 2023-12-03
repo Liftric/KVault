@@ -41,6 +41,7 @@ import platform.Security.kSecAttrAccessibleWhenUnlocked
 import platform.Security.kSecAttrAccessibleWhenUnlockedThisDeviceOnly
 import platform.Security.kSecAttrAccount
 import platform.Security.kSecAttrService
+import platform.Security.kSecAttrSynchronizable
 import platform.Security.kSecClass
 import platform.Security.kSecClassGenericPassword
 import platform.Security.kSecMatchLimit
@@ -59,12 +60,14 @@ import platform.posix.memcpy
  *
  * @param serviceName Name of the service. Used to categories entries.
  * @param accessGroup Name of the access group. Used to share entries between apps.
+ * @param synchronizable If true, the entries will be synced with iCloud.
  * @param accessibility Level of the accessibility for the Keychain instance.
  * @constructor Initiates a Keychain with the given parameters.
  */
 actual open class KVaultImpl(
     private val serviceName: String? = null,
     private val accessGroup: String? = null,
+    private val synchronizable: Boolean = false,
     private val accessibility: Accessible = Accessible.WhenUnlocked
 ): KVault {
     /**
@@ -358,7 +361,8 @@ actual open class KVaultImpl(
     private fun <T> context(vararg values: Any?, block: Context.(List<CFTypeRef?>) -> T): T {
         val standard = mapOf(
             kSecAttrService to CFBridgingRetain(serviceName),
-            kSecAttrAccessGroup to CFBridgingRetain(accessGroup)
+            kSecAttrAccessGroup to CFBridgingRetain(accessGroup),
+            kSecAttrSynchronizable to if (synchronizable) kCFBooleanTrue else kCFBooleanFalse
         )
         val custom = arrayOf(*values).map { CFBridgingRetain(it) }
         return block.invoke(Context(standard), custom).apply {
